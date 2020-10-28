@@ -50,6 +50,13 @@ channels = [
     {'name': 'Shishiro Botan',    'bg': '#322C34', 'fg': '#fff', 'twitter':  'shishirobotan',   'youtube': 'UCUKD-uaobj9jiqB-VXt71mA', 'bilibili': ''},
     {'name': 'Yukihana Lamy',     'bg': '#7895B8', 'fg': '#fff', 'twitter':  'yukihanalamy',    'youtube': 'UCFKOVgVbGmX65RxO3EtH3iw', 'bilibili': '624252706'},
 
+    # English
+    {'name': 'Ninomae Ina\'nis',  'bg': '#62567E', 'fg': '#fff', 'twitter':  'ninomaeinanis',   'youtube': 'UCMwGHR0BTZuLsmjY_NT5Pwg', 'bilibili': ''},
+    {'name': 'Gawr Gura',         'bg': '#5C81C7', 'fg': '#fff', 'twitter':  'gawrgura',        'youtube': 'UCoSrY_IQQVpmIRZ9Xf-y93g', 'bilibili': ''},
+    {'name': 'Takanashi Kiara',   'bg': '#FF511C', 'fg': '#fff', 'twitter':  'takanashikiara',  'youtube': 'UCHsx4Hqa-1ORjQTh9TYDhww', 'bilibili': ''},
+    {'name': 'Mori Calliope',     'bg': '#C90D40', 'fg': '#fff', 'twitter':  'moricalliope',    'youtube': 'UCL_qhgtOy0dy1Agp8vkySQg', 'bilibili': ''},
+    {'name': 'Watson Amelia',     'bg': '#F7DB92', 'fg': '#fff', 'twitter':  'watsonameliaen',  'youtube': 'UCyl1z3jo3XHR1riLFKG5UAg', 'bilibili': ''},
+
     # Indonesia
     {'name': 'Airani Iofifteen',  'bg': '#be8b8f', 'fg': '#fff', 'twitter':  'airaniiofifteen', 'youtube': 'UCAoy6rzhSf4ydcYjJw3WoVg', 'bilibili': ''},
     {'name': 'Ayunda Risu',       'bg': '#d48d85', 'fg': '#fff', 'twitter':  'ayunda_risu',     'youtube': 'UCOyYb1c43VlX9rc_lT6NKQw', 'bilibili': ''},
