@@ -13,6 +13,7 @@ LOG = logging.getLogger('HololiveStats')
 
 
 channels = [
+    # {'name': '',  'bg': '#', 'fg': '#fff', 'twitter':  '', 'youtube': '', 'bilibili': ''},
     # Japan
     {'name': 'AZKi',              'bg': '#6cbabc', 'fg': '#fff', 'twitter':  'azki_vdiva',      'youtube': 'UC0TXe_LYZ4scaW2XMyi5_kw', 'bilibili': '389056211'},
     {'name': 'Akai Haato',        'bg': '#eabb98', 'fg': '#fff', 'twitter':  'akaihaato',       'youtube': 'UC1CfXB_kRs3C-zaeTG3oGyg', 'bilibili': '339567211'},
@@ -61,6 +62,12 @@ channels = [
     {'name': 'Airani Iofifteen',  'bg': '#be8b8f', 'fg': '#fff', 'twitter':  'airaniiofifteen', 'youtube': 'UCAoy6rzhSf4ydcYjJw3WoVg', 'bilibili': ''},
     {'name': 'Ayunda Risu',       'bg': '#d48d85', 'fg': '#fff', 'twitter':  'ayunda_risu',     'youtube': 'UCOyYb1c43VlX9rc_lT6NKQw', 'bilibili': ''},
     {'name': 'Moona Hoshinova',   'bg': '#9b85c1', 'fg': '#fff', 'twitter':  'moonahoshinova',  'youtube': 'UCP0BspO_AMEe3aQqqpo89Dg', 'bilibili': ''},
+
+    # Indonesia 2nd gen
+    {'name': 'Kureiji Ollie',     'bg': '#E7004E', 'fg': '#fff', 'twitter':  'kureijiollie',    'youtube': 'UCYz_5n-uDuChHtLo7My1HnQ', 'bilibili': ''},
+    {'name': 'Anya Melfissa',     'bg': '#DAB75B', 'fg': '#fff', 'twitter':  'anyamelfissa',    'youtube': 'UC727SQYUvx5pDDGQpTICNWg', 'bilibili': ''},
+    {'name': 'Pavolia Reine',     'bg': '#2A64AE', 'fg': '#fff', 'twitter':  'pavoliareine',    'youtube': 'UChgTyjG-pdNvxxhdsXfHQ5Q', 'bilibili': ''},
+
     # China
     # {'name': 'Artia',             'bg': '#736b99', 'fg': '#fff', 'twitter':  'artia_hololive',  'youtube': '', 'bilibili': '511613155'},
     # {'name': 'Civia',             'bg': '#67abd5', 'fg': '#fff', 'twitter':  'civia_hololive',  'youtube': 'UCgNVXGlZIFK96XdEY20sVjg', 'bilibili': '354411419'},
@@ -69,7 +76,7 @@ channels = [
     # {'name': 'Spade Echo',        'bg': '#bb88a1', 'fg': '#fff', 'twitter':  'spadeecho',       'youtube': '', 'bilibili': '456368455'},
     # {'name': 'Yogiri',            'bg': '#bd536e', 'fg': '#fff', 'twitter':  'yogiri_hololive', 'youtube': '', 'bilibili': '427061218'},
     # Best Girl
-    {'name': 'Best Girl (Yagoo)', 'bg': '#c3b4af', 'fg': '#fff', 'twitter':  'tanigox',         'youtube': '', 'bilibili': ''},
+    {'name': 'Best Girl (Yagoo)', 'bg': '#c3b4af', 'fg': '#fff', 'twitter':  'tanigox',         'youtube': 'UCu2DMOGLeR_DSStCyeQpi5Q', 'bilibili': ''},
 ]
 
 # YouTube
