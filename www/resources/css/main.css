@@ -1,13 +1,18 @@
 * {
   box-sizing: border-box;
-  font-family: sans-serif;
-  font-weight: lighter;
 }
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  color: white;
+  background-color: black;
+  font-family: 'Roboto';
+}
+
+h2 {
+  font-weight: 100;
 }
 
 ul, li {
@@ -153,4 +158,24 @@ footer {
   text-align: center;
   font-size: .7em;
   margin: 1em 0;
+}
+
+/* roboto-100 - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 100;
+  src: local(''),
+       url('../fonts/roboto-v20-latin-100.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/roboto-v20-latin-100.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+/* roboto-regular - latin */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''),
+       url('../fonts/roboto-v20-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+       url('../fonts/roboto-v20-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
