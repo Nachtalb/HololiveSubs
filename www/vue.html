@@ -22,8 +22,24 @@
   <main>
     <div id="app">
       <ul id="members">
-        <li v-for="member in members"
-            v-bind:class="member.twitter"
+        <member-card
+          v-for="member in members"
+          v-bind:member="member"
+        ></member-card>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
+    Updates every 30min. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
+  </footer>
+
+  <script>
+    Vue.component('member-card', {
+      props: ['member'],
+      template: `
+        <li v-bind:class="member.twitter"
             v-bind:style="{ background: 'linear-gradient(180deg, ' + member.bg + ' 0%, ' + pSBC(-.9, member.bg) + ' 100%)', color: member.fg }">
           <a v-bind:href="'https://twitter.com/' + member.twitter" target="_blank">
             <div class="img"><img v-bind:src="member.image" alt="member.name"></div>
@@ -45,29 +61,7 @@
               <span>{{ nFormatter(member.t_subs, 1) }}</span> Twitter
             </a>
           </div>
-        </li>
-      </ul>
-    </div>
-  </main>
-
-  <footer>
-    Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
-    Updates every 30min. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
-  </footer>
-
-  <script>
-    var app = new Vue({
-      el: '#app',
-      data: {
-        members: [],
-      },
-      mounted() {
-        axios
-          .get('stats.json')
-          .then(response => {
-            this.members = response.data;
-          });
-      },
+        </li>`,
       methods: {
         // https://stackoverflow.com/a/13542669/5699307
         pSBC(p,c0,c1,l) {
@@ -113,6 +107,20 @@
           }
           return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
         },
+      },
+    });
+
+    var app = new Vue({
+      el: '#app',
+      data: {
+        members: [],
+      },
+      mounted() {
+        axios
+          .get('stats.json')
+          .then(response => {
+            this.members = response.data;
+          });
       },
     });
   </script>
