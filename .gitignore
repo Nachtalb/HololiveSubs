@@ -423,4 +423,6 @@ $RECYCLE.BIN/
 
 www/stats
 www/stats.json
+www/profile-images/*
+!www/profile-images/.gitkeep
 .env

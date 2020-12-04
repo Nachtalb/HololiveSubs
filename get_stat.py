@@ -4,6 +4,7 @@ from bilibili_api.user import UserInfo
 from dotenv import load_dotenv
 from pathlib import Path
 from twitter import Api
+from yarl import URL
 import json
 import logging
 import os
@@ -148,16 +149,32 @@ twitter_api = Api(consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
 LOG.info('Getting Twitter stats...')
 t_data = twitter_api.GetListMembersPaged(os.environ['TWITTER_MEMBER_LIST'])[2]
 
+images_path = BASE_PATH / 'www/profile-images/'
+images_path.mkdir(parents=True, exist_ok=True)
+
 # Sort and gather data
 result = []
 for channel_data in channels:
     t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'], t_data), None)
 
     if not t_user:
-        print(f'No data found for twitter user {channel_data["twitter"]}')
+        print(f'No data found for twitter user {channel_data["name"]}')
         sys.exit(1)
 
-    channel_data['image'] = t_user.profile_image_url_https.replace('_normal', '')
+    image_url = URL(t_user.profile_image_url_https.replace('_normal', ''))
+    image_path = images_path / image_url.name
+    if not image_path.is_file():
+        LOG.info(f'Fetching new profile image for {channel_data["name"]}...')
+        response = requests.get(image_url)
+        if response.status_code == 200:
+            image_path.write_bytes(response.content)
+        else:
+            LOG.warning('Failed to retrive image')
+        result_image_url = image_path.relative_to(BASE_PATH / 'www')
+    else:
+        result_image_url = image_url
+
+    channel_data['image'] = str(result_image_url)
     channel_data['t_subs'] = int(t_user.followers_count)
 
     b_user, yt_user= None, None
