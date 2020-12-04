@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from bilibili_api.user import UserInfo
+from dotenv import load_dotenv
 from pathlib import Path
 from twitter import Api
 import json
-import requests
-import time
 import logging
+import os
+import requests
+import sys
+import time
+
+BASE_PATH = Path(__file__).absolute().parent
+
+load_dotenv(BASE_PATH / '.env')
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger('HololiveStats')
@@ -91,12 +98,12 @@ channels = [
 
     # Staff
     {'name': 'Best Girl (Yagoo)', 'bg': '#C3B4AF', 'fg': '#fff', 'twitter':  'tanigox',         'youtube': 'UCu2DMOGLeR_DSStCyeQpi5Q', 'bilibili': ''},
-    {'name': 'A-Chan',            'bg': '#413982', 'fg': '#fff', 'twitter':  'achan_UGA',       'youtube': '', 'bilibili': ''},
+    {'name': 'A-Chan',            'bg': '#413982', 'fg': '#fff', 'twitter':  'achan_uga',       'youtube': '', 'bilibili': ''},
 ]
 
 # YouTube
 parts = ['statistics']
-yt_key = ''
+yt_key = os.environ['YOUTUBE_KEY']
 yt_url = 'https://www.googleapis.com/youtube/v3/channels?part={parts}&id={channels}&key={key}'
 
 LOG.info('Getting YouTube stats...')
@@ -108,18 +115,23 @@ yt_data = requests.get(yt_url.format(
 )).json()
 
 # Twitter
-twitter_api = Api(consumer_key='',
-                  consumer_secret='',
-                  access_token_key='',
-                  access_token_secret='')
+twitter_api = Api(consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
+                  consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
+                  access_token_key=os.environ['TWITTER_ACCESS_TOKEN'],
+                  access_token_secret=os.environ['TWITTER_ACCESS_SECRET'])
 
 LOG.info('Getting Twitter stats...')
-t_data = twitter_api.GetListMembersPaged('')[2]
+t_data = twitter_api.GetListMembersPaged(os.environ['TWITTER_MEMBER_LIST'])[2]
 
 # Sort and gather data
 result = []
 for channel_data in channels:
-    t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'], t_data))
+    t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'], t_data), None)
+
+    if not t_user:
+        print(f'No data found for twitter user {channel_data["twitter"]}')
+        sys.exit(1)
+
     channel_data['image'] = t_user.profile_image_url_https.replace('_normal', '')
     channel_data['t_subs'] = int(t_user.followers_count)
 
@@ -141,7 +153,8 @@ for channel_data in channels:
         channel_data['main_subs'] = 't_subs'
 
 result = sorted(channels, reverse=True, key=lambda data: data[data['main_subs']])
+
 # Write stats
-data_file = Path(__file__).absolute().parent / 'www/stats'
+data_file = BASE_PATH / 'www/stats'
 data_file.write_text(json.dumps(result))
 LOG.info('Done')
