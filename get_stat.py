@@ -157,4 +157,6 @@ result = sorted(channels, reverse=True, key=lambda data: data[data['main_subs']]
 # Write stats
 data_file = BASE_PATH / 'www/stats'
 data_file.write_text(json.dumps(result))
+data_file = BASE_PATH / 'www/stats.json'
+data_file.write_text(json.dumps(result))
 LOG.info('Done')
