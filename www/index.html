@@ -42,22 +42,27 @@
       template: `
         <li v-bind:class="member.twitter"
             v-bind:style="{ background: 'linear-gradient(180deg, ' + member.bg + ' 0%, ' + pSBC(-.9, member.bg) + ' 100%)', color: member.fg }">
-          <a v-bind:href="'https://www.youtube.com/channel/' + member.youtube" target="_blank">
+          <a v-bind:href="'https://www.youtube.com/channel/' + member.youtube"
+             v-bind:title="member.name"
+             target="_blank">
             <div class="img"><img v-bind:src="member.image" alt="member.name"></div>
             <span class="name">{{ member.name }}</span>
           </a>
           <div class="buttons">
             <a class="ytFollowersCount followersCount"
                v-bind:href="'https://www.youtube.com/channel/' + member.youtube"
+               v-bind:title="member.yt_subs + ' subscribers on YouTube'"
                v-if="member.yt_subs">
               <span>{{ nFormatter(member.yt_subs, 1) }}</span> YouTube
             </a>
             <a class="bFollowersCount followersCount"
                v-bind:href="'https://space.bilibili.com/' + member.bilibili"
+               v-bind:title="member.b_subs + ' subscribers on Bilibili'"
                v-if="member.b_subs">
               <span>{{ nFormatter(member.b_subs, 1) }}</span> Bilibili
             </a>
             <a class="tFollowersCount followersCount"
+               v-bind:title="member.t_subs + ' subscribers on Twitter'"
                v-bind:href="'https://twitter.com/' + member.twitter">
               <span>{{ nFormatter(member.t_subs, 1) }}</span> Twitter
             </a>
