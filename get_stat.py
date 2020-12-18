@@ -161,18 +161,21 @@ for channel_data in channels:
         print(f'No data found for twitter user {channel_data["name"]}')
         sys.exit(1)
 
-    image_url = URL(t_user.profile_image_url_https.replace('_normal', ''))
+    result_image_url = image_url = URL(t_user.profile_image_url_https.replace('_normal', ''))
     image_path = images_path / image_url.name
-    if not image_path.is_file():
+
+    has_local = image_path.is_file()
+    if not has_local:
         LOG.info(f'Fetching new profile image for {channel_data["name"]}...')
         response = requests.get(image_url)
         if response.status_code == 200:
             image_path.write_bytes(response.content)
+            has_local = True
         else:
             LOG.warning('Failed to retrive image')
+
+    if has_local:
         result_image_url = image_path.relative_to(BASE_PATH / 'www')
-    else:
-        result_image_url = image_url
 
     channel_data['image'] = str(result_image_url)
     channel_data['t_subs'] = int(t_user.followers_count)
