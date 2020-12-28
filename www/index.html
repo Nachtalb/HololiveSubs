@@ -53,18 +53,18 @@
                v-bind:href="'https://www.youtube.com/channel/' + member.youtube"
                v-bind:title="member.yt_subs + ' subscribers on YouTube'"
                v-if="member.yt_subs">
-              <span>{{ nFormatter(member.yt_subs, 1) }}</span> YouTube
+              <span>{{ nFormatter(member.yt_subs, 2) }}</span> YouTube
             </a>
             <a class="bFollowersCount followersCount"
                v-bind:href="'https://space.bilibili.com/' + member.bilibili"
                v-bind:title="member.b_subs + ' subscribers on Bilibili'"
                v-if="member.b_subs">
-              <span>{{ nFormatter(member.b_subs, 1) }}</span> Bilibili
+              <span>{{ nFormatter(member.b_subs, 2) }}</span> Bilibili
             </a>
             <a class="tFollowersCount followersCount"
                v-bind:title="member.t_subs + ' subscribers on Twitter'"
                v-bind:href="'https://twitter.com/' + member.twitter">
-              <span>{{ nFormatter(member.t_subs, 1) }}</span> Twitter
+              <span>{{ nFormatter(member.t_subs, 2) }}</span> Twitter
             </a>
           </div>
         </li>`,
