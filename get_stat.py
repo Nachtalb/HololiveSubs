@@ -122,9 +122,10 @@ channels = [
     {'id': 2, 'name': 'A-Chan',            'bg': '#413982', 'fg': '#fff', 'twitter':  'achan_uga',       'youtube': '',                         'bilibili': '',  'group': 'staff'},
 
     # Official Corp Stuff
-    {'id': 1, 'name': 'Japanese Branch',   'bg': '#61DFEB', 'fg': '#fff', 'twitter':  'hololivetv',  'youtube': 'UCJFZiqLMntJufDCHc6bQixg', 'bilibili': '286700005',  'group': 'corp'},
-    {'id': 2, 'name': 'English Branch',    'bg': '#45C2F2', 'fg': '#fff', 'twitter':  'hololive_en', 'youtube': '',                         'bilibili': '',           'group': 'corp'},
-    {'id': 3, 'name': 'Indonesian Branch', 'bg': '#3AAAE2', 'fg': '#fff', 'twitter':  'hololive_id', 'youtube': 'UCfrWoRGlawPQDQxxeIDRP0Q', 'bilibili': '',           'group': 'corp'},
+    {'id': 1, 'name': 'Japanese Branch',      'bg': '#61DFEB', 'fg': '#fff', 'twitter': 'hololivetv',  'youtube': 'UCJFZiqLMntJufDCHc6bQixg', 'bilibili': '286700005',  'group': 'corp'},
+    {'id': 2, 'name': 'English Branch',       'bg': '#45C2F2', 'fg': '#fff', 'twitter': 'hololive_en', 'youtube': '',                         'bilibili': '',           'group': 'corp'},
+    {'id': 3, 'name': 'Indonesian Branch',    'bg': '#3AAAE2', 'fg': '#fff', 'twitter': 'hololive_id', 'youtube': 'UCfrWoRGlawPQDQxxeIDRP0Q', 'bilibili': '',           'group': 'corp'},
+    {'id': 4, 'name': 'Hololive Alternative', 'bg': '#0437BF', 'fg': '#fff', 'twitter': 'hololiveALT', 'youtube': '',                         'bilibili': '',           'group': 'corp'},
 ]
 
 # YouTube
@@ -155,7 +156,7 @@ images_path.mkdir(parents=True, exist_ok=True)
 # Sort and gather data
 result = []
 for channel_data in channels:
-    t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'], t_data), None)
+    t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'].lower(), t_data), None)
 
     if not t_user:
         print(f'No data found for twitter user {channel_data["name"]}')
