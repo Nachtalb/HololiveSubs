@@ -34,15 +34,16 @@
   <footer>
     Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
     Updates every 30min. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
+    <label for="showretired">Show retired: <input type="checkbox" name="showretired" checked=""></label>
   </footer>
 
   <script>
     Vue.component('member-card', {
       props: ['member'],
       template: `
-        <li v-bind:class="member.twitter"
+        <li v-bind:class="[member.twitter, member.retired ? 'retired' : '']"
             v-bind:style="{ background: 'linear-gradient(180deg, ' + member.bg + ' 0%, ' + pSBC(-.9, member.bg) + ' 100%)', color: member.fg }">
-          <a v-bind:href="'https://www.youtube.com/channel/' + member.youtube"
+          <a v-bind:href="mainLink"
              v-bind:title="member.name"
              target="_blank">
             <div class="img"><img v-bind:src="member.image" alt="member.name"></div>
@@ -68,6 +69,19 @@
             </a>
           </div>
         </li>`,
+      computed: {
+        mainLink: function () {
+          if (this.member.yt_subs) {
+            return 'https://youtube.com/channel/' + this.member.youtube
+          } else if (this.member.t_subs) {
+            return 'https://twitter.com/' + this.member.twitter
+          } else if (this.member.b_subs) {
+            return 'https://space.bilibili.com/' + member.bilibili
+          } else {
+            return '#'
+          }
+        }
+      },
       methods: {
         // https://stackoverflow.com/a/13542669/5699307
         pSBC(p,c0,c1,l) {
@@ -136,13 +150,33 @@
       el: '#app',
       data: {
         groups: {},
+        showRetired: true,
       },
       mounted() {
+        const value = window.localStorage.getItem('showRetired');
+        this.showRetired = value === null ? true : value === 'true' ? true : false;
+
         axios
           .get('stats')
           .then(response => {
             this.groups = response.data
           });
+
+        const toggler = document.getElementsByName('showretired')[0];
+        toggler.onchange = this.toggleRetired;
+        toggler.checked = this.showRetired;
+        this.setClass();
+      },
+      methods: {
+        setClass: function() {
+          document.body.className = this.showRetired ? 'showRetired' : '';
+        },
+        toggleRetired: function() {
+          console.log('shiz');
+          this.showRetired = !this.showRetired;
+          window.localStorage.setItem('showRetired', this.showRetired);
+          this.setClass();
+        }
       },
     });
   </script>

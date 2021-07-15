@@ -73,6 +73,7 @@ li {
   list-style: none;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 img {
@@ -147,6 +148,25 @@ a:hover img {
     max-width: 200px;
 }
 
+.showRetired .retired {
+  display: flex;
+}
+
+.retired {
+  opacity: 0.7;
+  display: none;
+}
+
+li.retired::after {
+  content: "Retired";
+  position: absolute;
+  top: 10px;
+  padding: 3px;
+  right: 10px;
+  border-radius: 6px;
+  background: red;
+}
+
 .buttons {
   display: flex;
   flex-direction: column;
@@ -158,6 +178,15 @@ footer {
   text-align: center;
   font-size: .7em;
   margin: 1em 0;
+}
+
+footer a {
+  color: hotpink;
+}
+
+input {
+  margin: 0;
+  vertical-align: text-top;
 }
 
 /* roboto-100 - latin */

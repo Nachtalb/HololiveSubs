@@ -44,88 +44,88 @@ channels = [
     # {'name': '',  'bg': '#', 'fg': '#fff', 'twitter':  '', 'youtube': '', 'bilibili': ''},
 
     # Japan Gen 0
-    {'id': 1, 'name': 'Hoshimachi Suisei', 'bg': '#799acb', 'fg': '#fff', 'twitter':  'suisei_hosimati', 'youtube': 'UC5CwaMl1eIgY8h02uZw7u8A', 'bilibili': '9034870'},
-    {'id': 2, 'name': 'Roboco San',        'bg': '#af7425', 'fg': '#fff', 'twitter':  'robocosan',       'youtube': 'UCDqI2jOz0weumE8s7paEk6g', 'bilibili': '20813493'},
-    {'id': 3, 'name': 'Sakura Miko',       'bg': '#f6a1a8', 'fg': '#fff', 'twitter':  'sakuramiko35',    'youtube': 'UC-hM6YJuNYVAmUWxeIr9FeA', 'bilibili': '366690056'},
-    {'id': 4, 'name': 'Tokino Sora',       'bg': '#be6c5e', 'fg': '#fff', 'twitter':  'tokino_sora',     'youtube': 'UCp6993wxpyDPHUpavwDFqgg', 'bilibili': '286179206'},
+    {'id': 1, 'name': 'Hoshimachi Suisei', 'bg': '#799acb', 'fg': '#fff', 'twitter':  'suisei_hosimati', 'youtube': 'UC5CwaMl1eIgY8h02uZw7u8A', 'bilibili': '9034870',   'retired': False},
+    {'id': 2, 'name': 'Roboco San',        'bg': '#af7425', 'fg': '#fff', 'twitter':  'robocosan',       'youtube': 'UCDqI2jOz0weumE8s7paEk6g', 'bilibili': '20813493',  'retired': False},
+    {'id': 3, 'name': 'Sakura Miko',       'bg': '#f6a1a8', 'fg': '#fff', 'twitter':  'sakuramiko35',    'youtube': 'UC-hM6YJuNYVAmUWxeIr9FeA', 'bilibili': '366690056', 'retired': False},
+    {'id': 4, 'name': 'Tokino Sora',       'bg': '#be6c5e', 'fg': '#fff', 'twitter':  'tokino_sora',     'youtube': 'UCp6993wxpyDPHUpavwDFqgg', 'bilibili': '286179206', 'retired': False},
 
     # Japan INoNaKa Music
-    {'id': 4, 'name': 'AZKi',              'bg': '#6cbabc', 'fg': '#fff', 'twitter':  'azki_vdiva',      'youtube': 'UC0TXe_LYZ4scaW2XMyi5_kw', 'bilibili': '389056211'},
+    {'id': 4, 'name': 'AZKi',              'bg': '#6cbabc', 'fg': '#fff', 'twitter':  'azki_vdiva',      'youtube': 'UC0TXe_LYZ4scaW2XMyi5_kw', 'bilibili': '389056211', 'retired': False},
 
     # Japan Gen 1
-    {'id': 5, 'name': 'Akai Haato',        'bg': '#eabb98', 'fg': '#fff', 'twitter':  'akaihaato',       'youtube': 'UC1CfXB_kRs3C-zaeTG3oGyg', 'bilibili': '339567211'},
-    {'id': 6, 'name': 'Aki Rosenthal',     'bg': '#5deaf9', 'fg': '#fff', 'twitter':  'akirosenthal',    'youtube': 'UCFTLzh12_nrtzqBPsTCqenA', 'bilibili': '389857131'},
-    {'id': 7, 'name': 'Natsuiro Matsuri',  'bg': '#edad62', 'fg': '#fff', 'twitter':  'natsuiromatsuri', 'youtube': 'UCQ0UDLQCjY0rmuxCDE38FGg', 'bilibili': '336731767'},
-    {'id': 8, 'name': 'Shirakami Fubuki',  'bg': '#5eb6d0', 'fg': '#fff', 'twitter':  'shirakamifubuki', 'youtube': 'UCdn5BQ06XqgXoAxIhbqw5Rg', 'bilibili': '332704117'},
-    {'id': 9, 'name': 'Yozora Mel',        'bg': '#d7a86a', 'fg': '#fff', 'twitter':  'yozoramel',       'youtube': 'UCD8HOxPs4Xvsm8H0ZxXGiBw', 'bilibili': '389856447'},
+    {'id': 5, 'name': 'Akai Haato',        'bg': '#eabb98', 'fg': '#fff', 'twitter':  'akaihaato',       'youtube': 'UC1CfXB_kRs3C-zaeTG3oGyg', 'bilibili': '339567211', 'retired': False},
+    {'id': 6, 'name': 'Aki Rosenthal',     'bg': '#5deaf9', 'fg': '#fff', 'twitter':  'akirosenthal',    'youtube': 'UCFTLzh12_nrtzqBPsTCqenA', 'bilibili': '389857131', 'retired': False},
+    {'id': 7, 'name': 'Natsuiro Matsuri',  'bg': '#edad62', 'fg': '#fff', 'twitter':  'natsuiromatsuri', 'youtube': 'UCQ0UDLQCjY0rmuxCDE38FGg', 'bilibili': '336731767', 'retired': False},
+    {'id': 8, 'name': 'Shirakami Fubuki',  'bg': '#5eb6d0', 'fg': '#fff', 'twitter':  'shirakamifubuki', 'youtube': 'UCdn5BQ06XqgXoAxIhbqw5Rg', 'bilibili': '332704117', 'retired': False},
+    {'id': 9, 'name': 'Yozora Mel',        'bg': '#d7a86a', 'fg': '#fff', 'twitter':  'yozoramel',       'youtube': 'UCD8HOxPs4Xvsm8H0ZxXGiBw', 'bilibili': '389856447', 'retired': False},
 
     # Japan Gen 2
-    {'id': 10, 'name': 'Minato Aqua',       'bg': '#793559', 'fg': '#fff', 'twitter':  'minatoaqua',      'youtube': 'UC1opHUrw8rvnsadT-iGp7Cg', 'bilibili': '375504219'},
-    {'id': 11, 'name': 'Murasaki Shion',    'bg': '#4f3756', 'fg': '#fff', 'twitter':  'murasakishionch', 'youtube': 'UCXTpFs_3PqI41qX2d9tL2Rw', 'bilibili': '389857640'},
-    {'id': 12, 'name': 'Nakiri Ayame',      'bg': '#bf8996', 'fg': '#fff', 'twitter':  'nakiriayame',     'youtube': 'UC7fk0CB07ly8oSl0aqKkqFg', 'bilibili': '389858027'},
-    {'id': 13, 'name': 'Oozora Subaru',     'bg': '#6db2ce', 'fg': '#fff', 'twitter':  'oozorasubaru',    'youtube': 'UCvzGlP9oQwU--Y0r9id_jnA', 'bilibili': '389859190'},
-    {'id': 14, 'name': 'Yuzuki Choco',      'bg': '#eb9f74', 'fg': '#fff', 'twitter':  'yuzukichococh',   'youtube': 'UC1suqwovbL1kzsoaZgFZLKg', 'bilibili': '389858754'},
+    {'id': 10, 'name': 'Minato Aqua',       'bg': '#793559', 'fg': '#fff', 'twitter':  'minatoaqua',      'youtube': 'UC1opHUrw8rvnsadT-iGp7Cg', 'bilibili': '375504219', 'retired': False},
+    {'id': 11, 'name': 'Murasaki Shion',    'bg': '#4f3756', 'fg': '#fff', 'twitter':  'murasakishionch', 'youtube': 'UCXTpFs_3PqI41qX2d9tL2Rw', 'bilibili': '389857640', 'retired': False},
+    {'id': 12, 'name': 'Nakiri Ayame',      'bg': '#bf8996', 'fg': '#fff', 'twitter':  'nakiriayame',     'youtube': 'UC7fk0CB07ly8oSl0aqKkqFg', 'bilibili': '389858027', 'retired': False},
+    {'id': 13, 'name': 'Oozora Subaru',     'bg': '#6db2ce', 'fg': '#fff', 'twitter':  'oozorasubaru',    'youtube': 'UCvzGlP9oQwU--Y0r9id_jnA', 'bilibili': '389859190', 'retired': False},
+    {'id': 14, 'name': 'Yuzuki Choco',      'bg': '#eb9f74', 'fg': '#fff', 'twitter':  'yuzukichococh',   'youtube': 'UC1suqwovbL1kzsoaZgFZLKg', 'bilibili': '389858754', 'retired': False},
 
     # Japan Gamers
-    {'id': 15, 'name': 'Ookami Mio',        'bg': '#c6535c', 'fg': '#fff', 'twitter':  'ookamimio',       'youtube': 'UCp-5t9SrOQwXMU7iIjQfARg', 'bilibili': '389862071'},
-    {'id': 16, 'name': 'Nekomata Okayu',    'bg': '#aa8caf', 'fg': '#fff', 'twitter':  'nekomataokayu',   'youtube': 'UCvaTdHTWBGv3MKj3KVqJVCw', 'bilibili': '412135222'},
-    {'id': 17, 'name': 'Inugami Korone',    'bg': '#c88382', 'fg': '#fff', 'twitter':  'inugamikorone',   'youtube': 'UChAnqc_AY5_I3Px5dig3X1Q', 'bilibili': '412135619'},
+    {'id': 15, 'name': 'Ookami Mio',        'bg': '#c6535c', 'fg': '#fff', 'twitter':  'ookamimio',       'youtube': 'UCp-5t9SrOQwXMU7iIjQfARg', 'bilibili': '389862071', 'retired': False},
+    {'id': 16, 'name': 'Nekomata Okayu',    'bg': '#aa8caf', 'fg': '#fff', 'twitter':  'nekomataokayu',   'youtube': 'UCvaTdHTWBGv3MKj3KVqJVCw', 'bilibili': '412135222', 'retired': False},
+    {'id': 17, 'name': 'Inugami Korone',    'bg': '#c88382', 'fg': '#fff', 'twitter':  'inugamikorone',   'youtube': 'UChAnqc_AY5_I3Px5dig3X1Q', 'bilibili': '412135619', 'retired': False},
 
     # Japan Gen 3
-    {'id': 18, 'name': 'Houshou Marine',    'bg': '#dc6e7f', 'fg': '#fff', 'twitter':  'houshoumarine',   'youtube': 'UCCzUftO8KOVkV4wQG1vkUvg', 'bilibili': '454955503'},
-    {'id': 19, 'name': 'Shiranui Flare',    'bg': '#5bb39d', 'fg': '#fff', 'twitter':  'shiranuiflare',   'youtube': 'UCvInZx9h3jC2JzsIzoOebWg', 'bilibili': '454737600'},
-    {'id': 20, 'name': 'Shirogane Noel',    'bg': '#dccdcd', 'fg': '#fff', 'twitter':  'shiroganenoel',   'youtube': 'UCdyqAaZDKHXg4Ahi7VENThQ', 'bilibili': '454733056'},
-    {'id': 21, 'name': 'Uruha Rushia',      'bg': '#80d3c3', 'fg': '#fff', 'twitter':  'uruharushia',     'youtube': 'UCl_gCybOJRIgOXw6Qb4qJzQ', 'bilibili': '443300418'},
-    {'id': 22, 'name': 'Usada Pekora',      'bg': '#acc0ee', 'fg': '#fff', 'twitter':  'usadapekora',     'youtube': 'UC1DCedRgGHBdm81E1llLhOQ', 'bilibili': '443305053'},
+    {'id': 18, 'name': 'Houshou Marine',    'bg': '#dc6e7f', 'fg': '#fff', 'twitter':  'houshoumarine',   'youtube': 'UCCzUftO8KOVkV4wQG1vkUvg', 'bilibili': '454955503', 'retired': False},
+    {'id': 19, 'name': 'Shiranui Flare',    'bg': '#5bb39d', 'fg': '#fff', 'twitter':  'shiranuiflare',   'youtube': 'UCvInZx9h3jC2JzsIzoOebWg', 'bilibili': '454737600', 'retired': False},
+    {'id': 20, 'name': 'Shirogane Noel',    'bg': '#dccdcd', 'fg': '#fff', 'twitter':  'shiroganenoel',   'youtube': 'UCdyqAaZDKHXg4Ahi7VENThQ', 'bilibili': '454733056', 'retired': False},
+    {'id': 21, 'name': 'Uruha Rushia',      'bg': '#80d3c3', 'fg': '#fff', 'twitter':  'uruharushia',     'youtube': 'UCl_gCybOJRIgOXw6Qb4qJzQ', 'bilibili': '443300418', 'retired': False},
+    {'id': 22, 'name': 'Usada Pekora',      'bg': '#acc0ee', 'fg': '#fff', 'twitter':  'usadapekora',     'youtube': 'UC1DCedRgGHBdm81E1llLhOQ', 'bilibili': '443305053', 'retired': False},
 
     # Japan Gen 4
-    {'id': 23, 'name': 'Amane Kanata',      'bg': '#2650d0', 'fg': '#fff', 'twitter':  'amanekanatach',   'youtube': 'UCZlDXzGoo7d44bwdNObFacg', 'bilibili': '491474048'},
-    {'id': 24, 'name': 'Himemori Luna',     'bg': '#93446d', 'fg': '#fff', 'twitter':  'himemoriluna',    'youtube': 'UCa9Y57gfeY0Zro_noHRVrnw', 'bilibili': '491474052'},
-    {'id': 25, 'name': 'Kiryu Coco',        'bg': '#db9574', 'fg': '#fff', 'twitter':  'kiryucoco',       'youtube': 'UCS9uQI-jC3DE0L4IpXyvr6w', 'bilibili': '491474049'},
-    {'id': 26, 'name': 'Tokoyami Towa',     'bg': '#d197ce', 'fg': '#fff', 'twitter':  'tokoyamitowa',    'youtube': 'UC1uv2Oq6kNxgATlCiez59hw', 'bilibili': '491474051'},
-    {'id': 27, 'name': 'Tsunomaki Watame',  'bg': '#e4d3a3', 'fg': '#fff', 'twitter':  'tsunomakiwatame', 'youtube': 'UCqm3BQLlJfvkTsX_hvm0UmA', 'bilibili': '491474050'},
+    {'id': 23, 'name': 'Amane Kanata',      'bg': '#2650d0', 'fg': '#fff', 'twitter':  'amanekanatach',   'youtube': 'UCZlDXzGoo7d44bwdNObFacg', 'bilibili': '491474048', 'retired': False},
+    {'id': 24, 'name': 'Himemori Luna',     'bg': '#93446d', 'fg': '#fff', 'twitter':  'himemoriluna',    'youtube': 'UCa9Y57gfeY0Zro_noHRVrnw', 'bilibili': '491474052', 'retired': False},
+    {'id': 25, 'name': 'Kiryu Coco',        'bg': '#db9574', 'fg': '#fff', 'twitter':  'kiryucoco',       'youtube': 'UCS9uQI-jC3DE0L4IpXyvr6w', 'bilibili': '491474049', 'retired': True},
+    {'id': 26, 'name': 'Tokoyami Towa',     'bg': '#d197ce', 'fg': '#fff', 'twitter':  'tokoyamitowa',    'youtube': 'UC1uv2Oq6kNxgATlCiez59hw', 'bilibili': '491474051', 'retired': False},
+    {'id': 27, 'name': 'Tsunomaki Watame',  'bg': '#e4d3a3', 'fg': '#fff', 'twitter':  'tsunomakiwatame', 'youtube': 'UCqm3BQLlJfvkTsX_hvm0UmA', 'bilibili': '491474050', 'retired': False},
 
     # Jap 5th gen
     # {'id': 0, 'name': 'Mano Aloe',         'bg': '#DA8EAC', 'fg': '#fff', 'twitter':  'manoaloe',        'youtube': 'UCgZuwn-O7Szh9cAgHqJ6vjw', 'bilibili': ''},
-    {'id': 28, 'name': 'Momosuzu Nene',     'bg': '#E9D7D2', 'fg': '#fff', 'twitter':  'momosuzunene',    'youtube': 'UCAWSyEs_Io8MtpY3m-zqILA', 'bilibili': ''},
-    {'id': 29, 'name': 'Omaru Polka',       'bg': '#37465C', 'fg': '#fff', 'twitter':  'omarupolka',      'youtube': 'UCK9V2B22uJYu3N7eR_BT9QA', 'bilibili': ''},
-    {'id': 30, 'name': 'Shishiro Botan',    'bg': '#322C34', 'fg': '#fff', 'twitter':  'shishirobotan',   'youtube': 'UCUKD-uaobj9jiqB-VXt71mA', 'bilibili': ''},
-    {'id': 31, 'name': 'Yukihana Lamy',     'bg': '#7895B8', 'fg': '#fff', 'twitter':  'yukihanalamy',    'youtube': 'UCFKOVgVbGmX65RxO3EtH3iw', 'bilibili': '624252706'},
+    {'id': 28, 'name': 'Momosuzu Nene',     'bg': '#E9D7D2', 'fg': '#fff', 'twitter':  'momosuzunene',    'youtube': 'UCAWSyEs_Io8MtpY3m-zqILA', 'bilibili': '',          'retired': False},
+    {'id': 29, 'name': 'Omaru Polka',       'bg': '#37465C', 'fg': '#fff', 'twitter':  'omarupolka',      'youtube': 'UCK9V2B22uJYu3N7eR_BT9QA', 'bilibili': '',          'retired': False},
+    {'id': 30, 'name': 'Shishiro Botan',    'bg': '#322C34', 'fg': '#fff', 'twitter':  'shishirobotan',   'youtube': 'UCUKD-uaobj9jiqB-VXt71mA', 'bilibili': '',          'retired': False},
+    {'id': 31, 'name': 'Yukihana Lamy',     'bg': '#7895B8', 'fg': '#fff', 'twitter':  'yukihanalamy',    'youtube': 'UCFKOVgVbGmX65RxO3EtH3iw', 'bilibili': '624252706', 'retired': False},
 
     # English
-    {'id': 32, 'name': 'Ninomae Ina\'nis',  'bg': '#62567E', 'fg': '#fff', 'twitter':  'ninomaeinanis',   'youtube': 'UCMwGHR0BTZuLsmjY_NT5Pwg', 'bilibili': ''},
-    {'id': 33, 'name': 'Gawr Gura',         'bg': '#5C81C7', 'fg': '#fff', 'twitter':  'gawrgura',        'youtube': 'UCoSrY_IQQVpmIRZ9Xf-y93g', 'bilibili': ''},
-    {'id': 34, 'name': 'Takanashi Kiara',   'bg': '#FF511C', 'fg': '#fff', 'twitter':  'takanashikiara',  'youtube': 'UCHsx4Hqa-1ORjQTh9TYDhww', 'bilibili': ''},
-    {'id': 35, 'name': 'Mori Calliope',     'bg': '#C90D40', 'fg': '#fff', 'twitter':  'moricalliope',    'youtube': 'UCL_qhgtOy0dy1Agp8vkySQg', 'bilibili': ''},
-    {'id': 36, 'name': 'Watson Amelia',     'bg': '#F7DB92', 'fg': '#fff', 'twitter':  'watsonameliaen',  'youtube': 'UCyl1z3jo3XHR1riLFKG5UAg', 'bilibili': ''},
+    {'id': 32, 'name': 'Ninomae Ina\'nis',  'bg': '#62567E', 'fg': '#fff', 'twitter':  'ninomaeinanis',   'youtube': 'UCMwGHR0BTZuLsmjY_NT5Pwg', 'bilibili': '', 'retired': False},
+    {'id': 33, 'name': 'Gawr Gura',         'bg': '#5C81C7', 'fg': '#fff', 'twitter':  'gawrgura',        'youtube': 'UCoSrY_IQQVpmIRZ9Xf-y93g', 'bilibili': '', 'retired': False},
+    {'id': 34, 'name': 'Takanashi Kiara',   'bg': '#FF511C', 'fg': '#fff', 'twitter':  'takanashikiara',  'youtube': 'UCHsx4Hqa-1ORjQTh9TYDhww', 'bilibili': '', 'retired': False},
+    {'id': 35, 'name': 'Mori Calliope',     'bg': '#C90D40', 'fg': '#fff', 'twitter':  'moricalliope',    'youtube': 'UCL_qhgtOy0dy1Agp8vkySQg', 'bilibili': '', 'retired': False},
+    {'id': 36, 'name': 'Watson Amelia',     'bg': '#F7DB92', 'fg': '#fff', 'twitter':  'watsonameliaen',  'youtube': 'UCyl1z3jo3XHR1riLFKG5UAg', 'bilibili': '', 'retired': False},
 
     # Indonesia
-    {'id': 37, 'name': 'Airani Iofifteen',  'bg': '#be8b8f', 'fg': '#fff', 'twitter':  'airaniiofifteen', 'youtube': 'UCAoy6rzhSf4ydcYjJw3WoVg', 'bilibili': ''},
-    {'id': 38, 'name': 'Ayunda Risu',       'bg': '#d48d85', 'fg': '#fff', 'twitter':  'ayunda_risu',     'youtube': 'UCOyYb1c43VlX9rc_lT6NKQw', 'bilibili': ''},
-    {'id': 39, 'name': 'Moona Hoshinova',   'bg': '#9b85c1', 'fg': '#fff', 'twitter':  'moonahoshinova',  'youtube': 'UCP0BspO_AMEe3aQqqpo89Dg', 'bilibili': ''},
+    {'id': 37, 'name': 'Airani Iofifteen',  'bg': '#be8b8f', 'fg': '#fff', 'twitter':  'airaniiofifteen', 'youtube': 'UCAoy6rzhSf4ydcYjJw3WoVg', 'bilibili': '', 'retired': False},
+    {'id': 38, 'name': 'Ayunda Risu',       'bg': '#d48d85', 'fg': '#fff', 'twitter':  'ayunda_risu',     'youtube': 'UCOyYb1c43VlX9rc_lT6NKQw', 'bilibili': '', 'retired': False},
+    {'id': 39, 'name': 'Moona Hoshinova',   'bg': '#9b85c1', 'fg': '#fff', 'twitter':  'moonahoshinova',  'youtube': 'UCP0BspO_AMEe3aQqqpo89Dg', 'bilibili': '', 'retired': False},
 
     # Indonesia 2nd gen
-    {'id': 40, 'name': 'Kureiji Ollie',     'bg': '#E7004E', 'fg': '#fff', 'twitter':  'kureijiollie',    'youtube': 'UCYz_5n-uDuChHtLo7My1HnQ', 'bilibili': ''},
-    {'id': 41, 'name': 'Anya Melfissa',     'bg': '#DAB75B', 'fg': '#fff', 'twitter':  'anyamelfissa',    'youtube': 'UC727SQYUvx5pDDGQpTICNWg', 'bilibili': ''},
-    {'id': 42, 'name': 'Pavolia Reine',     'bg': '#2A64AE', 'fg': '#fff', 'twitter':  'pavoliareine',    'youtube': 'UChgTyjG-pdNvxxhdsXfHQ5Q', 'bilibili': ''},
+    {'id': 40, 'name': 'Kureiji Ollie',     'bg': '#E7004E', 'fg': '#fff', 'twitter':  'kureijiollie',    'youtube': 'UCYz_5n-uDuChHtLo7My1HnQ', 'bilibili': '', 'retired': False},
+    {'id': 41, 'name': 'Anya Melfissa',     'bg': '#DAB75B', 'fg': '#fff', 'twitter':  'anyamelfissa',    'youtube': 'UC727SQYUvx5pDDGQpTICNWg', 'bilibili': '', 'retired': False},
+    {'id': 42, 'name': 'Pavolia Reine',     'bg': '#2A64AE', 'fg': '#fff', 'twitter':  'pavoliareine',    'youtube': 'UChgTyjG-pdNvxxhdsXfHQ5Q', 'bilibili': '', 'retired': False},
 
     # China
-    # {'id': 0, 'name': 'Artia',             'bg': '#736b99', 'fg': '#fff', 'twitter':  'artia_hololive',  'youtube': '', 'bilibili': '511613155'},
-    # {'id': 0, 'name': 'Civia',             'bg': '#67abd5', 'fg': '#fff', 'twitter':  'civia_hololive',  'youtube': 'UCgNVXGlZIFK96XdEY20sVjg', 'bilibili': '354411419'},
-    # {'id': 0, 'name': 'Doris',             'bg': '#8198c8', 'fg': '#fff', 'twitter':  'doris_hololive',  'youtube': '', 'bilibili': '511613156'},
-    # {'id': 0, 'name': 'Rosalyn',           'bg': '#314268', 'fg': '#fff', 'twitter':  'rosalyn_holocn',  'youtube': '', 'bilibili': '511613157'},
-    # {'id': 0, 'name': 'Spade Echo',        'bg': '#bb88a1', 'fg': '#fff', 'twitter':  'spadeecho',       'youtube': '', 'bilibili': '456368455'},
-    # {'id': 0, 'name': 'Yogiri',            'bg': '#bd536e', 'fg': '#fff', 'twitter':  'yogiri_hololive', 'youtube': '', 'bilibili': '427061218'},
+    {'id': 44, 'name': 'Artia',             'bg': '#736b99', 'fg': '#fff', 'twitter':  'artia_hololive',  'youtube': '',                         'bilibili': '511613155', 'retired': True},
+    {'id': 45, 'name': 'Civia',             'bg': '#67abd5', 'fg': '#fff', 'twitter':  'civia_hololive',  'youtube': 'UCgNVXGlZIFK96XdEY20sVjg', 'bilibili': '354411419', 'retired': True},
+    {'id': 46, 'name': 'Doris',             'bg': '#8198c8', 'fg': '#fff', 'twitter':  'doris_hololive',  'youtube': '',                         'bilibili': '511613156', 'retired': True},
+    {'id': 47, 'name': 'Rosalyn',           'bg': '#314268', 'fg': '#fff', 'twitter':  'rosalyn_holocn',  'youtube': '',                         'bilibili': '511613157', 'retired': True},
+    {'id': 48, 'name': 'Spade Echo',        'bg': '#bb88a1', 'fg': '#fff', 'twitter':  'spadeecho',       'youtube': '',                         'bilibili': '456368455', 'retired': True},
+    {'id': 49, 'name': 'Yogiri',            'bg': '#bd536e', 'fg': '#fff', 'twitter':  'yogiri_hololive', 'youtube': '',                         'bilibili': '427061218', 'retired': True},
 
     # Staff
-    {'id': 1, 'name': 'Best Girl (Yagoo)', 'bg': '#C3B4AF', 'fg': '#fff', 'twitter':  'tanigox',         'youtube': 'UCu2DMOGLeR_DSStCyeQpi5Q', 'bilibili': '',  'group': 'staff'},
-    {'id': 2, 'name': 'A-Chan',            'bg': '#413982', 'fg': '#fff', 'twitter':  'achan_uga',       'youtube': '',                         'bilibili': '',  'group': 'staff'},
+    {'id': 1, 'name': 'Best Girl (Yagoo)', 'bg': '#C3B4AF', 'fg': '#fff', 'twitter':  'tanigox',         'youtube': 'UCu2DMOGLeR_DSStCyeQpi5Q', 'bilibili': '',  'group': 'staff', 'retired': False},
+    {'id': 2, 'name': 'A-Chan',            'bg': '#413982', 'fg': '#fff', 'twitter':  'achan_uga',       'youtube': '',                         'bilibili': '',  'group': 'staff', 'retired': False},
 
     # Official Corp Stuff
-    {'id': 1, 'name': 'Japanese Branch',      'bg': '#61DFEB', 'fg': '#fff', 'twitter': 'hololivetv',  'youtube': 'UCJFZiqLMntJufDCHc6bQixg', 'bilibili': '286700005',  'group': 'corp'},
-    {'id': 2, 'name': 'English Branch',       'bg': '#45C2F2', 'fg': '#fff', 'twitter': 'hololive_en', 'youtube': '',                         'bilibili': '',           'group': 'corp'},
-    {'id': 3, 'name': 'Indonesian Branch',    'bg': '#3AAAE2', 'fg': '#fff', 'twitter': 'hololive_id', 'youtube': 'UCfrWoRGlawPQDQxxeIDRP0Q', 'bilibili': '',           'group': 'corp'},
-    {'id': 4, 'name': 'Hololive Alternative', 'bg': '#0437BF', 'fg': '#fff', 'twitter': 'hololiveALT', 'youtube': '',                         'bilibili': '',           'group': 'corp'},
+    {'id': 1, 'name': 'Japanese Branch',      'bg': '#61DFEB', 'fg': '#fff', 'twitter': 'hololivetv',  'youtube': 'UCJFZiqLMntJufDCHc6bQixg', 'bilibili': '286700005',  'group': 'corp', 'retired': False},
+    {'id': 2, 'name': 'English Branch',       'bg': '#45C2F2', 'fg': '#fff', 'twitter': 'hololive_en', 'youtube': 'UCotXwY6s8pWmuWd_snKYjhg', 'bilibili': '',           'group': 'corp', 'retired': False},
+    {'id': 3, 'name': 'Indonesian Branch',    'bg': '#3AAAE2', 'fg': '#fff', 'twitter': 'hololive_id', 'youtube': 'UCfrWoRGlawPQDQxxeIDRP0Q', 'bilibili': '',           'group': 'corp', 'retired': False},
+    {'id': 4, 'name': 'Hololive Alternative', 'bg': '#0437BF', 'fg': '#fff', 'twitter': 'hololiveALT', 'youtube': '',                         'bilibili': '',           'group': 'corp', 'retired': False},
 ]
 
 # YouTube
