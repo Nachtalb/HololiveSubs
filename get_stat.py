@@ -99,6 +99,9 @@ channels = [
     {'id': 35, 'name': 'Mori Calliope',     'bg': '#C90D40', 'fg': '#fff', 'twitter':  'moricalliope',    'youtube': 'UCL_qhgtOy0dy1Agp8vkySQg', 'bilibili': '', 'retired': False},
     {'id': 36, 'name': 'Watson Amelia',     'bg': '#F7DB92', 'fg': '#fff', 'twitter':  'watsonameliaen',  'youtube': 'UCyl1z3jo3XHR1riLFKG5UAg', 'bilibili': '', 'retired': False},
 
+    # VSinger
+    {'id': 43, 'name': 'IRyS',              'bg': '#390024', 'fg': '#fff', 'twitter': 'irys_en',          'youtube': 'UC8rcEBzJSleTkf_-agPM20g', 'bilibili': '', 'retired': False},
+
     # Indonesia
     {'id': 37, 'name': 'Airani Iofifteen',  'bg': '#be8b8f', 'fg': '#fff', 'twitter':  'airaniiofifteen', 'youtube': 'UCAoy6rzhSf4ydcYjJw3WoVg', 'bilibili': '', 'retired': False},
     {'id': 38, 'name': 'Ayunda Risu',       'bg': '#d48d85', 'fg': '#fff', 'twitter':  'ayunda_risu',     'youtube': 'UCOyYb1c43VlX9rc_lT6NKQw', 'bilibili': '', 'retired': False},
