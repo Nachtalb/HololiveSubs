@@ -123,6 +123,7 @@ main a {
 
 .bFollowersCount {
   background-color: #23aee5;
+  display: none;
 }
 
 .bFollowersCount:hover,
@@ -150,6 +151,10 @@ a:hover img {
 
 .showRetired .retired {
   display: flex;
+}
+
+.showBilibili .bFollowersCount {
+  display: block;
 }
 
 .retired {

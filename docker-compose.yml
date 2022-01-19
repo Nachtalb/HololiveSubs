@@ -1,0 +1,10 @@
+version: '3'
+services:
+  hololive:
+    container_name: hololive
+    image: halverneus/static-file-server:latest
+    restart: unless-stopped
+    ports:
+      - 8001:8080
+    volumes:
+      - ./www/:/web
