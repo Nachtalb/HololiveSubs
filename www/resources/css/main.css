@@ -11,6 +11,10 @@ html, body {
   font-family: 'Roboto';
 }
 
+main {
+  padding-bottom: 2.5em;
+}
+
 h2 {
   font-weight: 100;
 }
@@ -181,8 +185,14 @@ li.retired::after {
 
 footer {
   text-align: center;
-  font-size: .7em;
-  margin: 1em 0;
+  font-size: .8em;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0;
+  background: inherit;
+  padding: 1em 0;
 }
 
 footer a {
