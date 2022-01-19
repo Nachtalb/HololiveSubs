@@ -33,7 +33,8 @@
 
   <footer>
     Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
-    Updates every 30min. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
+    Updates every 30min (<span id="lastUpdated">-</span>). (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
+    <br/>
     <label for="showretired">Show retired: <input type="checkbox" name="showretired" id="showretired" checked=""></label>
     <label for="showbilibili">Show bilibili: <input type="checkbox" name="showbilibili" id="showbilibili" checked=""></label>
   </footer>
@@ -165,7 +166,8 @@
         axios
           .get('stats.json')
           .then(response => {
-            this.groups = response.data
+            this.groups = response.data;
+            document.getElementById('lastUpdated').textContent = response.headers['last-modified'];
           });
 
         const retiredToggle = document.getElementsByName('showretired')[0];
