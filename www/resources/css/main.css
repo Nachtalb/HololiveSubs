@@ -12,7 +12,7 @@ html, body {
 }
 
 main {
-  padding-bottom: 3.5em;
+  padding-bottom: 5em;
 }
 
 h2 {
@@ -39,6 +39,10 @@ ul {
 @media (min-width: 1024px) {
   ul {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  main {
+    padding-bottom: 4em;
   }
 }
 
@@ -193,6 +197,7 @@ footer {
   margin: 0;
   background: inherit;
   padding: 1em 0;
+  line-height: 1.5em;
 }
 
 footer a {
