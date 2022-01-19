@@ -157,7 +157,7 @@
         this.showRetired = value === null ? true : value === 'true' ? true : false;
 
         axios
-          .get('stats')
+          .get('stats.json')
           .then(response => {
             this.groups = response.data
           });
