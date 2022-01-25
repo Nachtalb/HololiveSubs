@@ -175,6 +175,19 @@ t_data = twitter_api.GetListMembersPaged(os.environ['TWITTER_MEMBER_LIST'])[2]
 images_path = BASE_PATH / 'www/profile-images/'
 images_path.mkdir(parents=True, exist_ok=True)
 
+def is_live(channel_id: str) -> bool:
+    try:
+        res = requests.get(f'https://www.youtube.com/channel/{channel_id}/live', headers={
+            'Cookie': 'CONSENT=YES+cb.20210328-17-p0.en-GB+FX+634; VISITOR_INFO1_LIVE=9Ovd7YuEQbw; YSC=Tnb5Btx3xik'
+        })
+        res.raise_for_status()
+        if index := res.text.index('is_viewed_live'):
+            return 'True' in res.text[index+25:index+30]
+    except Exception:
+        pass
+    return False
+
+
 # Sort and gather data
 result = []
 for channel_data in channels:
@@ -213,6 +226,11 @@ for channel_data in channels:
         channel_data['yt_subs'] = int(yt_data[channel_data['youtube']]['statistics']['subscriberCount'])
 
     if channel_data['youtube'] in yt_data:
+        live = False
+        if not channel_data['retired']:
+            LOG.info('Checking if %s is live...', channel_data['name'])
+            live = is_live(channel_data['youtube'])
+        channel_data['is_live'] = live
         channel_data['main_subs'] = 'yt_subs'
     elif b_user:
         channel_data['main_subs'] = 'b_subs'

@@ -43,8 +43,11 @@
     Vue.component('member-card', {
       props: ['member'],
       template: `
-        <li v-bind:class="[member.twitter, member.retired ? 'retired' : '']"
+        <li v-bind:class="[member.twitter, member.retired ? 'retired' : '', member.is_live ? 'live' : '']"
             v-bind:style="{ background: 'linear-gradient(180deg, ' + member.bg + ' 0%, ' + pSBC(-.9, member.bg) + ' 100%)', color: member.fg }">
+          <div class="badges">
+            <span class="badge badge-icon badge-live" v-if="member.is_live">LIVE</span>
+          </div>
           <a v-bind:href="mainLink"
              v-bind:title="member.name"
              target="_blank">
@@ -74,7 +77,7 @@
       computed: {
         mainLink: function () {
           if (this.member.yt_subs) {
-            return 'https://youtube.com/channel/' + this.member.youtube
+            return 'https://youtube.com/channel/' + this.member.youtube + (this.member.is_live ? '/live' : '')
           } else if (this.member.t_subs) {
             return 'https://twitter.com/' + this.member.twitter
           } else if (this.member.b_subs) {

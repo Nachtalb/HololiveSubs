@@ -180,6 +180,35 @@ li.retired::after {
   background: red;
 }
 
+.badges {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.badge {
+  background-color: red;
+  padding: 3px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.badge-icon::before {
+  content: "";
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center left;
+  width: 22px;
+}
+
+.badge-live::before {
+  background-image: url("../icons/radio.svg");
+}
+
 .buttons {
   display: flex;
   flex-direction: column;
