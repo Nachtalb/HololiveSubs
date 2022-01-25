@@ -37,6 +37,7 @@
     <br/>
     <label for="showretired">Show retired: <input type="checkbox" name="showretired" id="showretired" checked=""></label>
     <label for="showbilibili">Show bilibili: <input type="checkbox" name="showbilibili" id="showbilibili" checked=""></label>
+    <label for="lowpolyBackgrounds">Show low-poly backgrounds: <input type="checkbox" name="lowpolyBackgrounds" id="lowpolyBackgrounds" checked=""></label>
   </footer>
 
   <script>
@@ -44,7 +45,7 @@
       props: ['member'],
       template: `
         <li v-bind:class="[member.twitter, member.retired ? 'retired' : '', member.is_live ? 'live' : '']"
-            v-bind:style="{ background: background, color: member.fg }">
+            v-bind:style="{ background: background }">
           <div class="badges">
             <span class="badge badge-icon badge-live" v-if="member.is_live">LIVE</span>
             <span class="badge badge-retired" v-if="member.retired">RETIRED</span>
@@ -53,7 +54,7 @@
              v-bind:title="member.name"
              target="_blank">
             <div class="img"><img v-bind:src="member.image" alt="member.name"></div>
-            <span class="name">{{ member.name }}</span>
+            <span class="name" v-bind:style="nameStyle">{{ member.name }}</span>
           </a>
           <div class="buttons">
             <a class="ytFollowersCount followersCount"
@@ -88,10 +89,17 @@
           }
         },
         background: function() {
-          if (this.member.background_image) {
+          if (this.member.background_image && app.lowpolyBackgrounds) {
             return `url("${this.member.background_image}")`
           } else {
             return `linear-gradient(180deg, ${this.member.bg} 0%, ${this.pSBC(-.9, this.member.bg)} 100%)`
+          }
+        },
+        nameStyle: function () {
+          if (this.member.background_image && app.lowpolyBackgrounds) {
+            return {color: '#222', 'font-weight': 'bold'}
+          } else {
+            return {color: this.member.fg, 'font-weight': 'normal'}
           }
         }
       },
@@ -167,12 +175,15 @@
         groups: {},
         showRetired: true,
         showBilibili: false,
+        lowpolyBackgrounds: true,
       },
       mounted() {
         const retired = window.localStorage.getItem('showRetired');
         const bilibili = window.localStorage.getItem('showBilibili');
+        const lowpolyBackgrounds = window.localStorage.getItem('lowpolyBackgrounds');
         this.showRetired = retired === null ? this.showRetired : retired === 'true' ? true : false;
         this.showBilibili = bilibili === null ? this.showBilibili : bilibili === 'true' ? true : false;
+        this.lowpolyBackgrounds = lowpolyBackgrounds === null ? this.lowpolyBackgrounds: lowpolyBackgrounds=== 'true' ? true : false;
 
         axios
           .get('stats.json')
@@ -187,12 +198,16 @@
         const bilibiliToggle = document.getElementsByName('showbilibili')[0];
         bilibiliToggle.onchange = this.toggleBilibili;
         bilibiliToggle.checked = this.showBilibili;
+        const lowpolyBackgroundsToggle = document.getElementsByName('lowpolyBackgrounds')[0];
+        lowpolyBackgroundsToggle.onchange = this.toggleLowpolyBackgrounds;
+        lowpolyBackgroundsToggle.checked = this.lowpolyBackgrounds;
         this.setClass();
       },
       methods: {
         setClass: function() {
           document.body.classList.toggle('showRetired', this.showRetired);
           document.body.classList.toggle('showBilibili', this.showBilibili);
+          document.body.classList.toggle('lowpolyBackgrounds', this.lowpolyBackgrounds);
         },
         toggleRetired: function() {
           console.log('shiz');
@@ -201,9 +216,13 @@
           this.setClass();
         },
         toggleBilibili: function() {
-          console.log('shiz');
           this.showBilibili = !this.showBilibili;
           window.localStorage.setItem('showBilibili', this.showBilibili);
+          this.setClass();
+        },
+        toggleLowpolyBackgrounds: function() {
+          this.lowpolyBackgrounds = !this.lowpolyBackgrounds;
+          window.localStorage.setItem('lowpolyBackgrounds', this.lowpolyBackgrounds);
           this.setClass();
         }
       },
