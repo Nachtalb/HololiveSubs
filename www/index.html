@@ -47,6 +47,7 @@
             v-bind:style="{ background: 'linear-gradient(180deg, ' + member.bg + ' 0%, ' + pSBC(-.9, member.bg) + ' 100%)', color: member.fg }">
           <div class="badges">
             <span class="badge badge-icon badge-live" v-if="member.is_live">LIVE</span>
+            <span class="badge badge-retired" v-if="member.retired">RETIRED</span>
           </div>
           <a v-bind:href="mainLink"
              v-bind:title="member.name"
