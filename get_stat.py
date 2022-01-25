@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from concurrent.futures import ThreadPoolExecutor
 import json
 import logging
 import os
@@ -188,9 +189,7 @@ def is_live(channel_id: str) -> bool:
     return False
 
 
-# Sort and gather data
-result = []
-for channel_data in channels:
+def summarize_data(channel_data: dict):
     t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'].lower(), t_data), None)
 
     if not t_user:
@@ -216,7 +215,7 @@ for channel_data in channels:
     channel_data['image'] = str(result_image_url)
     channel_data['t_subs'] = int(t_user.followers_count)
 
-    b_user, yt_user= None, None
+    b_user = None
 
     if channel_data['bilibili']:
         LOG.info('Getting BiliBili stats for %s...', channel_data['name'])
@@ -236,6 +235,11 @@ for channel_data in channels:
         channel_data['main_subs'] = 'b_subs'
     else:
         channel_data['main_subs'] = 't_subs'
+
+# Sort and gather data
+with ThreadPoolExecutor(5) as executor:
+    for channel_data in channels:
+        executor.submit(summarize_data, channel_data)
 
 for data in sorted(channels, reverse=True, key=lambda data: data[data['main_subs']]):
     group_name = data.get('group', 'talents')
