@@ -41,6 +41,7 @@ img {
   border-radius: 50%;
   transition: transform ease-in-out 0.2s;
   width: 100%;
+  border: 1px solid white;
 }
 
 main a:not(.followersCount) {
@@ -95,6 +96,10 @@ a:focus {
 }
 
 main a:hover {
+  text-shadow: 0 0 5px #777;
+}
+
+.simpleBackgrounds main a:hover {
   text-shadow: 0 0 5px;
 }
 
