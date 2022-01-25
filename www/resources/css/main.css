@@ -11,10 +11,6 @@ html, body {
   font-family: 'Roboto';
 }
 
-main {
-  padding-bottom: 5em;
-}
-
 h2 {
   font-weight: 100;
 }
@@ -29,53 +25,6 @@ ul {
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1px;
 }
-
-@media (min-width: 768px) {
-  ul {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  ul {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  main {
-    padding-bottom: 4em;
-  }
-}
-
-@media (min-width: 1440px) {
-  ul {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
-@media (min-width: 2560px) {
-  ul {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
-
-@media (min-width: 2560px) {
-  ul {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
-
-@media (min-width: 3440px) {
-  ul {
-    grid-template-columns: repeat(7, 1fr);
-  }
-}
-
-@media (min-width: 3840px) {
-  ul {
-    grid-template-columns: repeat(8, 1fr);
-  }
-}
-
 
 li {
   list-style: none;
@@ -134,7 +83,6 @@ main a {
 
 .bFollowersCount {
   background-color: #23aee5;
-  display: none;
 }
 
 .bFollowersCount:hover,
@@ -160,17 +108,8 @@ a:hover img {
     max-width: 200px;
 }
 
-.showRetired .retired {
-  display: flex;
-}
-
-.showBilibili .bFollowersCount {
-  display: block;
-}
-
-.retired {
+li.retired {
   opacity: 0.7;
-  display: none;
 }
 
 .badges {
@@ -216,18 +155,45 @@ a:hover img {
 footer {
   text-align: center;
   font-size: .8em;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   margin: 0;
   background: inherit;
-  padding: 1em 0;
   line-height: 1.5em;
+  padding-bottom: 5em;
 }
 
 footer a {
   color: hotpink;
+}
+
+#meta {
+  padding: 1em 0;
+}
+
+#settings {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: inherit;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1px;
+}
+
+#settings input {
+  display: none;
+}
+
+#settings input:checked + label {
+  background: #666;
+}
+
+#settings label {
+  padding: 5px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 input {
@@ -253,4 +219,54 @@ input {
   src: local(''),
        url('../fonts/roboto-v20-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
        url('../fonts/roboto-v20-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+@media (min-width: 768px) {
+  ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  footer {
+    padding-bottom: 2.5em;
+  }
+
+  #settings {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1440px) {
+  ul {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 2560px) {
+  ul {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 2560px) {
+  ul {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (min-width: 3440px) {
+  ul {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
+@media (min-width: 3840px) {
+  ul {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }

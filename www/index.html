@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-  <meta content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=3.0" id="viewport" name="viewport">
+  <meta content="width=device-width,initial-scale=1.0,user-scalabel=yes,minimum-scale=1.0,maximum-scale=3.0" id="viewport" name="viewport">
   <meta content="#15181c" name="theme-color">
 
   <meta property="og:title" content="Hololive Subs Realtime" />
@@ -32,19 +32,20 @@
   </main>
 
   <footer>
-    Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
-    Last update: <abbr id="lastUpdated" title="Every 30min">-</abbr>. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
-    <br/>
-    <label for="showretired">Show retired: <input type="checkbox" name="showretired" id="showretired" checked=""></label>
-    <label for="showbilibili">Show bilibili: <input type="checkbox" name="showbilibili" id="showbilibili" checked=""></label>
-    <label for="lowpolyBackgrounds">Show low-poly backgrounds: <input type="checkbox" name="lowpolyBackgrounds" id="lowpolyBackgrounds" checked=""></label>
+    <div id="meta">
+      Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
+      Last update: <abbr id="lastUpdated" title="Every 30min">-</abbr>. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a>
+    </div>
+    <div id="settings">
+    </div>
   </footer>
 
   <script>
     Vue.component('member-card', {
       props: ['member'],
       template: `
-        <li v-bind:class="[member.twitter, member.retired ? 'retired' : '', member.is_live ? 'live' : '']"
+        <li v-if="shown"
+            v-bind:class="[member.twitter, member.retired ? 'retired' : '', member.is_live ? 'live' : '']"
             v-bind:style="liStyle">
           <div class="badges">
             <span class="badge badge-icon badge-live" v-if="member.is_live">LIVE</span>
@@ -66,7 +67,7 @@
             <a class="bFollowersCount followersCount"
                v-bind:href="'https://space.bilibili.com/' + member.bilibili"
                v-bind:title="member.b_subs + ' subscribers on Bilibili'"
-               v-if="member.b_subs">
+               v-if="member.b_subs && app.settings.bilibili.value">
               <span>{{ nFormatter(member.b_subs, 2) }}</span> Bilibili
             </a>
             <a class="tFollowersCount followersCount"
@@ -77,6 +78,12 @@
           </div>
         </li>`,
       computed: {
+        shown: function() {
+          if ((!app.settings.retired.value && this.member.retired) ||
+              (app.settings.onlyLive.value && !this.member.is_live))
+                return false
+            return true
+        },
         mainLink: function () {
           if (this.member.yt_subs) {
             return 'https://youtube.com/channel/' + this.member.youtube + (this.member.is_live ? '/live' : '')
@@ -90,14 +97,13 @@
         },
         liStyle: function() {
           let style = {backgroundImage: `linear-gradient(180deg, ${this.member.bg} 0%, ${this.pSBC(-.9, this.member.bg)} 100%)`}
-          if (this.member.background_image && app.lowpolyBackgrounds) {
+          if (this.member.background_image && !app.settings.simpleBackgrounds.value) {
               style.backgroundImage = `url("${this.member.background_image}"), ${style.backgroundImage}`
           }
-          console.log(style);
           return style
         },
         nameStyle: function () {
-          if (this.member.background_image && app.lowpolyBackgrounds) {
+          if (this.member.background_image && !app.settings.simpleBackgrounds.value) {
             return {color: '#222', 'font-weight': 'bold'}
           } else {
             return {color: this.member.fg, 'font-weight': 'normal'}
@@ -174,18 +180,26 @@
       el: '#app',
       data: {
         groups: {},
-        showRetired: true,
-        showBilibili: false,
-        lowpolyBackgrounds: true,
+        settings: {
+          simpleBackgrounds: {
+            value: false,
+            label: 'Show simple backgrounds',
+          },
+          retired: {
+            value: true,
+            label: 'Show retired',
+          },
+          bilibili: {
+            value: false,
+            label: 'Show Bilibili',
+          },
+          onlyLive: {
+            value: false,
+            label: 'Only show currently live',
+          },
+        }
       },
       mounted() {
-        const retired = window.localStorage.getItem('showRetired');
-        const bilibili = window.localStorage.getItem('showBilibili');
-        const lowpolyBackgrounds = window.localStorage.getItem('lowpolyBackgrounds');
-        this.showRetired = retired === null ? this.showRetired : retired === 'true' ? true : false;
-        this.showBilibili = bilibili === null ? this.showBilibili : bilibili === 'true' ? true : false;
-        this.lowpolyBackgrounds = lowpolyBackgrounds === null ? this.lowpolyBackgrounds: lowpolyBackgrounds=== 'true' ? true : false;
-
         axios
           .get('stats.json')
           .then(response => {
@@ -193,38 +207,41 @@
             document.getElementById('lastUpdated').textContent = response.headers['last-modified'];
           });
 
-        const retiredToggle = document.getElementsByName('showretired')[0];
-        retiredToggle.onchange = this.toggleRetired;
-        retiredToggle.checked = this.showRetired;
-        const bilibiliToggle = document.getElementsByName('showbilibili')[0];
-        bilibiliToggle.onchange = this.toggleBilibili;
-        bilibiliToggle.checked = this.showBilibili;
-        const lowpolyBackgroundsToggle = document.getElementsByName('lowpolyBackgrounds')[0];
-        lowpolyBackgroundsToggle.onchange = this.toggleLowpolyBackgrounds;
-        lowpolyBackgroundsToggle.checked = this.lowpolyBackgrounds;
-        this.setClass();
+          this.loadSettings()
       },
       methods: {
-        setClass: function() {
-          document.body.classList.toggle('showRetired', this.showRetired);
-          document.body.classList.toggle('showBilibili', this.showBilibili);
-          document.body.classList.toggle('lowpolyBackgrounds', this.lowpolyBackgrounds);
+        loadSettings() {
+          let container = document.getElementById('settings');
+          for (const name in this.settings) {
+            let storedValue = window.localStorage.getItem(name)
+            let defaultValue = this.settings[name].value
+            this.settings[name].value = storedValue === null ? defaultValue : (storedValue === 'true' ? true : false)
+
+            let label = document.createElement('label')
+            let box = document.createElement('input')
+            label.setAttribute('for', name)
+            label.textContent = this.settings[name].label
+            box.name = name
+            box.id = name
+            box.type = 'checkbox'
+            box.checked = this.settings[name].value
+
+            box.addEventListener('change', (event) => this.toggleSetting(event.target.name))
+
+            container.append(box)
+            container.append(label)
+          }
+          this.updateClasses()
         },
-        toggleRetired: function() {
-          console.log('shiz');
-          this.showRetired = !this.showRetired;
-          window.localStorage.setItem('showRetired', this.showRetired);
-          this.setClass();
+        toggleSetting(name) {
+          this.settings[name].value = ! this.settings[name].value
+          window.localStorage.setItem(name, this.settings[name].value)
+          this.updateClasses()
         },
-        toggleBilibili: function() {
-          this.showBilibili = !this.showBilibili;
-          window.localStorage.setItem('showBilibili', this.showBilibili);
-          this.setClass();
-        },
-        toggleLowpolyBackgrounds: function() {
-          this.lowpolyBackgrounds = !this.lowpolyBackgrounds;
-          window.localStorage.setItem('lowpolyBackgrounds', this.lowpolyBackgrounds);
-          this.setClass();
+        updateClasses() {
+          for (const name in this.settings) {
+            document.body.classList.toggle(name, this.settings[name].value)
+          }
         }
       },
     });
