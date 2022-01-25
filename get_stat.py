@@ -193,7 +193,7 @@ def summarize_data(channel_data: dict):
     t_user = next(filter(lambda t: t.screen_name.lower() == channel_data['twitter'].lower(), t_data), None)
 
     if not t_user:
-        print(f'No data found for twitter user {channel_data["name"]}')
+        LOG.fatal(f'No data found for twitter user {channel_data["name"]}')
         sys.exit(1)
 
     result_image_url = image_url = URL(t_user.profile_image_url_https.replace('_normal', ''))
