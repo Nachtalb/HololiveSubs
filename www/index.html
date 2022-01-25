@@ -44,7 +44,7 @@
       props: ['member'],
       template: `
         <li v-bind:class="[member.twitter, member.retired ? 'retired' : '', member.is_live ? 'live' : '']"
-            v-bind:style="{ background: 'linear-gradient(180deg, ' + member.bg + ' 0%, ' + pSBC(-.9, member.bg) + ' 100%)', color: member.fg }">
+            v-bind:style="{ background: background, color: member.fg }">
           <div class="badges">
             <span class="badge badge-icon badge-live" v-if="member.is_live">LIVE</span>
             <span class="badge badge-retired" v-if="member.retired">RETIRED</span>
@@ -85,6 +85,13 @@
             return 'https://space.bilibili.com/' + member.bilibili
           } else {
             return '#'
+          }
+        },
+        background: function() {
+          if (this.member.background_image) {
+            return `url("${this.member.background_image}")`
+          } else {
+            return `linear-gradient(180deg, ${this.member.bg} 0%, ${this.pSBC(-.9, this.member.bg)} 100%)`
           }
         }
       },

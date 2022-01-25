@@ -5,6 +5,7 @@ import json
 import logging
 import os
 from pathlib import Path
+from subprocess import Popen
 import sys
 
 from bilibili_api.user import UserInfo
@@ -176,6 +177,8 @@ t_data = twitter_api.GetListMembersPaged(os.environ['TWITTER_MEMBER_LIST'])[2]
 images_path = BASE_PATH / 'www/profile-images/'
 images_path.mkdir(parents=True, exist_ok=True)
 
+low_poly_boy = BASE_PATH / 'triangulate-tool/build/triangulate-tool'
+
 def is_live(channel_id: str) -> bool:
     try:
         res = requests.get(f'https://www.youtube.com/channel/{channel_id}/live', headers={
@@ -196,23 +199,31 @@ def summarize_data(channel_data: dict):
         LOG.fatal(f'No data found for twitter user {channel_data["name"]}')
         sys.exit(1)
 
-    result_image_url = image_url = URL(t_user.profile_image_url_https.replace('_normal', ''))
+    image_url = URL(t_user.profile_image_url_https.replace('_normal', ''))
     image_path = images_path / image_url.name
 
-    has_local = image_path.is_file()
-    if not has_local:
+    if not image_path.is_file():
         LOG.info(f'Fetching new profile image for {channel_data["name"]}...')
         response = requests.get(str(image_url))
         if response.status_code == 200:
             image_path.write_bytes(response.content)
-            has_local = True
         else:
             LOG.warning('Failed to retrive image')
 
-    if has_local:
-        result_image_url = image_path.relative_to(BASE_PATH / 'www')
+    channel_data['image'] = str(image_path.relative_to(BASE_PATH / 'www') if image_path.is_file() else image_url)
 
-    channel_data['image'] = str(result_image_url)
+    channel_data['background_image'] = None
+    background_image = image_path.with_stem(image_path.stem + '_background')
+    if not background_image.is_file() and low_poly_boy.is_file():
+        LOG.info('Generate background image')
+        proc = Popen([str(low_poly_boy), str(image_path), str(background_image), '150', '10'])
+        if proc.wait() != 0:
+            LOG.warning('Failed to generate background image for %s', channel_data['name'])
+
+    if background_image.is_file():
+        channel_data['background_image'] = str(background_image.relative_to(BASE_PATH / 'www'))
+
+
     channel_data['t_subs'] = int(t_user.followers_count)
 
     b_user = None

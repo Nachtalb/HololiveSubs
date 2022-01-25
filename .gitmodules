@@ -1,0 +1,3 @@
+[submodule "triangulate-tool"]
+	path = triangulate-tool
+	url = https://github.com/Nachtalb/triangulate-tool
