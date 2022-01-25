@@ -82,6 +82,9 @@ li {
   display: flex;
   flex-direction: column;
   position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 img {
