@@ -44,6 +44,11 @@ img {
   border: 1px solid white;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
 main a:not(.followersCount) {
   display: flex;
   flex-wrap: wrap;
@@ -123,6 +128,12 @@ li.retired {
   right: 10px;
   display: flex;
   flex-direction: row;
+  z-index: 1;
+}
+
+.badges a {
+  padding: 0;
+  margin: 0;
 }
 
 .badge {
@@ -142,7 +153,12 @@ li.retired {
   width: 22px;
 }
 
-.badge-live::before {
+.badge-scheduled {
+  background-color: #607d8b;
+}
+
+.badge-live::before,
+.badge-scheduled::before {
   background-image: url("../icons/radio.svg");
 }
 
