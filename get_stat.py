@@ -43,7 +43,7 @@ groups = {
 }
 
 channels = [
-    # {'name': '',  'bg': '#', 'fg': '#fff', 'twitter':  '', 'youtube': '', 'bilibili': ''},
+    # {'id': 0, 'name': '',  'bg': '#', 'fg': '#fff', 'twitter':  '', 'youtube': '', 'bilibili': '', 'retired': False},
 
     # Japan Gen 0
     {'id': 1, 'name': 'Hoshimachi Suisei', 'bg': '#799acb', 'fg': '#fff', 'twitter':  'suisei_hosimati', 'youtube': 'UC5CwaMl1eIgY8h02uZw7u8A', 'bilibili': '9034870',   'retired': False},
