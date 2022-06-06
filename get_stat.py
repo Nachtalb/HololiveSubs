@@ -165,7 +165,7 @@ def summarize_data(channel_data: dict, twitter: User, youtube: dict | None):
         "next_live": -1,
     }
 
-    if bilibili := get_bilibili_data(talent):
+    if bilibili := get_bilibili_data(channel_data):
         update_data["bilibili_subs"] = int(bilibili["follower"])
 
     if youtube:
