@@ -2,15 +2,15 @@ Vue.component('member-card', {
   props: ['member'],
   template: `
         <li v-if="shown"
-            v-bind:class="[member.twitter, member.retired ? 'retired' : '', member.next_live === 0 ? 'live' : (member.next_live > 0 ? 'scheduled' : '')]"
+            v-bind:class="[member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (isScheduled ? 'scheduled' : '')]"
             v-bind:style="liStyle">
           <div class="badges">
             <a v-if="member.next_live >= 0"
                v-bind:href="mainLink"
                v-bind:title="member.name"
                target="_blank">
-              <span class="badge badge-icon badge-live" v-if="member.next_live === 0">LIVE</span>
-              <span class="badge badge-icon badge-scheduled" v-if="member.next_live > 0">{{ scheduledTitle }}</span>
+              <span class="badge badge-icon badge-live" v-if="isLive">LIVE</span>
+              <span class="badge badge-icon badge-scheduled" v-if="isScheduled">{{ scheduledTitle }}</span>
             </a>
             <span class="badge badge-retired" v-if="member.retired">RETIRED</span>
           </div>
@@ -41,6 +41,15 @@ Vue.component('member-card', {
           </div>
         </li>`,
   computed: {
+    currentTimestamp: function () {
+      return (new Date()).getTime() / 1000
+    },
+    isScheduled: function () {
+      return this.member.next_live > this.currentTimestamp
+    },
+    isLive: function () {
+      return this.member.next_live >= 0 && this.member.next_live <= this.currentTimestamp
+    },
     shown: function () {
       if ((!app.settings.retired.value && this.member.retired) ||
         (app.settings.onlyLive.value && this.member.next_live < 0))
