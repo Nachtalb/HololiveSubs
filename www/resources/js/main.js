@@ -136,7 +136,7 @@ Vue.component('member-group', {
         <section v-bind:id="id" :style="{order: group.order}">
           <h2 v-if="group.show_title">{{ group.name }}</h2>
 
-          <ul id="members">
+          <ul>
             <member-card
               v-for="member in group.members"
               v-bind:member="member"
