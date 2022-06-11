@@ -170,16 +170,20 @@ var app = new Vue({
     }
   },
   mounted() {
-    axios
-      .get('stats.json')
-      .then(response => {
-        this.groups = response.data;
-        document.getElementById('lastUpdated').textContent = response.headers['last-modified'];
-      });
-
     this.loadSettings()
+    this.loadStats()
+    setInterval(this.loadStats, 1000 * 60 * 5)
   },
   methods: {
+    loadStats() {
+      axios
+        .get('stats.json')
+        .then(response => {
+          this.groups = response.data;
+          document.getElementById('lastUpdated').textContent = response.headers['last-modified'];
+        });
+    },
+
     loadSettings() {
       let container = document.getElementById('settings');
       for (const name in this.settings) {
