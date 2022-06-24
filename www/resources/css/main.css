@@ -199,6 +199,7 @@ footer a {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1px;
+  z-index: 2;
 }
 
 #settings input {
