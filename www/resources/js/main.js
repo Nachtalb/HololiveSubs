@@ -286,9 +286,9 @@ var app = new Vue({
 
     exportSettingsProcedure() {
       const url = this.exportSettingsLink()
-      window.history.pushState("", "", url)
 
       function failed() {
+        window.history.pushState("", "", url)
         Toastify({
           text: "Copy the URL. Use it to automatically import the settings again.",
           duration: 7000,
