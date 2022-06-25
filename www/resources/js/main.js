@@ -222,6 +222,10 @@ var app = new Vue({
     groups: {},
     favourites: [],
     settings: {
+      exportSettings: {
+        value: 'exportSettingsProcedure',
+        label: "Export settings",
+      },
       simpleBackgrounds: {
         value: false,
         label: 'Show simple backgrounds',
@@ -258,6 +262,7 @@ var app = new Vue({
   },
 
   mounted() {
+    this.importSettingsFromLink(window.location.href)
     this.loadSettings()
     this.loadStats()
     setInterval(this.loadStats, 1000 * 60 * 5)
@@ -279,29 +284,59 @@ var app = new Vue({
         });
     },
 
+    exportSettingsProcedure() {
+      const url = this.exportSettingsLink()
+      window.history.pushState("", "", url)
+      window.navigator.clipboard?.writeText(url)
+    },
+
+    exportSettingsLink() {
+      let url = window.location.origin + "?"
+      url += "favourites=" + window.localStorage.getItem("favourites")
+
+      for (const name in this.settings) {
+        url += `&${name}=${window.localStorage.getItem(name)}`
+      }
+
+      return url
+    },
+
+    importSettingsFromLink(link) {
+      const url = new URL(link)
+      url.searchParams.forEach((value, key) => {
+        window.localStorage.setItem(key, value)
+      })
+    },
+
     loadSettings() {
       let container = document.getElementById('settings');
 
       this.favourites = window.localStorage.getItem("favourites")?.split(",") || []
 
       for (const name in this.settings) {
-        let storedValue = window.localStorage.getItem(name)
-        let defaultValue = this.settings[name].value
-        this.settings[name].value = storedValue === null ? defaultValue : (storedValue === 'true' ? true : false)
-
         let label = document.createElement('label')
-        let box = document.createElement('input')
         label.setAttribute('for', name)
         label.textContent = this.settings[name].label
-        box.name = name
-        box.id = name
-        box.type = 'checkbox'
-        box.checked = this.settings[name].value
 
-        box.addEventListener('change', (event) => this.toggleSetting(event.target.name))
+        let defaultValue = this.settings[name].value
+        if (typeof defaultValue === 'string') {
+          label.addEventListener('click', this[defaultValue])
+        } else {
+          let storedValue = window.localStorage.getItem(name)
+          this.settings[name].value = storedValue === null ? defaultValue : (storedValue === 'true' ? true : false)
 
-        container.append(box)
+          let box = document.createElement('input')
+          box.name = name
+          box.id = name
+          box.type = 'checkbox'
+          box.checked = this.settings[name].value
+
+          box.addEventListener('change', (event) => this.toggleSetting(event.target.name))
+          container.append(box)
+        }
+
         container.append(label)
+
       }
       this.updateClasses()
     },
