@@ -6,6 +6,7 @@ Vue.component('member-card', {
             v-bind:style="liStyle">
           <div class="actions">
             <a v-bind:href="'webcal://' + calendarLink"
+               target="_blank"
                title="Add live streams to your calendar"
                class="action action-icon action-calendar">
             </a>
