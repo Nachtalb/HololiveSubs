@@ -287,7 +287,26 @@ var app = new Vue({
     exportSettingsProcedure() {
       const url = this.exportSettingsLink()
       window.history.pushState("", "", url)
-      window.navigator.clipboard?.writeText(url)
+
+      function failed() {
+        Toastify({
+          text: "Copy the URL. Use it to automatically import the settings again.",
+          duration: 7000,
+          position: 'center',
+        }).showToast()
+      }
+
+      if (window.navigator.clipboard) {
+        window.navigator.clipboard.writeText(url).then(() => {
+          Toastify({
+            text: "The settings URL has been copied. Use it to automatically import the settings again.",
+            duration: 7000,
+            position: 'center',
+          }).showToast()
+        }, failed)
+      } else {
+        failed()
+      }
     },
 
     exportSettingsLink() {
@@ -308,6 +327,12 @@ var app = new Vue({
           window.localStorage.setItem(key, value)
         })
         window.history.pushState("", "", window.location.origin)
+
+        Toastify({
+          text: "Imported settings",
+          duration: 3000,
+          position: 'center',
+        }).showToast()
       }
     },
 
