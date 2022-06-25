@@ -38,7 +38,7 @@ for group in stats.values():
         file_content, events = None, ""
         if file.is_file():
             file_content = file.read_text()
-            events = "\n".join(file_content.split("\n")[5:-2]).strip()
+            events = "\n".join(file_content.split("\n")[6:-2]).strip()
 
         new_event = ""
         if (video := member["video"]) and video["start"] > 0:
@@ -86,6 +86,7 @@ NAME:{member['name']} Live Calendar
 PRODID:-//github.com/rianjs/ical.net//NONSGML ical.net 4.0//EN
 VERSION:2.0
 X-WR-CALNAME:{member['name']} Live Calendar
+FRESH-INTERVAL;VALUE=DURATION:P6H
 {events}
 END:VCALENDAR
 """
@@ -96,7 +97,7 @@ file = EVENTS_PATH / "all.ics"
 file_content, events = None, ""
 if file.is_file():
     file_content = file.read_text()
-    events = "\n".join(file_content.split("\n")[5:-2]).strip()
+    events = "\n".join(file_content.split("\n")[6:-2]).strip()
 
 for event_id, event in all_events:
     if event_id not in events:
@@ -107,6 +108,7 @@ NAME:Hololive Live Calendar
 PRODID:-//github.com/rianjs/ical.net//NONSGML ical.net 4.0//EN
 VERSION:2.0
 X-WR-CALNAME:Hololive Live Calendar
+FRESH-INTERVAL;VALUE=DURATION:P6H
 {events.strip()}
 END:VCALENDAR
 """

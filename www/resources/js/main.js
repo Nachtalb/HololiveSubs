@@ -67,7 +67,7 @@ Vue.component('member-card', {
       }
     },
     calendarLink: function () {
-      return window.location.host+ "/events/" + this.member.twitter + ".ics"
+      return window.location.host+ "/events/" + this.member.twitter + ".ics?noCache"
     },
     mainLink: function () {
       if (this.member.youtube_subs) {
