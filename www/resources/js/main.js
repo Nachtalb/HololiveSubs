@@ -64,11 +64,8 @@ Vue.component('member-card', {
     }
   },
   computed: {
-    currentTimestamp: function () {
-      return (new Date()).getTime() / 1000
-    },
     isLive: function () {
-      return this.member.video && (this.member.video.alreadyLive || this.currentTimestamp > this.member.video.start)
+      return this.member.video && (this.member.video.start === 0 || this.currentTimestamp() > this.member.video.start)
     },
     shown: function () {
       if ((!app.settings.retired.value && this.member.retired) ||
@@ -113,6 +110,10 @@ Vue.component('member-card', {
     }
   },
   methods: {
+    currentTimestamp() {
+      return (new Date()).getTime() / 1000
+    },
+
     // https://stackoverflow.com/a/13542669/5699307
     // Takes a 6 char hex, shades it and returns a rgb(...) value
     colourShade(p, c) {

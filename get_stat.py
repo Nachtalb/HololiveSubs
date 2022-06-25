@@ -142,12 +142,11 @@ def get_live_vide_info(html):
             json_getattr(
                 "playabilityStatus.liveStreamability.liveStreamabilityRenderer.offlineSlate.liveStreamOfflineSlateRenderer.scheduledStartTime",
                 raw_json,
-                0,
+                0,  # 0 == already live
             )
         ),
         "id": video_id,
         "description": json_getattr("videoDetails.shortDescription", raw_json),
-        "alreadyLive": json_getattr("playabilityStatus.status", raw_json) == "OK",
         "thumbnail": json_getattr("videoDetails.thumbnail.thumbnails.[-1].url", raw_json, f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg")
     }
 
