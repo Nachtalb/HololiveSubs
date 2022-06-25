@@ -133,7 +133,7 @@ def get_live_vide_info(html):
         "start": int(json_getattr("playabilityStatus.liveStreamability.liveStreamabilityRenderer.offlineSlate.liveStreamOfflineSlateRenderer.scheduledStartTime", raw_data, 0)),
         "id": json_getattr("videoDetails.videoId", raw_data),
         "description": json_getattr("videoDetails.shortDescription", raw_data),
-        "alreadyLive": json_getattr("microformat.liveBroadcastDetails.isLiveNow", raw_data, False)
+        "alreadyLive": json_getattr("playabilityStatus.status", raw_data) == "OK"
     }
     data["thumbnail"] = f"https://i.ytimg.com/vi/{data['id']}/maxresdefault.jpg"
 
