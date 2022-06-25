@@ -2,15 +2,15 @@ Vue.component('member-card', {
   props: ['member'],
   template: `
         <li v-if="shown"
-            v-bind:class="[member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (isScheduled ? 'scheduled' : '')]"
+            v-bind:class="[member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
             v-bind:style="liStyle">
           <div class="badges">
-            <a v-if="member.next_live >= 0"
+            <a v-if="member.video"
                v-bind:href="mainLink"
-               v-bind:title="member.name"
+               v-bind:title="member.video.title"
                target="_blank">
               <span class="badge badge-icon badge-live" v-if="isLive">LIVE</span>
-              <span class="badge badge-icon badge-scheduled" v-if="isScheduled">{{ scheduledTitle }}</span>
+              <span class="badge badge-icon badge-scheduled" v-else>{{ scheduledTitle }}</span>
             </a>
             <span class="badge badge-retired" v-if="member.retired">RETIRED</span>
           </div>
@@ -44,27 +44,25 @@ Vue.component('member-card', {
     currentTimestamp: function () {
       return (new Date()).getTime() / 1000
     },
-    isScheduled: function () {
-      return this.member.next_live > this.currentTimestamp
-    },
     isLive: function () {
-      return this.member.next_live >= 0 && this.member.next_live <= this.currentTimestamp
+      return this.member.video && (this.member.video.alreadyLive || this.currentTimestamp > this.member.video.start)
     },
     shown: function () {
       if ((!app.settings.retired.value && this.member.retired) ||
-        (app.settings.onlyLive.value && this.member.next_live < 0))
+        (app.settings.onlyLive.value && !this.member.video))
         return false
       return true
     },
     scheduledTitle: function () {
-      if (this.member.next_live > 0) {
-        const date = new Date(this.member.next_live * 1000)
+      if (this.member.video) {
+        const date = new Date(this.member.video.start * 1000)
         return "Live " + moment(date).fromNow()
       }
     },
     mainLink: function () {
       if (this.member.youtube_subs) {
-        return 'https://youtube.com/channel/' + this.member.youtube + (this.member.next_live >= 0 ? '/live' : '')
+        if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id
+        else "https://youtube.com/channel/" + this.member.youtube
       } else if (this.member.twitter_subs) {
         return 'https://twitter.com/' + this.member.twitter
       } else if (this.member.bilibili_subs) {
