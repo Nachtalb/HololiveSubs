@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from hashlib import sha1
 import json
 from pathlib import Path
+from uuid import uuid4
 
 BASE_PATH = Path(__file__).absolute().parent
 
@@ -17,23 +18,26 @@ for group in stats.values():
         file_content, events = None, ""
         if file.is_file():
             file_content = file.read_text()
-            events = "\n".join(file_content.split("\n")[5:-1])
+            events = "\n".join(file_content.split("\n")[5:-2]).strip()
 
         new_event = ""
-        if (next_live := member["next_live"]) > 0:
-            event_id = sha1(str(next_live).encode()).hexdigest()
+        if (video := member["video"]) and video["start"] > 0:
+            event_id = sha1(str(video["title"]).encode()).hexdigest()
             if event_id in events:
                 continue
 
-            event_start = datetime.fromtimestamp(next_live)
+            event_start = datetime.fromtimestamp(video["start"])
             event_end = event_start + timedelta(hours=1)
-            event_name = member["name"] + " live!"
+            event_name = f"[{member['name']}] - {video['title']}"
+            event_description = f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
+
             new_event = f"""BEGIN:VEVENT
 DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}
 DTEND:{event_end.strftime('%Y%m%dT%H%M%SZ')}
 DTSTART:{event_start.strftime('%Y%m%dT%H%M%SZ')}
 SEQUENCE:0
 SUMMARY:{event_name}
+DESCRIPTION:{event_description}
 UID:{event_id}
 PRIORITY:5
 BEGIN:VALARM
@@ -44,14 +48,25 @@ END:VALARM
 X-PUBLISHED-TTL:PT5M
 END:VEVENT"""
 
-        if new_event or not file_content:
-            events += "\n" + new_event
+        if not new_event and not file_content:
+            new_event = f"""BEGIN:VTODO
+COMMENT:Placeholder to ensure valid calendar import
+UID:{str(uuid4())}
+DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}
+END:VTODO"""
 
-            file.write_text(f"""BEGIN:VCALENDAR
+        if events and new_event:
+            events += "\n" + new_event
+        elif new_event:
+            events = new_event
+
+        file.write_bytes(
+            f"""BEGIN:VCALENDAR
 NAME:{member['name']} Live Calendar
 PRODID:-//github.com/rianjs/ical.net//NONSGML ical.net 4.0//EN
 VERSION:2.0
 X-WR-CALNAME:{member['name']} Live Calendar
 {events}
 END:VCALENDAR
-""")
+""".replace('\n', '\r\n').encode('utf-8')
+        )
