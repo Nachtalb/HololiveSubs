@@ -10,6 +10,8 @@ Vue.component('member-card', {
                title="Add live streams to your calendar"
                class="action action-icon action-calendar">
             </a>
+            <span @click="toggleFavourite" class="action action-icon action-heart-full" v-if="isFavourite"></span>
+            <span @click="toggleFavourite" class="action action-icon action-heart" v-else></span>
           </div>
           <div class="badges">
             <a v-if="member.video"
@@ -66,6 +68,10 @@ Vue.component('member-card', {
   },
 
   computed: {
+    isFavourite() {
+      return app.favourites.includes(this.member.twitter)
+    },
+
     isLive: function () {
       return this.member.video && (this.member.video.start === 0 || this.currentTimestamp() > this.member.video.start)
     },
@@ -119,6 +125,12 @@ Vue.component('member-card', {
   },
 
   methods: {
+    toggleFavourite() {
+      let index = app.favourites.indexOf(this.member.twitter)
+      if (index !== -1) app.favourites.splice(index, 1)
+      else app.favourites.push(this.member.twitter)
+    },
+
     currentTimestamp() {
       return (new Date()).getTime() / 1000
     },
@@ -171,7 +183,6 @@ Vue.component('member-group', {
     sortedMembers() {
       let members = this.group.members.slice()
       if (app.settings.sortLive.value) {
-        console.log("Sort ", members.length)
         members.sort((a, b) => {
           if (a.video && b.video) return a.video.start - b.video.start
           else if (a.video) return -1
@@ -188,6 +199,7 @@ var app = new Vue({
   el: '#app',
   data: {
     groups: {},
+    favourites: [],
     settings: {
       simpleBackgrounds: {
         value: false,
@@ -218,6 +230,12 @@ var app = new Vue({
     setInterval(this.loadStats, 1000 * 60 * 5)
   },
 
+  watch: {
+    favourites(newValue) {
+      window.localStorage.setItem('favourites', newValue)
+    }
+  },
+
   methods: {
     loadStats() {
       axios
@@ -230,6 +248,9 @@ var app = new Vue({
 
     loadSettings() {
       let container = document.getElementById('settings');
+
+      this.favourites = window.localStorage.getItem("favourites")?.split(",") || []
+
       for (const name in this.settings) {
         let storedValue = window.localStorage.getItem(name)
         let defaultValue = this.settings[name].value
