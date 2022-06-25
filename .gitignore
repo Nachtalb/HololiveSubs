@@ -422,6 +422,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/python,venv,vim,linux,macos,emacs,windows,sublimetext,jetbrains+all,visualstudiocode
 
 www/stats
+www/events
 www/stats.json
 www/profile-images/*
 !www/profile-images/.gitkeep
