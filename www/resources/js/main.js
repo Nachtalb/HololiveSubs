@@ -52,8 +52,9 @@ Vue.component('member-card', {
             </a>
           </div>
         </li>`,
+
   mounted() {
-    if (this.$refs.live)  {
+    if (this.$refs.live) {
       tippy(this.$refs.live, {
         allowHTML: true,
         interactive: true,
@@ -63,25 +64,30 @@ Vue.component('member-card', {
       });
     }
   },
+
   computed: {
     isLive: function () {
       return this.member.video && (this.member.video.start === 0 || this.currentTimestamp() > this.member.video.start)
     },
+
     shown: function () {
       if ((!app.settings.retired.value && this.member.retired) ||
         (app.settings.onlyLive.value && !this.member.video))
         return false
       return true
     },
+
     scheduledTitle: function () {
       if (this.member.video) {
         const date = new Date(this.member.video.start * 1000)
         return "Live " + moment(date).fromNow()
       }
     },
+
     calendarLink: function () {
-      return window.location.host+ "/events/" + this.member.twitter + ".ics?noCache"
+      return window.location.host + "/events/" + this.member.twitter + ".ics?noCache"
     },
+
     mainLink: function () {
       if (this.member.youtube_subs) {
         if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id
@@ -94,6 +100,7 @@ Vue.component('member-card', {
         return '#'
       }
     },
+
     liStyle: function () {
       let style = {backgroundImage: `linear-gradient(180deg, ${this.member.bg} 0%, ${this.colourShade(-.9, this.member.bg)} 100%)`}
       if (this.member.background_image && !app.settings.simpleBackgrounds.value) {
@@ -101,6 +108,7 @@ Vue.component('member-card', {
       }
       return style
     },
+
     nameStyle: function () {
       if (this.member.background_image && !app.settings.simpleBackgrounds.value) {
         return {color: '#222', 'font-weight': 'bold'}
@@ -109,6 +117,7 @@ Vue.component('member-card', {
       }
     }
   },
+
   methods: {
     currentTimestamp() {
       return (new Date()).getTime() / 1000
@@ -120,6 +129,7 @@ Vue.component('member-card', {
       var m = Math.round, c = parseInt(c.slice(1), 16), r = c >> 16, g = c >> 8 & 255, b = c & 255, P = p < 0, t = P ? 0 : p * 255 ** 2, P = P ? 1 + p : 1 - p;
       return "rgb" + "(" + m((P * r ** 2 + t) ** 0.5) + "," + m((P * g ** 2 + t) ** 0.5) + "," + m((P * b ** 2 + t) ** 0.5) + ")";
     },
+
     nFormatter(num, digits) {
       if (num === undefined) return;
       var si = [
@@ -181,11 +191,13 @@ var app = new Vue({
       },
     }
   },
+
   mounted() {
     this.loadSettings()
     this.loadStats()
     setInterval(this.loadStats, 1000 * 60 * 5)
   },
+
   methods: {
     loadStats() {
       axios
@@ -219,11 +231,13 @@ var app = new Vue({
       }
       this.updateClasses()
     },
+
     toggleSetting(name) {
       this.settings[name].value = !this.settings[name].value
       window.localStorage.setItem(name, this.settings[name].value)
       this.updateClasses()
     },
+
     updateClasses() {
       for (const name in this.settings) {
         document.body.classList.toggle(name, this.settings[name].value)
