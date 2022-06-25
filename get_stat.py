@@ -92,10 +92,10 @@ def get_bilibili_data(talent: dict) -> dict | None:
 
 
 def json_getattr(key, json, default=None):
-    keys = key.split('.')
+    keys = key.split(".")
     current_item = json
     for key in keys:
-        if key[0] == '[' and key[-1] == ']':
+        if key[0] == "[" and key[-1] == "]":
             key = int(key[1:-1])
         try:
             current_item = current_item[key]
@@ -104,38 +104,52 @@ def json_getattr(key, json, default=None):
     return current_item
 
 
-def get_live_vide_info(html):
-    start = "var ytInitialPlayerResponse = "
-    start_index = html.index(start) + len(start)
-    text = html[start_index:]
+def find_json(string, start_search):
+    start_index = string.index(start_search) + len(start_search)
+    text = string[start_index:]
 
     counter = 0
     final = None
     for i, char in enumerate(text, 1):
-        if char == '{':
+        if char == "{":
             counter += 1
-        elif char == '}':
+        elif char == "}":
             counter -= 1
         if counter == 0:
             final = text[:i]
             break
 
-    if not final:
+    return final
+
+
+def get_live_vide_info(html):
+    raw_data = find_json(html, "var ytInitialPlayerResponse = ")
+
+    if not raw_data:
         return
 
     try:
-        raw_data = json.loads(final)
+        raw_json = json.loads(raw_data)
+        video_id = json_getattr("videoDetails.videoId", raw_json)
+        if not video_id:
+            return
     except JSONDecodeError:
         return
 
     data = {
-        "title": json_getattr("videoDetails.title", raw_data),
-        "start": int(json_getattr("playabilityStatus.liveStreamability.liveStreamabilityRenderer.offlineSlate.liveStreamOfflineSlateRenderer.scheduledStartTime", raw_data, 0)),
-        "id": json_getattr("videoDetails.videoId", raw_data),
-        "description": json_getattr("videoDetails.shortDescription", raw_data),
-        "alreadyLive": json_getattr("playabilityStatus.status", raw_data) == "OK"
+        "title": json_getattr("videoDetails.title", raw_json),
+        "start": int(
+            json_getattr(
+                "playabilityStatus.liveStreamability.liveStreamabilityRenderer.offlineSlate.liveStreamOfflineSlateRenderer.scheduledStartTime",
+                raw_json,
+                0,
+            )
+        ),
+        "id": video_id,
+        "description": json_getattr("videoDetails.shortDescription", raw_json),
+        "alreadyLive": json_getattr("playabilityStatus.status", raw_json) == "OK",
+        "thumbnail": f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg",
     }
-    data["thumbnail"] = f"https://i.ytimg.com/vi/{data['id']}/maxresdefault.jpg"
 
     if data["start"] - time.time() > 60 * 60 * 24 * 2:
         return
@@ -143,7 +157,7 @@ def get_live_vide_info(html):
 
 
 def next_youtube_live_schedule(channel: dict) -> None | dict:
-    LOG.info('[%s] Live on YouTube check', channel["name"])
+    LOG.info("[%s] Live on YouTube check", channel["name"])
     try:
         res = requests.get(
             f"https://www.youtube.com/channel/{channel['youtube']}/live",
