@@ -188,6 +188,7 @@ li.retired {
 }
 
 .member:hover .actions .action-hidden,
+.member:hover .actions .action-hidden-desktop,
 .actions .action:focus {
   opacity: 1;
 }
