@@ -160,12 +160,28 @@ Vue.component('member-group', {
 
           <ul>
             <member-card
-              v-for="member in group.members"
+              v-for="member in sortedMembers"
               v-bind:member="member"
               v-bind:key="member.id"
             ></member-card>
           </ul>
         </section>`,
+
+  computed: {
+    sortedMembers() {
+      let members = this.group.members.slice()
+      if (app.settings.sortLive.value) {
+        console.log("Sort ", members.length)
+        members.sort((a, b) => {
+          if (a.video && b.video) return a.video.start - b.video.start
+          else if (a.video) return -1
+          else if (b.video) return 1
+          return 0
+        })
+      }
+      return members
+    },
+  },
 });
 
 var app = new Vue({
@@ -189,6 +205,10 @@ var app = new Vue({
         value: false,
         label: 'Only show currently live',
       },
+      sortLive: {
+        value: false,
+        label: 'Sort by live status',
+      }
     }
   },
 
