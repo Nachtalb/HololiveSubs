@@ -303,9 +303,12 @@ var app = new Vue({
 
     importSettingsFromLink(link) {
       const url = new URL(link)
-      url.searchParams.forEach((value, key) => {
-        window.localStorage.setItem(key, value)
-      })
+      if (url.search) {
+        url.searchParams.forEach((value, key) => {
+          window.localStorage.setItem(key, value)
+        })
+        window.history.pushState("", "", window.location.origin)
+      }
     },
 
     loadSettings() {
