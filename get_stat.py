@@ -91,15 +91,59 @@ def get_bilibili_data(talent: dict) -> dict | None:
             LOG.warning('[%s] Could not load bilibili data due to "%s"', talent["name"], str(error))
 
 
-def next_youtube_live_schedule(channel: dict) -> int:
-    """Check when the next youtube live event starts
+def json_getattr(key, json, default=None):
+    keys = key.split('.')
+    current_item = json
+    for key in keys:
+        if key[0] == '[' and key[-1] == ']':
+            key = int(key[1:-1])
+        try:
+            current_item = current_item[key]
+        except (KeyError, IndexError):
+            return default
+    return current_item
 
-      -1 = no event scheduled or event in more than 2 days
-       0 = live
-    1234 = timestamp of next event
-    """
+
+def get_live_vide_info(html):
+    start = "var ytInitialPlayerResponse = "
+    start_index = html.index(start) + len(start)
+    text = html[start_index:]
+
+    counter = 0
+    final = None
+    for i, char in enumerate(text, 1):
+        if char == '{':
+            counter += 1
+        elif char == '}':
+            counter -= 1
+        if counter == 0:
+            final = text[:i]
+            break
+
+    if not final:
+        return
+
+    try:
+        raw_data = json.loads(final)
+    except JSONDecodeError:
+        return
+
+    data = {
+        "title": json_getattr("videoDetails.title", raw_data),
+        "start": int(json_getattr("playabilityStatus.liveStreamability.liveStreamabilityRenderer.offlineSlate.liveStreamOfflineSlateRenderer.scheduledStartTime", raw_data, 0)),
+        "id": json_getattr("videoDetails.videoId", raw_data),
+        "description": json_getattr("videoDetails.shortDescription", raw_data),
+        "alreadyLive": json_getattr("microformat.liveBroadcastDetails.isLiveNow", raw_data, False)
+    }
+    data["thumbnail"] = f"https://i.ytimg.com/vi/{data['id']}/maxresdefault.jpg"
+
+    if data["start"] - time.time() > 60 * 60 * 24 * 2:
+        return
+    return data
+
+
+def next_youtube_live_schedule(channel: dict) -> None | dict:
     LOG.info('[%s] Live on YouTube check', channel["name"])
-    scheduled = -1
     try:
         res = requests.get(
             f"https://www.youtube.com/channel/{channel['youtube']}/live",
@@ -108,19 +152,9 @@ def next_youtube_live_schedule(channel: dict) -> int:
             },
         )
         res.raise_for_status()
-        if index := res.text.index("is_viewed_live"):
-            scheduled = 0 if "True" in res.text[index + 25 : index + 30] else -1
-        if scheduled != 0 and (index := res.text.index("scheduledStartTime")):
-            try:
-                scheduled = int(res.text[index + 21: index + 31])
-                if scheduled - time.time() > 172800:  # Ignore if it's more than 2 days in the future
-                    scheduled = -1
-            except ValueError:
-                LOG.warning("[%s] YouTube scheduled stream time value has changed", channel["name"])
-                scheduled = -1
+        return get_live_vide_info(res.text)
     except Exception:
         pass
-    return scheduled
 
 
 def get_images(twitter: User, name: str) -> tuple[str | None, str | None]:
@@ -162,7 +196,7 @@ def summarize_data(channel_data: dict, twitter: User, youtube: dict | None):
         "image": images[0],
         "background_image": images[1],
         "twitter_subs": int(twitter.followers_count),  # type: ignore
-        "next_live": -1,
+        "video": None,
     }
 
     if bilibili := get_bilibili_data(channel_data):
@@ -172,7 +206,7 @@ def summarize_data(channel_data: dict, twitter: User, youtube: dict | None):
         update_data["youtube_subs"] = int(youtube["statistics"]["subscriberCount"])
 
         if not channel_data["retired"]:
-            update_data["next_live"] = next_youtube_live_schedule(channel_data)
+            update_data["video"] = next_youtube_live_schedule(channel_data)
 
     return update_data
 
@@ -182,8 +216,8 @@ with ProcessPoolExecutor(5) as executor:
         # only check wheter the account is live or not
         LOG.info("Updating YouTube live status")
         for group in CURRENT_STATS.values():
-            for talent, scheduled in zip(group["members"], executor.map(next_youtube_live_schedule, group["members"])):
-                talent["next_live"] = scheduled
+            for talent, video_info in zip(group["members"], executor.map(next_youtube_live_schedule, group["members"])):
+                talent["video"] = video_info
 
         GROUPS = CURRENT_STATS
     else:
