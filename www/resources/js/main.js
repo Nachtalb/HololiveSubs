@@ -4,13 +4,13 @@ Vue.component('member-card', {
         <li v-bind:class="['member', member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
             v-bind:style="liStyle">
           <div class="actions">
+            <span @click="toggleFavourite" class="action action-icon action-heart-full" v-if="isFavourite"></span>
+            <span @click="toggleFavourite" class="action action-icon action-heart action-hidden" v-else></span>
             <a v-bind:href="'webcal://' + calendarLink"
                target="_blank"
                title="Add live streams to your calendar"
-               class="action action-icon action-calendar">
+               class="action action-icon action-calendar action-hidden">
             </a>
-            <span @click="toggleFavourite" class="action action-icon action-heart-full" v-if="isFavourite"></span>
-            <span @click="toggleFavourite" class="action action-icon action-heart" v-else></span>
           </div>
           <div class="badges">
             <a v-if="member.video"

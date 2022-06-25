@@ -175,8 +175,17 @@ li.retired {
   height: 22px;
   transition: transform ease-in-out 0.2s;
   padding: 0;
-  margin: 0 2px 0 0;
+  margin: 0 10px 0 0;
   cursor: pointer;
+}
+
+.action-hidden {
+  opacity: 0;
+}
+
+.member:hover .actions .action-hidden,
+.actions .action:focus {
+  opacity: 1;
 }
 
 .action:hover,
