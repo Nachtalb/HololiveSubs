@@ -23,7 +23,7 @@ def spec_conform(text):
         for char in map(encoder.encode, line):
             if len(current_line) + len(char) > 73:
                 lines.append(current_line)
-                current_line = b"  " + char
+                current_line = b" " + char
             else:
                 current_line += char
         lines.append(current_line)
