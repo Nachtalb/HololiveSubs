@@ -15,16 +15,21 @@ Vue.component('member-card', {
             <a v-if="member.video"
                v-bind:href="mainLink"
                v-bind:title="member.video.title"
-               target="_blank">
+               target="_blank"
+               ref="live">
               <span class="badge badge-icon badge-live" v-if="isLive">LIVE</span>
               <span class="badge badge-icon badge-scheduled" v-else>{{ scheduledTitle }}</span>
+              <a class="thumbnail" v-bind:href="mainLink" target="_blank" ref="thumbnail">
+                <span class="thumbnail-title">{{ member.video.title }}</span>
+                <img v-bind:src="member.video.thumbnail">
+              </a>
             </a>
             <span class="badge badge-retired" v-if="member.retired">RETIRED</span>
           </div>
           <a v-bind:href="mainLink"
              v-bind:title="member.name"
              target="_blank">
-            <div class="img"><img v-bind:src="member.image" alt="member.name"></div>
+            <div class="profile-image"><img v-bind:src="member.image" alt="member.name"></div>
             <span class="name" v-bind:style="nameStyle">{{ member.name }}</span>
           </a>
           <div class="buttons">
@@ -47,6 +52,17 @@ Vue.component('member-card', {
             </a>
           </div>
         </li>`,
+  mounted() {
+    if (this.$refs.live)  {
+      tippy(this.$refs.live, {
+        allowHTML: true,
+        interactive: true,
+        appendTo: () => document.body,
+        content: this.$refs.thumbnail,
+        maxWidth: 'none',
+      });
+    }
+  },
   computed: {
     currentTimestamp: function () {
       return (new Date()).getTime() / 1000
