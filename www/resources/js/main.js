@@ -4,6 +4,13 @@ Vue.component('member-card', {
         <li v-if="shown"
             v-bind:class="[member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
             v-bind:style="liStyle">
+          <div class="actions">
+            <a v-bind:href="'webcal://' + calendarLink"
+               @click="copyCalendarLink"
+               title="Add live streams to your calendar"
+               class="action action-icon action-calendar">
+            </a>
+          </div>
           <div class="badges">
             <a v-if="member.video"
                v-bind:href="mainLink"
@@ -59,6 +66,9 @@ Vue.component('member-card', {
         return "Live " + moment(date).fromNow()
       }
     },
+    calendarLink: function () {
+      return window.location.host+ "/events/" + this.member.twitter + ".ics"
+    },
     mainLink: function () {
       if (this.member.youtube_subs) {
         if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id
@@ -87,6 +97,41 @@ Vue.component('member-card', {
     }
   },
   methods: {
+    copyCalendarLink(event) {
+      event.preventDefault();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(this.calendarLink).then(() => {
+          Toastify({
+            text: "Calendar import link copied",
+            duration: 5000,
+            position: 'center',
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            }
+          }).showToast()
+        }, () => {
+          Toastify({
+            text: "Could not copy the calendar import link, please do so manually: https://" + this.calendarLink,
+            duration: -1,
+            close: true,
+            position: 'center',
+            style: {
+              background: "linear-gradient(to right, #ff9632, #f33723)",
+            }
+          }).showToast()
+        });
+      } else {
+        Toastify({
+          text: "Could not copy the calendar import link, please do so manually: https://" + this.calendarLink,
+          duration: -1,
+          close: true,
+          position: 'center',
+          style: {
+            background: "linear-gradient(to right, #ff9632, #f33723)",
+          }
+        }).showToast()
+      }
+    },
     // https://stackoverflow.com/a/13542669/5699307
     // Takes a 6 char hex, shades it and returns a rgb(...) value
     colourShade(p, c) {
