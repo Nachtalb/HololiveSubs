@@ -187,11 +187,19 @@ Vue.component('member-group', {
 
       }
 
-      if (app.settings.sortLive.value) {
+      if (app.settings.sortLive.value && !app.settings.sortName.value) {
         members.sort((a, b) => {
           if (a.video && b.video) return a.video.start - b.video.start
           else if (a.video) return -1
           else if (b.video) return 1
+          return 0
+        })
+      }
+
+      if (app.settings.sortName.value) {
+        members.sort((a,b) => {
+          if (a.name > b.name) return 1
+          else if (a.name < b.name) return -1
           return 0
         })
       }
@@ -241,6 +249,10 @@ var app = new Vue({
       sortFavourites: {
         value: true,
         label: "Sort favourites first"
+      },
+      sortName: {
+        value: false,
+        label: "Sort by name"
       }
     }
   },
