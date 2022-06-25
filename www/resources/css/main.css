@@ -354,6 +354,10 @@ input {
 }
 
 @media (min-width: 1024px) {
+  .action-hidden-desktop {
+    opacity: 0;
+  }
+
   ul {
     grid-template-columns: repeat(4, 1fr);
   }

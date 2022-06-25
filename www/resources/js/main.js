@@ -5,7 +5,7 @@ Vue.component('member-card', {
             v-bind:style="liStyle">
           <div class="actions">
             <span @click="toggleFavourite" class="action action-icon action-heart-full" v-if="isFavourite"></span>
-            <span @click="toggleFavourite" class="action action-icon action-heart action-hidden" v-else></span>
+            <span @click="toggleFavourite" class="action action-icon action-heart action-hidden-desktop" v-else></span>
             <a v-bind:href="'webcal://' + calendarLink"
                target="_blank"
                title="Add live streams to your calendar"
