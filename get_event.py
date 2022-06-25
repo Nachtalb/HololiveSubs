@@ -1,8 +1,11 @@
+from codecs import getincrementalencoder
 from datetime import datetime, timedelta
 from hashlib import sha1
 import json
 from pathlib import Path
 from uuid import uuid4
+
+encoder = getincrementalencoder("utf-8")()
 
 BASE_PATH = Path(__file__).absolute().parent
 
@@ -11,6 +14,23 @@ EVENTS_PATH.mkdir(parents=True, exist_ok=True)
 
 stats = json.loads((BASE_PATH / "www/stats.json").read_text())
 
+
+def spec_conform(text):
+    encoder.reset()
+    lines = []
+    for line in text.split('\n'):
+        current_line = b""
+        for char in map(encoder.encode, line):
+            if len(current_line) + len(char) > 73:
+                lines.append(current_line)
+                current_line = b"  " + char
+            else:
+                current_line += char
+        lines.append(current_line)
+    return b"\r\n".join(lines)
+
+
+all_events = []
 for group in stats.values():
     for member in group["members"]:
         file = EVENTS_PATH / (member["twitter"] + ".ics")
@@ -47,6 +67,7 @@ TRIGGER:-PT5M
 END:VALARM
 X-PUBLISHED-TTL:PT5M
 END:VEVENT"""
+            all_events.append((event_id, new_event))
 
         if not new_event and not file_content:
             new_event = f"""BEGIN:VTODO
@@ -60,13 +81,33 @@ END:VTODO"""
         elif new_event:
             events = new_event
 
-        file.write_bytes(
-            f"""BEGIN:VCALENDAR
+        new_content = f"""BEGIN:VCALENDAR
 NAME:{member['name']} Live Calendar
 PRODID:-//github.com/rianjs/ical.net//NONSGML ical.net 4.0//EN
 VERSION:2.0
 X-WR-CALNAME:{member['name']} Live Calendar
 {events}
 END:VCALENDAR
-""".replace('\n', '\r\n').encode('utf-8')
-        )
+"""
+        file.write_bytes(spec_conform(new_content))
+
+
+file = EVENTS_PATH / "all.ics"
+file_content, events = None, ""
+if file.is_file():
+    file_content = file.read_text()
+    events = "\n".join(file_content.split("\n")[5:-2]).strip()
+
+for event_id, event in all_events:
+    if event_id not in events:
+        events += "\n" + event
+
+new_content = f"""BEGIN:VCALENDAR
+NAME:Hololive Live Calendar
+PRODID:-//github.com/rianjs/ical.net//NONSGML ical.net 4.0//EN
+VERSION:2.0
+X-WR-CALNAME:Hololive Live Calendar
+{events.strip()}
+END:VCALENDAR
+"""
+file.write_bytes(spec_conform(new_content))
