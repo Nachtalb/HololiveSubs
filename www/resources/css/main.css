@@ -36,6 +36,10 @@ li {
   background-position: center;
 }
 
+.hidden {
+  display: None;
+}
+
 .profile-image > img{
   transform: scale(1);
   border-radius: 50%;
@@ -255,16 +259,47 @@ footer a {
   padding: 1em 0;
 }
 
-#settings {
+#settingsWrapper {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: inherit;
-  display: grid;
+  z-index: 1;
+}
+
+
+#settingsToggler {
+  width: 100%;
+  display: flex;
+  background: transparent;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+  height: 3em;
+}
+
+#settingsToggler > label {
+  height: inherit;
+  padding: 0 1em;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  background: black;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+#settings {
+  display: None;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 1px;
-  z-index: 2;
+  background: black;
+}
+
+#settingsCheckbox:checked + #settings {
+  display: grid;
 }
 
 #settings input {
@@ -309,6 +344,10 @@ input {
 }
 
 @media (min-width: 768px) {
+  #settingsToggler > label {
+    width: 200px;
+  }
+
   ul {
     grid-template-columns: repeat(3, 1fr);
   }
