@@ -1,8 +1,7 @@
 Vue.component('member-card', {
   props: ['member'],
   template: `
-        <li v-if="shown"
-            v-bind:class="[member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
+        <li v-bind:class="['member', member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
             v-bind:style="liStyle">
           <div class="actions">
             <a v-bind:href="'webcal://' + calendarLink"
@@ -74,13 +73,6 @@ Vue.component('member-card', {
 
     isLive: function () {
       return this.member.video && (this.member.video.start === 0 || this.currentTimestamp() > this.member.video.start)
-    },
-
-    shown: function () {
-      if ((!app.settings.retired.value && this.member.retired) ||
-        (app.settings.onlyLive.value && !this.member.video))
-        return false
-      return true
     },
 
     scheduledTitle: function () {
@@ -172,7 +164,7 @@ Vue.component('member-group', {
 
           <ul>
             <member-card
-              v-for="member in sortedMembers"
+              v-for="member in filteredMembers"
               v-bind:member="member"
               v-bind:key="member.id"
             ></member-card>
@@ -180,14 +172,35 @@ Vue.component('member-group', {
         </section>`,
 
   computed: {
-    sortedMembers() {
-      let members = this.group.members.slice()
+    filteredMembers() {
+      let members = []
+
+      for (let member of this.group.members) {
+        if (
+          (!app.settings.retired.value && member.retired) ||
+          (app.settings.onlyLive.value && !member.video) ||
+          (app.settings.onlyFavourites.value && !app.favourites.includes(member.twitter))
+        ) {
+          continue
+        }
+        members.push(member)
+
+      }
+
       if (app.settings.sortLive.value) {
         members.sort((a, b) => {
           if (a.video && b.video) return a.video.start - b.video.start
           else if (a.video) return -1
           else if (b.video) return 1
           return 0
+        })
+      }
+
+      if (app.settings.sortFavourites.value) {
+        members.sort((a, b) => {
+          if (app.favourites.includes(a.twitter) && app.favourites.includes(b.twitter)) return 0
+          else if (app.favourites.includes(a.twitter)) return -1
+          return 1
         })
       }
       return members
@@ -220,6 +233,14 @@ var app = new Vue({
       sortLive: {
         value: false,
         label: 'Sort by live status',
+      },
+      onlyFavourites: {
+        value: false,
+        label: "Only show favourites"
+      },
+      sortFavourites: {
+        value: true,
+        label: "Sort favourites first"
       }
     }
   },
