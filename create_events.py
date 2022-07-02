@@ -4,6 +4,7 @@ from hashlib import md5
 import json
 from pathlib import Path
 from uuid import UUID, uuid4
+from zoneinfo import ZoneInfo
 
 from ics import Calendar, Event, Todo
 from ics.grammar.parse import ContentLine
@@ -16,7 +17,8 @@ BASE_PATH = Path(__file__).absolute().parent
 EVENTS_PATH = BASE_PATH / "www/events/"
 EVENTS_PATH.mkdir(parents=True, exist_ok=True)
 
-NOW = datetime.utcnow()
+UTC = ZoneInfo("UTC")
+NOW = datetime.now().astimezone(UTC)
 
 CREATOR = "-//hololive.zone//NONSGML Live Calendar {}//EN"
 
@@ -26,7 +28,7 @@ css_colour_name = lambda member: best_match(hex2rgb(member["bg"][1:]))[0]
 uuid = lambda value: str(UUID(md5(value.encode()).hexdigest()))
 cal_id = lambda video: uuid(video["id"])
 yt_link = lambda video: f"https://youtu.be/{video['id']}"
-format_date = lambda date: date.strftime("%Y%m%dT%H%M%SZ")
+format_date = lambda date: date.astimezone(UTC).strftime("%Y%m%dT%H%M%SZ")
 
 
 def spec_conform(text):
@@ -87,7 +89,7 @@ def new_event(member):
     name = f"[{member['name']}] - {video['title']}"
     description = f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
 
-    start = datetime.fromtimestamp(video["start"])
+    start = datetime.fromtimestamp(video["start"]).astimezone(UTC)
     if (start + timedelta(minutes=15)) < NOW:
         duration = NOW - start
     else:
