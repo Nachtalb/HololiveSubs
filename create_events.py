@@ -1,6 +1,6 @@
 from codecs import getincrementalencoder
 from datetime import datetime, timedelta
-from hashlib import md5
+from hashlib import md5, sha1
 import json
 from pathlib import Path
 from uuid import UUID, uuid4
@@ -46,9 +46,12 @@ def spec_conform(text):
     return b"\r\n".join(lines)
 
 
-def add_event(calendar: Calendar, new_event: Event):
+def add_event(calendar: Calendar, new_event: Event, old_event_id):
     copy = calendar.events.copy()
     for event in calendar.events:
+        if event.uid == old_event_id:
+            copy.remove(event)
+    for event in copy.copy():
         if event.uid == new_event.uid:
             copy.remove(event)
             copy.add(new_event)
@@ -122,8 +125,9 @@ for group in stats.values():
 
         if member["video"]:
             event = new_event(member)
-            add_event(calendar, event)
-            all_events.append(event)
+            old_event_id = sha1(str(member["video"]["title"]).encode()).hexdigest()
+            add_event(calendar, event, old_event_id)
+            all_events.append((event, old_event_id))
         elif is_new:
             todo = Todo(
                 dtstamp=datetime.fromtimestamp(0),
@@ -141,7 +145,7 @@ if file.is_file() and (content := file.read_text()):
 else:
     calendar = new_calendar({"name": "All", "twitter": "all"})
 
-for event in all_events:
-    add_event(calendar, event)
+for event, old_event_id in all_events:
+    add_event(calendar, event, old_event_id)
 
 file.write_bytes(spec_conform(calendar.serialize()))
