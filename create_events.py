@@ -136,7 +136,13 @@ for group in stats.values():
         is_new = False
         if file.is_file() and (content := file.read_text()):
             try:
-                calendar = Calendar(content)
+                imported_calendar = Calendar(content)
+
+                if not any([extra for extra in imported_calendar.extra if extra.name == "SOURCE"]):
+                    calendar = new_calendar(member)
+                    calendar.events = imported_calendar.events
+                else:
+                    calendar = imported_calendar
             except Exception:
                 log.fatal("[%s] Got an error parsing the calendar [%s]", member["name"], str(file))
                 raise
