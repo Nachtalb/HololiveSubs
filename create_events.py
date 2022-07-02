@@ -55,8 +55,10 @@ def add_event(calendar: Calendar, new_event: Event):
         if event.uid == new_event.uid:
             calendar.events.remove(event)
             calendar.events.add(new_event)
+            log.info('🔵 %s', new_event.name)
             break
     else:
+        log.info('🟢 %s', new_event.name)
         calendar.events.add(new_event)
 
 
@@ -65,6 +67,7 @@ def clear_old_events(calendar):
     for event in calendar.events.copy():
         if event.begin < threshold:
             calendar.events.remove(event)
+            log.info('🔴 %s', event.name)
 
 
 def new_calendar(member):
@@ -142,12 +145,10 @@ for group in stats.values():
             calendar = new_calendar(member)
 
         if member["video"]:
-            log.info("[%s] new event", member["name"])
             event = new_event(member, calendar)
             add_event(calendar, event)
             all_events.append(event)
         elif is_new:
-            log.warning("[%s] No events found, creating placeholder todo", member["name"])
             todo = Todo(
                 dtstamp=datetime.fromtimestamp(0),
                 uid=str(uuid4()),
