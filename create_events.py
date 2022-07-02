@@ -2,6 +2,7 @@ from codecs import getincrementalencoder
 from datetime import datetime, timedelta
 from hashlib import md5, sha1
 import json
+import logging as log
 from pathlib import Path
 from uuid import UUID, uuid4
 from zoneinfo import ZoneInfo
@@ -10,6 +11,8 @@ from ics import Calendar, Event, Todo
 from ics.grammar.parse import ContentLine
 
 from utils import best_match, hex2rgb
+
+log.basicConfig(level=log.INFO)
 
 ENCODER = getincrementalencoder("utf-8")()
 BASE_PATH = Path(__file__).absolute().parent
@@ -121,6 +124,7 @@ def new_event(member, calendar):
 # Create all individual calendars
 all_events = []
 for group in stats.values():
+    log.info("BEGIN:[%s]", group["name"])
     for member in group["members"]:
         file = EVENTS_PATH / (member["twitter"] + ".ics")
         is_new = False
@@ -128,18 +132,20 @@ for group in stats.values():
             try:
                 calendar = Calendar(content)
             except Exception:
-                print(f"Got an error parsing the calendar [{str(file)}]")
+                log.fatal("[%s] Got an error parsing the calendar [%s]", member["name"], str(file))
                 raise
             is_new = True
         else:
             calendar = new_calendar(member)
 
         if member["video"]:
+            log.info("[%s] new event", member["name"])
             event = new_event(member, calendar)
             old_event_id = sha1(str(member["video"]["title"]).encode()).hexdigest()
             add_event(calendar, event, old_event_id, yt_link(member["video"]))
             all_events.append((event, old_event_id, yt_link(member["video"])))
         elif is_new:
+            log.warning("[%s] No events found, creating placeholder todo", member["name"])
             todo = Todo(
                 dtstamp=datetime.fromtimestamp(0),
                 uid=str(uuid4()),
@@ -148,6 +154,7 @@ for group in stats.values():
             )
 
         file.write_bytes(spec_conform(calendar.serialize()))
+    log.info("END:[%s]\n", group["name"])
 
 # Create one calendar containing all events
 file = EVENTS_PATH / "all.ics"
