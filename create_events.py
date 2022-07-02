@@ -22,6 +22,7 @@ EVENTS_PATH.mkdir(parents=True, exist_ok=True)
 
 UTC = ZoneInfo("UTC")
 NOW = datetime.now().astimezone(UTC)
+RETENTION = timedelta(days=7)
 
 CREATOR = "-//hololive.zone//NONSGML Live Calendar {}//EN"
 
@@ -57,6 +58,13 @@ def add_event(calendar: Calendar, new_event: Event):
             break
     else:
         calendar.events.add(new_event)
+
+
+def clear_old_events(calendar):
+    threshold = NOW - RETENTION
+    for event in calendar.events.copy():
+        if event.begin < threshold:
+            calendar.events.remove(event)
 
 
 def new_calendar(member):
@@ -147,6 +155,7 @@ for group in stats.values():
                 description="This only acts as a placeholder for a valid ics calendar file",
             )
 
+        clear_old_events(calendar)
         file.write_bytes(spec_conform(calendar.serialize()))
     log.info("END:[%s]\n", group["name"])
 
@@ -161,4 +170,5 @@ else:
 for event in all_events:
     add_event(calendar, event)
 
+clear_old_events(calendar)
 file.write_bytes(spec_conform(calendar.serialize()))
