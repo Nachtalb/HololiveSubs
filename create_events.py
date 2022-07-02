@@ -50,15 +50,13 @@ def spec_conform(text):
 
 
 def add_event(calendar: Calendar, new_event: Event):
-    copy = calendar.events.copy()
-    for event in calendar.events:
+    for event in calendar.events.copy():
         if event.uid == new_event.uid:
-            copy.remove(event)
-            copy.add(new_event)
+            calendar.events.remove(event)
+            calendar.events.add(new_event)
             break
     else:
-        copy.add(new_event)
-    calendar.events = copy
+        calendar.events.add(new_event)
 
 
 def new_calendar(member):
