@@ -1,6 +1,6 @@
 from codecs import getincrementalencoder
 from datetime import datetime, timedelta
-from hashlib import md5, sha1
+from hashlib import md5
 import json
 import logging as log
 from pathlib import Path
@@ -49,12 +49,9 @@ def spec_conform(text):
     return b"\r\n".join(lines)
 
 
-def add_event(calendar: Calendar, new_event: Event, old_event_id, yt_link):
+def add_event(calendar: Calendar, new_event: Event):
     copy = calendar.events.copy()
     for event in calendar.events:
-        if event.uid == old_event_id or yt_link in event.description:
-            copy.remove(event)
-    for event in copy.copy():
         if event.uid == new_event.uid:
             copy.remove(event)
             copy.add(new_event)
@@ -141,9 +138,8 @@ for group in stats.values():
         if member["video"]:
             log.info("[%s] new event", member["name"])
             event = new_event(member, calendar)
-            old_event_id = sha1(str(member["video"]["title"]).encode()).hexdigest()
-            add_event(calendar, event, old_event_id, yt_link(member["video"]))
-            all_events.append((event, old_event_id, yt_link(member["video"])))
+            add_event(calendar, event)
+            all_events.append(event)
         elif is_new:
             log.warning("[%s] No events found, creating placeholder todo", member["name"])
             todo = Todo(
@@ -163,7 +159,7 @@ if file.is_file() and (content := file.read_text()):
 else:
     calendar = new_calendar({"name": "All", "twitter": "all"})
 
-for event, old_event_id, yt_link in all_events:
-    add_event(calendar, event, old_event_id, yt_link)
+for event in all_events:
+    add_event(calendar, event)
 
 file.write_bytes(spec_conform(calendar.serialize()))
