@@ -84,13 +84,20 @@ def event_extras(member, video):
     ]
 
 
-def new_event(member):
+def new_event(member, calendar):
     video = member["video"]
+    uid = cal_id(video)
+
     name = f"[{member['name']}] - {video['title']}"
     description = f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
 
     start = datetime.fromtimestamp(video["start"]).astimezone(UTC)
-    if (start + timedelta(minutes=15)) < NOW:
+    if video["start"] == 0:
+        known_event = next(iter([e for e in calendar.events if e.uid == uid]), None)
+        if known_event:
+            start = known_event.begin.datetime
+
+    if start + timedelta(minutes=15) < NOW:
         duration = NOW - start
     else:
         duration = timedelta(hours=1)
@@ -101,7 +108,7 @@ def new_event(member):
         description=description,
         duration=duration,
         last_modified=NOW,
-        uid=cal_id(video),
+        uid=uid,
         url=yt_link(video),
     )
     event.extra.extend(event_extras(member, video))
@@ -121,7 +128,7 @@ for group in stats.values():
             calendar = new_calendar(member)
 
         if member["video"]:
-            event = new_event(member)
+            event = new_event(member, calendar)
             add_event(calendar, event)
             all_events.append(event)
         elif is_new:
