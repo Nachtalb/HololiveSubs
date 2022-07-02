@@ -34,10 +34,10 @@ yt_link = lambda video: f"https://youtu.be/{video['id']}"
 format_date = lambda date: date.astimezone(UTC).strftime("%Y%m%dT%H%M%SZ")
 
 
-def spec_conform(text):
+def spec_conform(text: str):
     ENCODER.reset()
     lines = []
-    for line in text.split("\n"):
+    for line in filter(None, text.splitlines()):
         current_line = b""
         for char in map(ENCODER.encode, line):
             if len(current_line) + len(char) > 73:
