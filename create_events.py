@@ -122,7 +122,11 @@ for group in stats.values():
         file = EVENTS_PATH / (member["twitter"] + ".ics")
         is_new = False
         if file.is_file() and (content := file.read_text()):
-            calendar = Calendar(content)
+            try:
+                calendar = Calendar(content)
+            except Exception:
+                print(f"Got an error parsing the calendar [{str(file)}]")
+                raise
             is_new = True
         else:
             calendar = new_calendar(member)
