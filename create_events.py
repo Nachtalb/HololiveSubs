@@ -151,6 +151,7 @@ for group in stats.values():
     log.info("END:[%s]\n", group["name"])
 
 # Create one calendar containing all events
+log.info("[ALL] Save all events to all.ics")
 file = EVENTS_PATH / "all.ics"
 if file.is_file() and (content := file.read_text()):
     calendar = Calendar(content)
