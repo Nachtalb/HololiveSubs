@@ -151,7 +151,11 @@ def get_live_vide_info(html):
         ),
         "id": video_id,
         "description": json_getattr("videoDetails.shortDescription", raw_json),
-        "thumbnail": json_getattr("videoDetails.thumbnail.thumbnails.[-1].url", raw_json, f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg")
+        "thumbnail": json_getattr(
+            "videoDetails.thumbnail.thumbnails.[-1].url",
+            raw_json,
+            f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg",
+        ),
     }
 
     if data["start"] - time.time() > 60 * 60 * 24 * 2:
