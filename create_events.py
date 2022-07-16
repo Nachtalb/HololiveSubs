@@ -129,7 +129,7 @@ def new_event(member, calendar):
 
 # Create all individual calendars
 all_events = []
-for group in stats.values():
+for group in stats["groups"].values():
     log.info("BEGIN:[%s]", group["name"])
     for member in group["members"]:
         file = EVENTS_PATH / (member["twitter"] + ".ics")

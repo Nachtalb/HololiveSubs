@@ -220,6 +220,7 @@ var app = new Vue({
   el: '#app',
   data: {
     groups: {},
+    meta: {},
     favourites: [],
     settings: {
       exportSettings: {
@@ -279,8 +280,9 @@ var app = new Vue({
       axios
         .get('stats.json')
         .then(response => {
-          this.groups = response.data;
-          document.getElementById('lastUpdated').textContent = response.headers['last-modified'];
+          this.groups = response.data.groups;
+          this.meta = response.data.meta;
+          document.getElementById('lastUpdated').textContent = this.meta.subsLastUpdate;
         });
     },
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
 import json
 from json.decoder import JSONDecodeError
 import logging
@@ -9,6 +10,7 @@ from pathlib import Path
 from subprocess import Popen
 import sys
 import time
+from zoneinfo import ZoneInfo
 
 from bilibili_api.user import UserInfo as BilibiliUser
 from dotenv import load_dotenv
@@ -49,7 +51,9 @@ TALENTS_DATA = json.loads(TALENTS_PATH.read_text())
 GROUPS = TALENTS_DATA["groups"]
 TALENTS = TALENTS_DATA["talents"]
 
-CURRENT_STATS = {}
+NOW = datetime.now().astimezone(ZoneInfo("UTC")).isoformat(timespec="minutes")
+
+CURRENT_STATS = {"groups": {}, "meta": {"subsLastUpdate": NOW, "liveEventsLastUpdate": NOW}}
 if STATS_PATH.is_file():
     try:
         CURRENT_STATS = json.loads(STATS_PATH.read_text())
@@ -228,11 +232,12 @@ with ProcessPoolExecutor(5) as executor:
     if "live" in sys.argv:
         # only check wheter the account is live or not
         LOG.info("Updating YouTube live status")
-        for group in CURRENT_STATS.values():
+        for group in CURRENT_STATS["groups"].values():
             for talent, video_info in zip(group["members"], executor.map(next_youtube_live_schedule, group["members"])):
                 talent["video"] = video_info
 
-        GROUPS = CURRENT_STATS
+        CURRENT_STATS["meta"]["liveEventsLastUpdate"] = NOW
+        result = CURRENT_STATS
     else:
         youtube_data = get_youtube_data()
         twitter_data = get_twitter_data()
@@ -251,9 +256,16 @@ with ProcessPoolExecutor(5) as executor:
             group_name = data.get("group", "talents")
             GROUPS[group_name]["members"].append(data)
 
-        result = dict(sorted(GROUPS.items(), key=lambda item: item[1]["order"]))
+        GROUPS = dict(sorted(GROUPS.items(), key=lambda item: item[1]["order"]))
+        result = {
+            "groups": GROUPS,
+            "meta": {
+                "subsLastUpdate": NOW,
+                "liveEventsLastUpdate": NOW,
+            },
+        }
 
 
 # Write stats
-STATS_PATH.write_text(json.dumps(GROUPS, indent=2, sort_keys=True))
+STATS_PATH.write_text(json.dumps(result, indent=2, sort_keys=True))
 LOG.info("Done")
