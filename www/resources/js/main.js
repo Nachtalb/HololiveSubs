@@ -30,7 +30,7 @@ Vue.component('member-card', {
           <a v-bind:href="mainLink"
              v-bind:title="member.name"
              target="_blank">
-            <div class="profile-image"><img v-bind:src="member.image" alt="member.name"></div>
+            <div class="profile-image"><img v-bind:src="member.image" alt="{{ member.name }}"></div>
             <span class="name" v-bind:style="nameStyle">{{ member.name }}</span>
           </a>
           <div class="buttons">
