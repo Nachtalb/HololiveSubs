@@ -37,18 +37,21 @@ Vue.component('member-card', {
             <a class="ytFollowersCount followersCount"
                v-bind:href="'https://www.youtube.com/channel/' + member.youtube"
                v-bind:title="member.youtube_subs + ' subscribers on YouTube'"
-               v-if="member.youtube_subs">
+               v-if="member.youtube_subs"
+               target="_blank">
               <span>{{ nFormatter(member.youtube_subs, 2) }}</span> YouTube
             </a>
             <a class="bFollowersCount followersCount"
                v-bind:href="'https://space.bilibili.com/' + member.bilibili"
                v-bind:title="member.bilibili_subs + ' subscribers on Bilibili'"
-               v-if="member.bilibili_subs && app.settings.bilibili.value">
+               v-if="member.bilibili_subs && app.settings.bilibili.value"
+               target="_blank">
               <span>{{ nFormatter(member.bilibili_subs, 2) }}</span> Bilibili
             </a>
             <a class="tFollowersCount followersCount"
                v-bind:title="member.twitter_subs + ' subscribers on Twitter'"
-               v-bind:href="'https://twitter.com/' + member.twitter">
+               v-bind:href="'https://twitter.com/' + member.twitter"
+               target="_blank">
               <span>{{ nFormatter(member.twitter_subs, 2) }}</span> Twitter
             </a>
           </div>
