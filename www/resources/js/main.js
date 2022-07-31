@@ -276,6 +276,7 @@ var app = new Vue({
   watch: {
     favourites(newValue) {
       window.localStorage.setItem('favourites', newValue)
+      this.sendFavouritesToSW()
     }
   },
 
@@ -283,6 +284,13 @@ var app = new Vue({
     installServiceWorker() {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("/service_worker.js")
+
+        if (Notification.permission === "default") {
+          Notification.requestPermission()
+            .then(state => {
+              if (state === "granted") new Notification("You will get live update for your favourite talents!")
+            })
+        }
       }
     },
 
@@ -379,6 +387,14 @@ var app = new Vue({
 
       }
       this.updateClasses()
+    },
+
+    sendFavouritesToSW() {
+      const bc = new BroadcastChannel("sw")
+      bc.postMessage({
+        target: "favourites",
+        data: this.favourites
+      })
     },
 
     toggleSetting(name) {
