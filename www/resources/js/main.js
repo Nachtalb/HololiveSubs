@@ -266,6 +266,7 @@ var app = new Vue({
   },
 
   mounted() {
+    this.installServiceWorker()
     this.importSettingsFromLink(window.location.href)
     this.loadSettings()
     this.loadStats()
@@ -279,6 +280,12 @@ var app = new Vue({
   },
 
   methods: {
+    installServiceWorker() {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service_worker.js")
+      }
+    },
+
     loadStats() {
       axios
         .get('stats.json')
