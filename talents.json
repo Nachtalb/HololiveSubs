@@ -73,7 +73,7 @@
         {"id":  73,   "name":  "Mori Calliope",         "bg":  "#C90D40",  "fg":  "#fff",  "twitter":  "moricalliope",     "youtube":  "UCL_qhgtOy0dy1Agp8vkySQg",  "bilibili":  "",           "retired":  false},
         {"id":  74,   "name":  "Watson Amelia",         "bg":  "#F7DB92",  "fg":  "#fff",  "twitter":  "watsonameliaen",   "youtube":  "UCyl1z3jo3XHR1riLFKG5UAg",  "bilibili":  "",           "retired":  false},
 
-        {"id":  130,  "name":  "Tsukumo Sana",          "bg":  "#cf83ac",  "fg":  "#fff",  "twitter":  "tsukumosana",      "youtube":  "UCsUj0dszADCGbF3gNrQEuSQ",  "bilibili":  "",           "retired":  false},
+        {"id":  130,  "name":  "Tsukumo Sana",          "bg":  "#cf83ac",  "fg":  "#fff",  "twitter":  "tsukumosana",      "youtube":  "UCsUj0dszADCGbF3gNrQEuSQ",  "bilibili":  "",           "retired":  true},
         {"id":  131,  "name":  "Ceres Fauna",           "bg":  "#50ca61",  "fg":  "#fff",  "twitter":  "ceresfauna",       "youtube":  "UCO_aKKYxn4tvrqPjcTzZ6EQ",  "bilibili":  "",           "retired":  false},
         {"id":  132,  "name":  "Ouro Kronii",           "bg":  "#22199a",  "fg":  "#fff",  "twitter":  "ourokronii",       "youtube":  "UCmbs8T6MWqUHP1tIQvSgKrg",  "bilibili":  "",           "retired":  false},
         {"id":  133,  "name":  "Nanashi Mumei",         "bg":  "#be936f",  "fg":  "#fff",  "twitter":  "nanashimumei_en",  "youtube":  "UC3n5uGu18FoCy23ggWWp8tA",  "bilibili":  "",           "retired":  false},
