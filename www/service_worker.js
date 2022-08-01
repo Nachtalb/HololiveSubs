@@ -7,13 +7,15 @@ const addResourcesToCache = async (resources) => {
 };
 
 const putToCache = async (cacheName, request, response) => {
-  const cache = await caches.open(cacheName);
-  return await cache.put(request, response);
+  return caches.open(cacheName)
+    .then(cache => cache.put(request, response.clone()))
+    .then(() => {return response})
 }
 
 const fetchAndPutToCache = async (cacheName, request) => {
-  const response = await fetch(request)
-  return await putToCache(cacheName, request, response)
+  return fetch(request)
+    .then(response => putToCache(cacheName, request, response))
+    .then(response => {return response})
 }
 
 const log = (location.host === "test.hololive.zone") ? console.log : () => {}
@@ -160,7 +162,6 @@ self.addEventListener('fetch', event => {
             .then(response => {
               log("Update stats")
               return fetchAndPutToCache(PRECACHE, event.request, response)
-                .then(() => {return response})
             })
             .catch(() => {return cachedResponse})
         }
