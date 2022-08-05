@@ -18,6 +18,14 @@ const fetchAndPutToCache = async (cacheName, request) => {
     .then(response => {return response})
 }
 
+const prefersNoCache = (request) => {
+  const url = new URL(request.url)
+  for (let query of PREFER_NO_CACHE) {
+    if (url.pathname.match(`^${query}$`)) return true
+  }
+  return false
+}
+
 const log = (location.host === "test.hololive.zone") ? console.log : () => {}
 
 const CACHED_URLS = [
@@ -34,6 +42,11 @@ const CACHED_URLS = [
   "/resources/js/proper.min.js",
   "/resources/js/tippy.min.js",
   "/resources/js/toastify.min.js",
+]
+
+const PREFER_NO_CACHE = [
+  "/stats.json",
+  "/archive.*",
 ]
 
 let CACHED_PROFILE_PICTURES = []
@@ -157,7 +170,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       caches.match(event.request).then(cachedResponse => {
         // Update stats.json and return cached one if offline
-        if (event.request.url.endsWith("/stats.json")) {
+        if (prefersNoCache(event.request)) {
           return fetch(event.request)
             .then(response => {
               log("Update stats")
