@@ -1,31 +1,6 @@
 const PRECACHE = 'precache-v1';
 const RUNTIME = 'runtime';
 
-const addResourcesToCache = async (resources) => {
-  const cache = await caches.open(PRECACHE);
-  await cache.addAll(resources);
-};
-
-const putToCache = async (cacheName, request, response) => {
-  return caches.open(cacheName)
-    .then(cache => cache.put(request, response.clone()))
-    .then(() => {return response})
-}
-
-const fetchAndPutToCache = async (cacheName, request) => {
-  return fetch(request)
-    .then(response => putToCache(cacheName, request, response))
-    .then(response => {return response})
-}
-
-const prefersNoCache = (request) => {
-  const url = new URL(request.url)
-  for (let query of PREFER_NO_CACHE) {
-    if (url.pathname.match(`^${query}$`)) return true
-  }
-  return false
-}
-
 const log = (location.host === "test.hololive.zone") ? console.log : () => {}
 
 const CACHED_URLS = [
@@ -53,6 +28,33 @@ let CACHED_PROFILE_PICTURES = []
 
 let FAVOURITES
 
+let worker, stats, prevStats
+
+const addResourcesToCache = async (resources) => {
+  const cache = await caches.open(PRECACHE);
+  await cache.addAll(resources);
+};
+
+const putToCache = async (cacheName, request, response) => {
+  return caches.open(cacheName)
+    .then(cache => cache.put(request, response.clone()))
+    .then(() => {return response})
+}
+
+const fetchAndPutToCache = async (cacheName, request) => {
+  return fetch(request)
+    .then(response => putToCache(cacheName, request, response))
+    .then(response => {return response})
+}
+
+const prefersNoCache = request => {
+  const url = new URL(request.url)
+  for (let query of PREFER_NO_CACHE) {
+    if (url.pathname.match(`^${query}$`)) return true
+  }
+  return false
+}
+
 const bc = new BroadcastChannel("sw")
 bc.onmessage = event => {
   switch (event.data?.target) {
@@ -64,9 +66,6 @@ bc.onmessage = event => {
       log("Received unknown message", event)
   }
 }
-
-
-let worker, stats, prevStats
 
 const getMembers = function* (stats) {
   for (let groupName in stats.groups) {
