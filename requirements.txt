@@ -1,7 +1,7 @@
 bilibili-api==1.4.0
 certifi==2022.12.7
 charset-normalizer==2.0.2
-future==0.18.2
+future==0.18.3
 idna==3.2
 multidict==5.1.0
 oauthlib==3.2.2
