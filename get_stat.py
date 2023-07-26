@@ -10,12 +10,14 @@ from pathlib import Path
 from subprocess import Popen
 import sys
 import time
+from typing import Any
 from zoneinfo import ZoneInfo
 
-from bilibili_api.user import UserInfo as BilibiliUser
+from bilibili_api import sync, user
 from dotenv import load_dotenv
 import requests
-from twitter import Api, User
+from tweepy import Client as TwitterClient
+from tweepy.user import User as TwitterUser
 from yarl import URL
 
 BASE_PATH = Path(__file__).absolute().parent
@@ -35,12 +37,7 @@ LOW_POLY_TOOL = BASE_PATH / "triangulate-tool/build/triangulate-tool"
 YT_API_KEY = os.environ["YOUTUBE_KEY"]
 YT_API_URL = "https://www.googleapis.com/youtube/v3/channels?part={parts}&id={channels}&key={key}"
 
-TWITTER_API_CLIENT = Api(
-    consumer_key=os.environ["TWITTER_CONSUMER_KEY"],
-    consumer_secret=os.environ["TWITTER_CONSUMER_SECRET"],
-    access_token_key=os.environ["TWITTER_ACCESS_TOKEN"],
-    access_token_secret=os.environ["TWITTER_ACCESS_SECRET"],
-)
+TWITTER_API_CLIENT = TwitterClient(os.environ["TWITTER_BEARER_TOKEN"])
 
 # Logging
 logging.basicConfig(level=logging.INFO)
@@ -80,17 +77,20 @@ def get_youtube_data() -> dict:
     return result
 
 
-def get_twitter_data() -> dict[str, User]:
+def get_twitter_data() -> dict[str, dict[str, Any]]:
     LOG.info("Getting Twitter stats")
-    data = TWITTER_API_CLIENT.GetListMembersPaged(os.environ["TWITTER_MEMBER_LIST"])[2]
-    return {talent.screen_name.lower(): talent for talent in data}
+    data = TWITTER_API_CLIENT.get_list_members(
+        os.environ["TWITTER_MEMBER_LIST"],
+        user_fields=[ "id", "name", "username", "profile_image_url", "public_metrics"],
+    ).data  # pyright: ignore
+    return {talent.username.lower(): dict(talent) for talent in data}
 
 
 def get_bilibili_data(talent: dict) -> dict | None:
     if talent["bilibili"]:
         LOG.info("[%s]: Getting bilibili stats", talent["name"])
         try:
-            return BilibiliUser(talent["bilibili"]).get_info()
+            return sync(user.User(talent["bilibili"]).get_relation_info())
         except Exception as error:
             LOG.warning('[%s] Could not load bilibili data due to "%s"', talent["name"], str(error))
 
@@ -126,7 +126,7 @@ def find_json(string, start_search):
     return final
 
 
-def get_live_vide_info(html):
+def get_live_video_info(html):
     raw_data = find_json(html, "var ytInitialPlayerResponse = ")
 
     if not raw_data:
@@ -173,15 +173,15 @@ def next_youtube_live_schedule(channel: dict) -> None | dict:
             },
         )
         res.raise_for_status()
-        return get_live_vide_info(res.text)
+        return get_live_video_info(res.text)
     except Exception:
         pass
 
 
-def get_images(twitter: User, name: str) -> tuple[str | None, str | None]:
+def get_images(twitter: dict[str, Any], name: str) -> tuple[str | None, str | None]:
     profile_image_url = background_image_url = None
 
-    image_url = URL(twitter.profile_image_url_https.replace("_normal", ""))  # type: ignore
+    image_url = URL(twitter["profile_image_url"].replace("_normal", ""))  # type: ignore
     image_path = IMAGES_PATH / image_url.name
 
     if not image_path.is_file():
@@ -207,7 +207,7 @@ def get_images(twitter: User, name: str) -> tuple[str | None, str | None]:
     return (profile_image_url, background_image_url)
 
 
-def summarize_data(channel_data: dict, twitter: User, youtube: dict | None):
+def summarize_data(channel_data: dict, twitter: dict[str, Any], youtube: dict | None):
     if not twitter:
         LOG.fatal("[%s] No twitter data", channel_data["name"])
         sys.exit(1)
@@ -216,7 +216,7 @@ def summarize_data(channel_data: dict, twitter: User, youtube: dict | None):
     update_data = {
         "image": images[0],
         "background_image": images[1],
-        "twitter_subs": int(twitter.followers_count),  # type: ignore
+        "twitter_subs": twitter["public_metrics"]["followers_count"],
         "video": None,
     }
 
@@ -234,7 +234,7 @@ def summarize_data(channel_data: dict, twitter: User, youtube: dict | None):
 
 with ProcessPoolExecutor(5) as executor:
     if "live" in sys.argv:
-        # only check wheter the account is live or not
+        # only check whether the account is live or not
         LOG.info("Updating YouTube live status")
         for group in CURRENT_STATS["groups"].values():
             for talent, video_info in zip(group["members"], executor.map(next_youtube_live_schedule, group["members"])):
