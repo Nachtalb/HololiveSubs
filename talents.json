@@ -101,6 +101,10 @@
         {"id":  142,  "name":  "Fuwawa & Mococo Abyssgard", "bg":  "#c5ddff",  "fg":  "#fff",  "twitter":  "fuwamoco_en",  "youtube":  "UCt9H_RpQzhxzlyBxFqrdHqA",  "bilibili":  "",           "retired":  false},
         {"id":  144,  "name":  "Shiori Novella",        "bg":  "#b096c6",  "fg":  "#fff",  "twitter":  "shiorinovella",    "youtube":  "UCgnfPPb9JI3e9A4cXHnWbyg",  "bilibili":  "",           "retired":  false},
 
+        {"id":  150,  "name":  "Kobo Kanaeru",          "bg":  "#addbfe",  "fg":  "#fff",  "twitter":  "kobokanaeru",      "youtube":  "UCjLEmnpCNeisMxy134KPwWw",  "bilibili":  "",           "retired":  false},
+        {"id":  151,  "name":  "Kaela Kovalskia",       "bg":  "#ff3a3a",  "fg":  "#fff",  "twitter":  "kaelakovalskia",   "youtube":  "UCZLZ8Jjx_RN2CXloOmgTHVg",  "bilibili":  "",           "retired":  false},
+        {"id":  152,  "name":  "Vestia Zeta",           "bg":  "#91a2df",  "fg":  "#fff",  "twitter":  "vestiazeta",       "youtube":  "UCTvHWSfBZgtxE4sILOaurIQ",  "bilibili":  "",           "retired":  false},
+
         {"id":  1,    "name":  "Best Girl (Yagoo)",     "bg":  "#C3B4AF",  "fg":  "#fff",  "twitter":  "tanigox",          "youtube":  "UCu2DMOGLeR_DSStCyeQpi5Q",  "bilibili":  "",           "group":    "staff",  "retired":  false},
         {"id":  2,    "name":  "A-Chan",                "bg":  "#413982",  "fg":  "#fff",  "twitter":  "achan_uga",        "youtube":  "",                          "bilibili":  "",           "group":    "staff",  "retired":  false},
         {"id":  3,    "name":  "Omega\u03b1",           "bg":  "#fbdeeb",  "fg":  "#fff",  "twitter":  "omegaalpha_en",    "youtube":  "UCKYyiJwNg2nV7hM86U5_wvw",  "bilibili":  "",           "group":    "staff",  "retired":  false},
