@@ -98,8 +98,7 @@
 
         {"id":  140,  "name":  "Koseki Bijou",          "bg":  "#7e6bac",  "fg":  "#fff",  "twitter":  "kosekibijou",      "youtube":  "UC9p_lqQ0FEDz327Vgf5JwqA",  "bilibili":  "",           "retired":  false},
         {"id":  141,  "name":  "Nerissa Ravencroft",    "bg":  "#5260d4",  "fg":  "#fff",  "twitter":  "nerissa_en",       "youtube":  "UC_sFNM0z0MWm9A6WlKPuMMg",  "bilibili":  "",           "retired":  false},
-        {"id":  142,  "name":  "Fuwawa Abyssgard",      "bg":  "#c5ddff",  "fg":  "#fff",  "twitter":  "fuwamoco_en",      "youtube":  "UCt9H_RpQzhxzlyBxFqrdHqA",  "bilibili":  "",           "retired":  false},
-        {"id":  143,  "name":  "Mococo Abyssgard",      "bg":  "#fa93c2",  "fg":  "#fff",  "twitter":  "fuwamoco_en",      "youtube":  "UCt9H_RpQzhxzlyBxFqrdHqA",  "bilibili":  "",           "retired":  false},
+        {"id":  142,  "name":  "Fuwawa & Mococo Abyssgard", "bg":  "#c5ddff",  "fg":  "#fff",  "twitter":  "fuwamoco_en",  "youtube":  "UCt9H_RpQzhxzlyBxFqrdHqA",  "bilibili":  "",           "retired":  false},
         {"id":  144,  "name":  "Shiori Novella",        "bg":  "#b096c6",  "fg":  "#fff",  "twitter":  "shiorinovella",    "youtube":  "UCgnfPPb9JI3e9A4cXHnWbyg",  "bilibili":  "",           "retired":  false},
 
         {"id":  1,    "name":  "Best Girl (Yagoo)",     "bg":  "#C3B4AF",  "fg":  "#fff",  "twitter":  "tanigox",          "youtube":  "UCu2DMOGLeR_DSStCyeQpi5Q",  "bilibili":  "",           "group":    "staff",  "retired":  false},
