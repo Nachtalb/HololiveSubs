@@ -1466,6 +1466,16 @@ requests = ">=2.0.0"
 rsa = ["oauthlib[signedtoken] (>=3.0.0)"]
 
 [[package]]
+name = "rfeed"
+version = "1.1.1"
+description = "Python RSS 2.0 Generator"
+optional = false
+python-versions = "*"
+files = [
+    {file = "rfeed-1.1.1.tar.gz", hash = "sha256:aa9506f2866b74f5a322d394a14a63c19a6825c2d94755ff19d46dd1e2434819"},
+]
+
+[[package]]
 name = "rsa"
 version = "4.9"
 description = "Pure-Python RSA implementation"
@@ -1776,4 +1786,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "1e1359a4c172d7232387ebf5ae32440a89c36397691d57db50bdecc2d360f1df"
+content-hash = "0ca5e6a2025010f5363b6a2e13db70cb7d7a1d241b747249f1579ba2b95ea33f"
