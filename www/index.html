@@ -1,68 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width,initial-scale=1.0" id="viewport" name="viewport">
-  <meta content="#15181c" name="theme-color">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1.0" id="viewport" name="viewport" />
+    <meta content="#15181c" name="theme-color" />
 
-  <meta property="og:title" content="Hololive Zone" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://hololive.zone/" />
-  <meta property="og:image" content="http://hololive.zone/website-screenshot.jpg" />
-  <meta property="og:description" content="Hololive subscriber ranking and who is live overview.">
-  <meta name="description" content="Hololive subscriber ranking and who is live overview.">
+    <meta property="og:title" content="Hololive Zone" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hololive.zone/" />
+    <meta property="og:image" content="http://hololive.zone/website-screenshot.jpg" />
+    <meta property="og:description" content="Hololive subscriber ranking and who is live overview." />
+    <meta name="description" content="Hololive subscriber ranking and who is live overview." />
 
-  <title>Hololive Zone</title>
+    <title>Hololive Zone</title>
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="apple-mobile-web-app-title" content="Hololive Zone">
-  <meta name="application-name" content="Hololive Zone">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="apple-mobile-web-app-title" content="Hololive Zone" />
+    <meta name="application-name" content="Hololive Zone" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
+    <meta name="theme-color" content="#ffffff" />
 
-  <link href="/resources/css/main.css" rel="stylesheet" />
-  <link href="/resources/css/toastify.min.css" rel="stylesheet" />
-  <script src="/resources/js/vue.min.js"></script>
-  <script src="/resources/js/axios.min.js"></script>
-  <script src="/resources/js/proper.min.js"></script>
-  <script src="/resources/js/tippy.min.js"></script>
-  <script src="/resources/js/toastify.min.js"></script>
-</head>
-<body>
-
-  <main>
-    <div id="app">
-      <member-group
-        v-for="(group, id) in groups"
-        v-bind:id="id"
-        v-bind:group="group"
-        v-bind:key="group.order"
-      ></member-group>
-    </div>
-  </main>
-
-  <footer>
-    <div id="meta">
-      Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with <a href="https://en.hololive.tv/" target="_blank">Hololive</a>).
-      Last update: <abbr id="lastUpdated" title="Every 30min">-</abbr>. (Twitter) Profile pictures are also updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a><br>
-      You can also add this <a href="webcal://hololive.zone/events/all.ics?noCache" target="_blank">calendar</a> with all live events! There is a daily <a href="/archive" target="_blank" title="Daily Archive">archive</a> of the stats which you can use for your projects as well.
-    </div>
-    <div id="settingsWrapper">
-      <div id="settingsToggler">
-        <label for="settingsCheckbox">Settings</label>
+    <link href="/resources/css/main.css" rel="stylesheet" />
+    <link href="/resources/css/toastify.min.css" rel="stylesheet" />
+    <script src="/resources/js/vue.min.js"></script>
+    <script src="/resources/js/axios.min.js"></script>
+    <script src="/resources/js/proper.min.js"></script>
+    <script src="/resources/js/tippy.min.js"></script>
+    <script src="/resources/js/toastify.min.js"></script>
+  </head>
+  <body>
+    <main>
+      <div id="app">
+        <member-group
+          v-for="(group, id) in groups"
+          v-bind:id="id"
+          v-bind:group="group"
+          v-bind:key="group.order"
+        ></member-group>
       </div>
+    </main>
 
-      <input type="checkbox" class="hidden" id="settingsCheckbox" onchange="console.log(this.checked)"/>
-      <div id="settings">
-    </div>
-    </div>
-  </footer>
+    <footer>
+      <div id="meta">
+        Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with
+        <a href="https://en.hololive.tv/" target="_blank">Hololive</a>). Last update:
+        <abbr id="lastUpdated" title="Every 30min">-</abbr>. (Twitter) Profile pictures are also updated.
+        <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a><br />
+        You can also add this <a href="webcal://hololive.zone/events/all.ics?noCache" target="_blank">calendar</a> with
+        all live events! There is a daily <a href="/archive" target="_blank" title="Daily Archive">archive</a> of the
+        stats which you can use for your projects as well.
+      </div>
+      <div id="settingsWrapper">
+        <div id="settingsToggler">
+          <label for="settingsCheckbox">Settings</label>
+        </div>
 
-  <script src="/resources/js/moment.min.js"></script>
-  <script type="application/javascript" src="/resources/js/main.js"></script>
-</body>
+        <input type="checkbox" class="hidden" id="settingsCheckbox" onchange="console.log(this.checked)" />
+        <div id="settings"></div>
+      </div>
+    </footer>
+
+    <script src="/resources/js/moment.min.js"></script>
+    <script type="application/javascript" src="/resources/js/main.js"></script>
+  </body>
 </html>

@@ -1,14 +1,15 @@
+import json
+import logging as log
 from codecs import getincrementalencoder
 from datetime import datetime, timedelta
 from hashlib import md5
-import json
-import logging as log
 from pathlib import Path
 from uuid import UUID, uuid4
 from zoneinfo import ZoneInfo
 
 from ics import Calendar, Event, Todo
 from ics.grammar.parse import ContentLine
+from rfeed import Feed, Item
 
 from utils import best_match, hex2rgb
 
@@ -55,10 +56,10 @@ def add_event(calendar: Calendar, new_event: Event):
         if event.uid == new_event.uid:
             calendar.events.remove(event)
             calendar.events.add(new_event)
-            log.info('🔵 %s', new_event.name)
+            log.info("🔵 %s", new_event.name)
             break
     else:
-        log.info('🟢 %s', new_event.name)
+        log.info("🟢 %s", new_event.name)
         calendar.events.add(new_event)
 
 
@@ -67,7 +68,7 @@ def clear_old_events(calendar):
     for event in calendar.events.copy():
         if event.begin < threshold:
             calendar.events.remove(event)
-            log.info('🔴 %s', event.name)
+            log.info("🔴 %s", event.name)
 
 
 def new_calendar(member):
@@ -81,7 +82,11 @@ def new_calendar(member):
                 "DESCRIPTION",
                 value=f"Calendar with all new live streams for {member['name']}. New live streams will be set to 1h long and then adjusted during the live stream.",
             ),
-            ContentLine("SOURCE", {"VALUE": ["URI"]}, f"https://hololive.zone/events/{member['twitter']}.ics"),
+            ContentLine(
+                "SOURCE",
+                {"VALUE": ["URI"]},
+                f"https://hololive.zone/events/{member['twitter']}.ics",
+            ),
             ContentLine("REFRESH-INTERVAL", {"VALUE": ["DURATION"]}, "P4H"),
         ]
     )
@@ -91,7 +96,11 @@ def new_calendar(member):
 def event_extras(member, video):
     return [
         ContentLine("COLOR", value=css_colour_name(member)),
-        ContentLine("CONFERENCE", {"VALUE": ["URI"], "FEATURE": ["AUDIO", "VIDEO", "CHAT"]}, yt_link(video)),
+        ContentLine(
+            "CONFERENCE",
+            {"VALUE": ["URI"], "FEATURE": ["AUDIO", "VIDEO", "CHAT"]},
+            yt_link(video),
+        ),
         ContentLine("DTSTAMP", value=format_date(NOW)),
     ]
 
@@ -101,7 +110,9 @@ def new_event(member, calendar):
     uid = cal_id(video)
 
     name = f"[{member['name']}] - {video['title']}"
-    description = f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
+    description = (
+        f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
+    )
 
     start = datetime.fromtimestamp(video["start"]).astimezone(UTC)
     if video["start"] == 0:
@@ -138,13 +149,23 @@ for group in stats["groups"].values():
             try:
                 imported_calendar = Calendar(content)
 
-                if not any([extra for extra in imported_calendar.extra if extra.name == "SOURCE"]):
+                if not any(
+                    [
+                        extra
+                        for extra in imported_calendar.extra
+                        if extra.name == "SOURCE"
+                    ]
+                ):
                     calendar = new_calendar(member)
                     calendar.events = imported_calendar.events
                 else:
                     calendar = imported_calendar
             except Exception:
-                log.fatal("[%s] Got an error parsing the calendar [%s]", member["name"], str(file))
+                log.fatal(
+                    "[%s] Got an error parsing the calendar [%s]",
+                    member["name"],
+                    str(file),
+                )
                 raise
             is_new = True
         else:
