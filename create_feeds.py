@@ -242,3 +242,4 @@ file = RSS_PATH / "all.xml"
 feed = new_feed({"name": "All", "image": ""})
 feed.items.extend(all_items)
 feed.pubDate = sorted(all_items, key=lambda item: item.pubDate)[0].pubDate
+file.write_text(feed.rss())
