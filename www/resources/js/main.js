@@ -11,6 +11,11 @@ Vue.component("member-card", {
                title="Add live streams to your calendar"
                class="action action-icon action-calendar action-hidden">
             </a>
+            <a v-bind:href="'https://' + rssLink"
+               target="_blank"
+               title="Goto RSS feed"
+               class="action action-icon action-rss action-hidden">
+            </a>
           </div>
           <div class="badges">
             <a v-if="member.video"
@@ -87,6 +92,10 @@ Vue.component("member-card", {
 
     calendarLink: function () {
       return window.location.host + "/events/" + this.member.twitter + ".ics?noCache";
+    },
+
+    rssLink: function () {
+      return window.location.host + "/rss/" + this.member.twitter + ".xml";
     },
 
     mainLink: function () {

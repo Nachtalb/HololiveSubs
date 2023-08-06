@@ -229,6 +229,10 @@ li.retired {
   background-image: url("../icons/calendar.svg");
 }
 
+.action-rss::before {
+  background-image: url("../icons/rss.svg");
+}
+
 .action-heart::before {
   background-image: url("../icons/heart.svg");
 }
