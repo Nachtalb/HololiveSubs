@@ -2,20 +2,22 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
   color: white;
   background-color: black;
-  font-family: 'Roboto';
+  font-family: "Roboto";
 }
 
 h2 {
   font-weight: 100;
 }
 
-ul, li {
+ul,
+li {
   margin: 0;
   padding: 0;
 }
@@ -40,7 +42,7 @@ li {
   display: None;
 }
 
-.profile-image > img{
+.profile-image > img {
   transform: scale(1);
   border-radius: 50%;
   transition: transform ease-in-out 0.2s;
@@ -74,7 +76,7 @@ main a {
 }
 
 .tFollowersCount {
-  background-color: #1DA1F2;
+  background-color: #1da1f2;
 }
 
 .tFollowersCount:hover,
@@ -83,7 +85,7 @@ main a {
 }
 
 .ytFollowersCount {
-  background-color: #FF0000;
+  background-color: #ff0000;
 }
 
 .ytFollowersCount:hover,
@@ -101,7 +103,7 @@ main a {
 }
 
 a:focus {
-    outline: none;
+  outline: none;
 }
 
 main a:hover {
@@ -114,13 +116,13 @@ main a:hover {
 
 a:hover .profile-image > img,
 a:focus .profile-image > img {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 .profile-image {
-    margin-bottom: 1em;
-    display: flex;
-    max-width: 200px;
+  margin-bottom: 1em;
+  display: flex;
+  max-width: 200px;
 }
 
 .thumbnail {
@@ -145,7 +147,8 @@ li.retired {
   opacity: 0.7;
 }
 
-.badges, .actions {
+.badges,
+.actions {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -164,7 +167,8 @@ li.retired {
   margin: 0;
 }
 
-.badge, .action {
+.badge,
+.action {
   background-color: red;
   padding: 3px;
   border-radius: 6px;
@@ -203,7 +207,8 @@ li.retired {
   width: inherit;
 }
 
-.badge-icon::before, .action-icon::before {
+.badge-icon::before,
+.action-icon::before {
   content: "";
   background-repeat: no-repeat;
   background-size: contain;
@@ -245,7 +250,7 @@ li.retired {
 
 footer {
   text-align: center;
-  font-size: .8em;
+  font-size: 0.8em;
   margin: 0;
   background: inherit;
   line-height: 1.5em;
@@ -267,7 +272,6 @@ footer a {
   right: 0;
   z-index: 1;
 }
-
 
 #settingsToggler {
   width: 100%;
@@ -326,22 +330,20 @@ input {
 
 /* roboto-100 - latin */
 @font-face {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 100;
-  src: local(''),
-       url('../fonts/roboto-v20-latin-100.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/roboto-v20-latin-100.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local(""), url("../fonts/roboto-v20-latin-100.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */ url("../fonts/roboto-v20-latin-100.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /* roboto-regular - latin */
 @font-face {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-style: normal;
   font-weight: 400;
-  src: local(''),
-       url('../fonts/roboto-v20-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
-       url('../fonts/roboto-v20-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  src: local(""), url("../fonts/roboto-v20-latin-regular.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */ url("../fonts/roboto-v20-latin-regular.woff") format("woff"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 @media (min-width: 768px) {

@@ -1,5 +1,5 @@
-Vue.component('member-card', {
-  props: ['member'],
+Vue.component("member-card", {
+  props: ["member"],
   template: `
         <li v-bind:class="['member', member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
             v-bind:style="liStyle">
@@ -64,103 +64,125 @@ Vue.component('member-card', {
         interactive: true,
         appendTo: () => document.body,
         content: this.$refs.thumbnail,
-        maxWidth: 'none',
+        maxWidth: "none",
       });
     }
   },
 
   computed: {
     isFavourite() {
-      return app.favourites.includes(this.member.twitter)
+      return app.favourites.includes(this.member.twitter);
     },
 
     isLive: function () {
-      return this.member.video && (this.member.video.start === 0 || this.currentTimestamp() > this.member.video.start)
+      return this.member.video && (this.member.video.start === 0 || this.currentTimestamp() > this.member.video.start);
     },
 
     scheduledTitle: function () {
       if (this.member.video) {
-        const date = new Date(this.member.video.start * 1000)
-        return "Live " + moment(date).fromNow()
+        const date = new Date(this.member.video.start * 1000);
+        return "Live " + moment(date).fromNow();
       }
     },
 
     calendarLink: function () {
-      return window.location.host + "/events/" + this.member.twitter + ".ics?noCache"
+      return window.location.host + "/events/" + this.member.twitter + ".ics?noCache";
     },
 
     mainLink: function () {
       if (this.member.youtube_subs) {
-        if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id
-        else "https://youtube.com/channel/" + this.member.youtube
+        if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id;
+        else "https://youtube.com/channel/" + this.member.youtube;
       } else if (this.member.twitter_subs) {
-        return 'https://twitter.com/' + this.member.twitter
+        return "https://twitter.com/" + this.member.twitter;
       } else if (this.member.bilibili_subs) {
-        return 'https://space.bilibili.com/' + member.bilibili
+        return "https://space.bilibili.com/" + member.bilibili;
       } else {
-        return '#'
+        return "#";
       }
     },
 
     liStyle: function () {
-      let style = {backgroundImage: `linear-gradient(180deg, ${this.member.bg} 0%, ${this.colourShade(-.9, this.member.bg)} 100%)`}
+      let style = {
+        backgroundImage: `linear-gradient(180deg, ${this.member.bg} 0%, ${this.colourShade(
+          -0.9,
+          this.member.bg
+        )} 100%)`,
+      };
       if (this.member.background_image && !app.settings.simpleBackgrounds.value) {
-        style.backgroundImage = `url("${this.member.background_image}"), ${style.backgroundImage}`
+        style.backgroundImage = `url("${this.member.background_image}"), ${style.backgroundImage}`;
       }
-      return style
+      return style;
     },
 
     nameStyle: function () {
       if (this.member.background_image && !app.settings.simpleBackgrounds.value) {
-        return {color: '#222', 'font-weight': 'bold'}
+        return { color: "#222", "font-weight": "bold" };
       } else {
-        return {color: this.member.fg, 'font-weight': 'normal'}
+        return { color: this.member.fg, "font-weight": "normal" };
       }
-    }
+    },
   },
 
   methods: {
     toggleFavourite() {
-      let index = app.favourites.indexOf(this.member.twitter)
-      if (index !== -1) app.favourites.splice(index, 1)
-      else app.favourites.push(this.member.twitter)
+      let index = app.favourites.indexOf(this.member.twitter);
+      if (index !== -1) app.favourites.splice(index, 1);
+      else app.favourites.push(this.member.twitter);
     },
 
     currentTimestamp() {
-      return (new Date()).getTime() / 1000
+      return new Date().getTime() / 1000;
     },
 
     // https://stackoverflow.com/a/13542669/5699307
     // Takes a 6 char hex, shades it and returns a rgb(...) value
     colourShade(p, c) {
-      var m = Math.round, c = parseInt(c.slice(1), 16), r = c >> 16, g = c >> 8 & 255, b = c & 255, P = p < 0, t = P ? 0 : p * 255 ** 2, P = P ? 1 + p : 1 - p;
-      return "rgb" + "(" + m((P * r ** 2 + t) ** 0.5) + "," + m((P * g ** 2 + t) ** 0.5) + "," + m((P * b ** 2 + t) ** 0.5) + ")";
+      var m = Math.round,
+        c = parseInt(c.slice(1), 16),
+        r = c >> 16,
+        g = (c >> 8) & 255,
+        b = c & 255,
+        P = p < 0,
+        t = P ? 0 : p * 255 ** 2,
+        P = P ? 1 + p : 1 - p;
+      return (
+        "rgb" +
+        "(" +
+        m((P * r ** 2 + t) ** 0.5) +
+        "," +
+        m((P * g ** 2 + t) ** 0.5) +
+        "," +
+        m((P * b ** 2 + t) ** 0.5) +
+        ")"
+      );
     },
 
     nFormatter(num, digits) {
       if (num === undefined) return;
       var si = [
-        {value: 1, symbol: ''},
-        {value: 1E3, symbol: 'k'},
-        {value: 1E6, symbol: 'M'},
-        {value: 1E9, symbol: 'G'},
-        {value: 1E12, symbol: 'T'},
-        {value: 1E15, symbol: 'P'},
-        {value: 1E18, symbol: 'E'}
+        { value: 1, symbol: "" },
+        { value: 1e3, symbol: "k" },
+        { value: 1e6, symbol: "M" },
+        { value: 1e9, symbol: "G" },
+        { value: 1e12, symbol: "T" },
+        { value: 1e15, symbol: "P" },
+        { value: 1e18, symbol: "E" },
       ];
-      var i, rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+      var i,
+        rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
       for (i = si.length - 1; i > 0; i--) {
         if (num >= si[i].value) {
           break;
         }
       }
-      return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
+      return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
     },
   },
 });
 
-Vue.component('member-group', {
-  props: ['id', 'group'],
+Vue.component("member-group", {
+  props: ["id", "group"],
   template: `
         <section v-bind:id="id" :style="{order: group.order}">
           <h2 v-if="group.show_title">{{ group.name }}</h2>
@@ -176,7 +198,7 @@ Vue.component('member-group', {
 
   computed: {
     filteredMembers() {
-      let members = []
+      let members = [];
 
       for (let member of this.group.members) {
         if (
@@ -184,136 +206,132 @@ Vue.component('member-group', {
           (app.settings.onlyLive.value && !member.video) ||
           (app.settings.onlyFavourites.value && !app.favourites.includes(member.twitter))
         ) {
-          continue
+          continue;
         }
-        members.push(member)
-
+        members.push(member);
       }
 
       if (app.settings.sortLive.value && !app.settings.sortName.value) {
         members.sort((a, b) => {
-          if (a.video && b.video) return a.video.start - b.video.start
-          else if (a.video) return -1
-          else if (b.video) return 1
-          return 0
-        })
+          if (a.video && b.video) return a.video.start - b.video.start;
+          else if (a.video) return -1;
+          else if (b.video) return 1;
+          return 0;
+        });
       }
 
       if (app.settings.sortName.value) {
-        members.sort((a,b) => {
-          if (a.name > b.name) return 1
-          else if (a.name < b.name) return -1
-          return 0
-        })
+        members.sort((a, b) => {
+          if (a.name > b.name) return 1;
+          else if (a.name < b.name) return -1;
+          return 0;
+        });
       }
 
       if (app.settings.sortFavourites.value) {
         members.sort((a, b) => {
-          if (app.favourites.includes(a.twitter) && app.favourites.includes(b.twitter)) return 0
-          else if (app.favourites.includes(a.twitter)) return -1
-          return 1
-        })
+          if (app.favourites.includes(a.twitter) && app.favourites.includes(b.twitter)) return 0;
+          else if (app.favourites.includes(a.twitter)) return -1;
+          return 1;
+        });
       }
-      return members
+      return members;
     },
   },
 });
 
 var app = new Vue({
-  el: '#app',
+  el: "#app",
   data: {
     groups: {},
     meta: {},
     favourites: [],
     settings: {
       exportSettings: {
-        value: 'exportSettingsProcedure',
+        value: "exportSettingsProcedure",
         label: "Export settings",
       },
       simpleBackgrounds: {
         value: false,
-        label: 'Show simple backgrounds',
+        label: "Show simple backgrounds",
       },
       retired: {
         value: true,
-        label: 'Show retired',
+        label: "Show retired",
       },
       bilibili: {
         value: false,
-        label: 'Show Bilibili',
+        label: "Show Bilibili",
       },
       onlyLive: {
         value: false,
-        label: 'Only show currently live',
+        label: "Only show currently live",
       },
       sortLive: {
         value: false,
-        label: 'Sort by live status',
+        label: "Sort by live status",
       },
       onlyFavourites: {
         value: false,
-        label: "Only show favourites"
+        label: "Only show favourites",
       },
       sortFavourites: {
         value: true,
-        label: "Sort favourites first"
+        label: "Sort favourites first",
       },
       sortName: {
         value: false,
-        label: "Sort by name"
-      }
-    }
+        label: "Sort by name",
+      },
+    },
   },
 
   mounted() {
-    this.installServiceWorker()
-    this.importSettingsFromLink(window.location.href)
-    this.loadSettings()
-    this.loadStats()
-    setInterval(this.loadStats, 1000 * 60 * 5)
+    this.installServiceWorker();
+    this.importSettingsFromLink(window.location.href);
+    this.loadSettings();
+    this.loadStats();
+    setInterval(this.loadStats, 1000 * 60 * 5);
   },
 
   watch: {
     favourites(newValue) {
-      window.localStorage.setItem('favourites', newValue)
-      this.sendFavouritesToSW()
-    }
+      window.localStorage.setItem("favourites", newValue);
+      this.sendFavouritesToSW();
+    },
   },
 
   methods: {
     installServiceWorker() {
       if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/service_worker.js")
+        navigator.serviceWorker.register("/service_worker.js");
 
         if (Notification.permission === "default") {
-          Notification.requestPermission()
-            .then(state => {
-              if (state === "granted") new Notification("You will get live update for your favourite talents!")
-            })
+          Notification.requestPermission().then((state) => {
+            if (state === "granted") new Notification("You will get live update for your favourite talents!");
+          });
         }
       }
     },
 
     loadStats() {
-      axios
-        .get('stats.json')
-        .then(response => {
-          this.groups = response.data.groups;
-          this.meta = response.data.meta;
-          document.getElementById('lastUpdated').textContent = this.meta.subsLastUpdate;
-        });
+      axios.get("stats.json").then((response) => {
+        this.groups = response.data.groups;
+        this.meta = response.data.meta;
+        document.getElementById("lastUpdated").textContent = this.meta.subsLastUpdate;
+      });
     },
 
     exportSettingsProcedure() {
-      const url = this.exportSettingsLink()
+      const url = this.exportSettingsLink();
 
       function failed() {
-        window.history.pushState("", "", url)
+        window.history.pushState("", "", url);
         Toastify({
           text: "Copy the URL. Use it to automatically import the settings again.",
           duration: 7000,
-          position: 'center',
-        }).showToast()
+          position: "center",
+        }).showToast();
       }
 
       if (window.navigator.clipboard) {
@@ -321,93 +339,91 @@ var app = new Vue({
           Toastify({
             text: "The settings URL has been copied. Use it to automatically import the settings again.",
             duration: 7000,
-            position: 'center',
-          }).showToast()
-        }, failed)
+            position: "center",
+          }).showToast();
+        }, failed);
       } else {
-        failed()
+        failed();
       }
     },
 
     exportSettingsLink() {
-      let url = window.location.origin + "?"
-      url += "favourites=" + window.localStorage.getItem("favourites")
+      let url = window.location.origin + "?";
+      url += "favourites=" + window.localStorage.getItem("favourites");
 
       for (const name in this.settings) {
-        url += `&${name}=${window.localStorage.getItem(name)}`
+        url += `&${name}=${window.localStorage.getItem(name)}`;
       }
 
-      return url
+      return url;
     },
 
     importSettingsFromLink(link) {
-      const url = new URL(link)
+      const url = new URL(link);
       if (url.search) {
         url.searchParams.forEach((value, key) => {
-          window.localStorage.setItem(key, value)
-        })
-        window.history.pushState("", "", window.location.origin)
+          window.localStorage.setItem(key, value);
+        });
+        window.history.pushState("", "", window.location.origin);
 
         Toastify({
           text: "Imported settings",
           duration: 3000,
-          position: 'center',
-        }).showToast()
+          position: "center",
+        }).showToast();
       }
     },
 
     loadSettings() {
-      let container = document.getElementById('settings');
+      let container = document.getElementById("settings");
 
-      this.favourites = window.localStorage.getItem("favourites")?.split(",") || []
+      this.favourites = window.localStorage.getItem("favourites")?.split(",") || [];
 
       for (const name in this.settings) {
-        let label = document.createElement('label')
-        label.setAttribute('for', name)
-        label.textContent = this.settings[name].label
+        let label = document.createElement("label");
+        label.setAttribute("for", name);
+        label.textContent = this.settings[name].label;
 
-        let defaultValue = this.settings[name].value
-        if (typeof defaultValue === 'string') {
-          label.addEventListener('click', this[defaultValue])
+        let defaultValue = this.settings[name].value;
+        if (typeof defaultValue === "string") {
+          label.addEventListener("click", this[defaultValue]);
         } else {
-          let storedValue = window.localStorage.getItem(name)
-          this.settings[name].value = storedValue === null ? defaultValue : (storedValue === 'true' ? true : false)
+          let storedValue = window.localStorage.getItem(name);
+          this.settings[name].value = storedValue === null ? defaultValue : storedValue === "true" ? true : false;
 
-          let box = document.createElement('input')
-          box.name = name
-          box.id = name
-          box.type = 'checkbox'
-          box.checked = this.settings[name].value
+          let box = document.createElement("input");
+          box.name = name;
+          box.id = name;
+          box.type = "checkbox";
+          box.checked = this.settings[name].value;
 
-          box.addEventListener('change', (event) => this.toggleSetting(event.target.name))
-          container.append(box)
+          box.addEventListener("change", (event) => this.toggleSetting(event.target.name));
+          container.append(box);
         }
 
-        container.append(label)
-
+        container.append(label);
       }
-      this.updateClasses()
+      this.updateClasses();
     },
 
     sendFavouritesToSW() {
-      const bc = new BroadcastChannel("sw")
+      const bc = new BroadcastChannel("sw");
       bc.postMessage({
         target: "favourites",
-        data: this.favourites
-      })
+        data: this.favourites,
+      });
     },
 
     toggleSetting(name) {
-      this.settings[name].value = !this.settings[name].value
-      window.localStorage.setItem(name, this.settings[name].value)
-      this.updateClasses()
+      this.settings[name].value = !this.settings[name].value;
+      window.localStorage.setItem(name, this.settings[name].value);
+      this.updateClasses();
     },
 
     updateClasses() {
       for (const name in this.settings) {
-        document.body.classList.toggle(name, this.settings[name].value)
+        document.body.classList.toggle(name, this.settings[name].value);
       }
-    }
+    },
   },
 });
-
