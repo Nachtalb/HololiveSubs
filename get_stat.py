@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from concurrent.futures import ProcessPoolExecutor
-from datetime import datetime
 import json
-from json.decoder import JSONDecodeError
 import logging
 import os
-from pathlib import Path
-from subprocess import Popen
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
+from datetime import datetime
+from json.decoder import JSONDecodeError
+from pathlib import Path
+from subprocess import Popen
 from typing import Any
 from zoneinfo import ZoneInfo
 
+import requests
 from bilibili_api import sync, user
 from dotenv import load_dotenv
-import requests
 from tweepy import Client as TwitterClient
 from tweepy.user import User as TwitterUser
 from yarl import URL
@@ -50,7 +50,10 @@ TALENTS = TALENTS_DATA["talents"]
 
 NOW = datetime.now().astimezone(ZoneInfo("UTC")).isoformat(timespec="minutes")
 
-CURRENT_STATS = {"groups": {}, "meta": {"subsLastUpdate": NOW, "liveEventsLastUpdate": NOW}}
+CURRENT_STATS = {
+    "groups": {},
+    "meta": {"subsLastUpdate": NOW, "liveEventsLastUpdate": NOW},
+}
 if STATS_PATH.is_file():
     try:
         CURRENT_STATS = json.loads(STATS_PATH.read_text())
@@ -81,7 +84,7 @@ def get_twitter_data() -> dict[str, dict[str, Any]]:
     LOG.info("Getting Twitter stats")
     data = TWITTER_API_CLIENT.get_list_members(
         os.environ["TWITTER_MEMBER_LIST"],
-        user_fields=[ "id", "name", "username", "profile_image_url", "public_metrics"],
+        user_fields=["id", "name", "username", "profile_image_url", "public_metrics"],
     ).data  # pyright: ignore
     return {talent.username.lower(): dict(talent) for talent in data}
 
@@ -92,7 +95,11 @@ def get_bilibili_data(talent: dict) -> dict | None:
         try:
             return sync(user.User(talent["bilibili"]).get_relation_info())
         except Exception as error:
-            LOG.warning('[%s] Could not load bilibili data due to "%s"', talent["name"], str(error))
+            LOG.warning(
+                '[%s] Could not load bilibili data due to "%s"',
+                talent["name"],
+                str(error),
+            )
 
 
 def json_getattr(key, json, default=None):
@@ -245,7 +252,10 @@ with ProcessPoolExecutor(5) as executor:
         # only check whether the account is live or not
         LOG.info("Updating YouTube live status")
         for group in CURRENT_STATS["groups"].values():
-            for talent, video_info in zip(group["members"], executor.map(next_youtube_live_schedule, group["members"])):
+            for talent, video_info in zip(
+                group["members"],
+                executor.map(next_youtube_live_schedule, group["members"]),
+            ):
                 talent["video"] = video_info
 
         CURRENT_STATS["meta"]["liveEventsLastUpdate"] = NOW
@@ -264,7 +274,11 @@ with ProcessPoolExecutor(5) as executor:
         for talent, result in zip(TALENTS, map_data):
             talent.update(result)
 
-        for data in sorted(TALENTS, reverse=True, key=lambda data: data.get("youtube_subs", data["twitter_subs"])):
+        for data in sorted(
+            TALENTS,
+            reverse=True,
+            key=lambda data: data.get("youtube_subs", data["twitter_subs"]),
+        ):
             group_name = data.get("group", "talents")
             GROUPS[group_name]["members"].append(data)
 

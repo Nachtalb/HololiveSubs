@@ -155,4 +155,6 @@ rgb2hex = lambda rgb: "#" + "".join([hex(val)[2:] for val in rgb])
 hex2rgb = lambda h: tuple(int(h[i : i + 2], 16) for i in (0, 2, 4))
 
 distance = lambda x1, y1, z1, x2, y2, z2: math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
-best_match = lambda rgb: min([(name, distance(*rgb, *val), val) for name, val in CSS_COLOUR_MAP.items()], key=lambda t: t[1])
+best_match = lambda rgb: min(
+    [(name, distance(*rgb, *val), val) for name, val in CSS_COLOUR_MAP.items()], key=lambda t: t[1]
+)

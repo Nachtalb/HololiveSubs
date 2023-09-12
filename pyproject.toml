@@ -19,8 +19,33 @@ pillow = "^10.0.0"
 
 [tool.poetry.group.dev.dependencies]
 ipdb = "^0.13.13"
-ipython = {extras = ["black"], version = "^8.14.0"}
+ipython = { extras = ["black"], version = "^8.14.0" }
+
+
+[tool.poetry.group.deve.dependencies]
+black = "^23.9.1"
+isort = "^5.12.0"
+mypy = "^1.5.1"
+ruff = "^0.0.289"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+line_length = 120
+
+[tool.black]
+line-length = 120
+preview = true
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.mypy]
+python_version = "3.11"
+show_error_codes = true
+pretty = true
+strict = true

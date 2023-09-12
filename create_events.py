@@ -80,7 +80,10 @@ def new_calendar(member):
             ContentLine("X-WR-CALNAME", value=name),
             ContentLine(
                 "DESCRIPTION",
-                value=f"Calendar with all new live streams for {member['name']}. New live streams will be set to 1h long and then adjusted during the live stream.",
+                value=(
+                    f"Calendar with all new live streams for {member['name']}. New live streams will be set to 1h long"
+                    " and then adjusted during the live stream."
+                ),
             ),
             ContentLine(
                 "SOURCE",
@@ -110,9 +113,7 @@ def new_event(member, calendar):
     uid = cal_id(video)
 
     name = f"[{member['name']}] - {video['title']}"
-    description = (
-        f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
-    )
+    description = f"Watch {member['name']} live on YouTube https://youtu.be/{video['id']}"
 
     start = datetime.fromtimestamp(video["start"]).astimezone(UTC)
     if video["start"] == 0:
@@ -149,13 +150,7 @@ for group in stats["groups"].values():
             try:
                 imported_calendar = Calendar(content)
 
-                if not any(
-                    [
-                        extra
-                        for extra in imported_calendar.extra
-                        if extra.name == "SOURCE"
-                    ]
-                ):
+                if not any([extra for extra in imported_calendar.extra if extra.name == "SOURCE"]):
                     calendar = new_calendar(member)
                     calendar.events = imported_calendar.events
                 else:

@@ -10,8 +10,9 @@ from zoneinfo import ZoneInfo
 
 import requests
 from PIL import Image, ImageDraw
-from rfeed import Enclosure, Feed, Guid, Item
+from rfeed import Enclosure, Feed, Guid
 from rfeed import Image as RImage
+from rfeed import Item
 
 
 class Video(TypedDict):
@@ -53,9 +54,7 @@ RETENTION = timedelta(days=7)
 
 RSS_IMAGE_SIZE = (144, 144)
 
-stats: dict[str, dict[str, dict[str, list[Member]]]] = json.loads(
-    (BASE_PATH / "www/stats.json").read_text()
-)
+stats: dict[str, dict[str, dict[str, list[Member]]]] = json.loads((BASE_PATH / "www/stats.json").read_text())
 
 
 def uuid(value: str) -> str:
@@ -172,11 +171,7 @@ def new_event(member: Member, feed: Feed) -> Item:
             rss_id(member["video"]),
             isPermaLink=False,
         ),
-        pubDate=(
-            datetime.fromtimestamp(member["video"]["start"]).astimezone(UTC)
-            if member["video"]["start"]
-            else NOW
-        ),
+        pubDate=(datetime.fromtimestamp(member["video"]["start"]).astimezone(UTC) if member["video"]["start"] else NOW),
         link=yt_link(member["video"]),
         enclosure=Enclosure(
             length=get_image_size_by_url(member["video"]["thumbnail"]),
