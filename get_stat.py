@@ -165,12 +165,20 @@ def get_live_video_info(html):
 
 def next_youtube_live_schedule(channel: dict) -> None | dict:
     LOG.info("[%s] Live on YouTube check", channel["name"])
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0"
+            " Safari/537.36"
+        ),
+        "Cookie": (
+            "CONSENT=YES+926; SOCS=CAESEwgDEgk1NjQ0NjAzMDMaAmVuIAEaBgiA1P6nBg; VISITOR_PRIVACY_METADATA=CgJDSBICGgA%3D;"
+            " YSC=poeLmbJpLv0; __Secure-YEC=CgtaMmhvRHI5WTJjWSizvYOoBjIICgJDSBICGgA%3D"
+        ),
+    }
     try:
         res = requests.get(
             f"https://www.youtube.com/channel/{channel['youtube']}/live",
-            headers={
-                "Cookie": "CONSENT=YES+cb.20210328-17-p0.en-GB+FX+634; VISITOR_INFO1_LIVE=9Ovd7YuEQbw; YSC=Tnb5Btx3xik"
-            },
+            headers=headers,
         )
         res.raise_for_status()
         return get_live_video_info(res.text)
