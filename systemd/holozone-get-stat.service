@@ -1,0 +1,9 @@
+[Unit]
+Description=Get subscriber + live events stats
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/dietpi/src/github.com/Nachtalb/HololiveSubs
+ExecStart=/home/dietpi/.cache/pypoetry/virtualenvs/hololivesubs-PE9y_kui-py3.11/bin/python get_stat.py
+StandardOutput=syslog
+SyslogIdentifier=holozone

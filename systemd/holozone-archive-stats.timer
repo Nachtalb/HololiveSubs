@@ -1,0 +1,10 @@
+[Unit]
+Description=Archive holo stats at 00:00 every day
+
+[Timer]
+OnCalendar=*-*-* 00:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+
