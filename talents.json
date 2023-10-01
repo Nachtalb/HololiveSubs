@@ -105,6 +105,12 @@
         {"id":  151,  "name":  "Kaela Kovalskia",       "bg":  "#ff3a3a",  "fg":  "#fff",  "twitter":  "kaelakovalskia",   "youtube":  "UCZLZ8Jjx_RN2CXloOmgTHVg",  "bilibili":  "",           "retired":  false},
         {"id":  152,  "name":  "Vestia Zeta",           "bg":  "#91a2df",  "fg":  "#fff",  "twitter":  "vestiazeta",       "youtube":  "UCTvHWSfBZgtxE4sILOaurIQ",  "bilibili":  "",           "retired":  false},
 
+        {"id":  160,  "name":  "Hiodoshi Ao",           "bg":  "#16264b",  "fg":  "#fff",  "twitter":  "hiodoshiao",        "youtube":  "UCMGfV7TVTmHhEErVJg1oHBQ",  "bilibili":  "",           "retired":  false},
+        {"id":  161,  "name":  "Otonose Kanade",        "bg":  "#f6c663",  "fg":  "#fff",  "twitter":  "otonosekanade",     "youtube":  "UCWQtYtq9EOB4-I5P-3fh8lA",  "bilibili":  "",           "retired":  false},
+        {"id":  162,  "name":  "Ichijou Ririka",        "bg":  "#ee558b",  "fg":  "#fff",  "twitter":  "ichijouririka",     "youtube":  "UCtyWhCj3AqKh2dXctLkDtng",  "bilibili":  "",           "retired":  false},
+        {"id":  163,  "name":  "Juufuutei Raden",       "bg":  "#1c5e4f",  "fg":  "#fff",  "twitter":  "juufuuteiraden",    "youtube":  "UCdXAk5MpyLD8594lm_OvtGQ",  "bilibili":  "",           "retired":  false},
+        {"id":  164,  "name":  "Todoroki Hajime",       "bg":  "#9293fe",  "fg":  "#fff",  "twitter":  "todoroki_hajime",   "youtube":  "UC1iA6_NT4mtAcIII6ygrvCw",  "bilibili":  "",           "retired":  false},
+
         {"id":  1,    "name":  "Best Girl (Yagoo)",     "bg":  "#C3B4AF",  "fg":  "#fff",  "twitter":  "tanigox",          "youtube":  "UCu2DMOGLeR_DSStCyeQpi5Q",  "bilibili":  "",           "group":    "staff",  "retired":  false},
         {"id":  2,    "name":  "A-Chan",                "bg":  "#413982",  "fg":  "#fff",  "twitter":  "achan_uga",        "youtube":  "",                          "bilibili":  "",           "group":    "staff",  "retired":  false},
         {"id":  3,    "name":  "Omega\u03b1",           "bg":  "#fbdeeb",  "fg":  "#fff",  "twitter":  "omegaalpha_en",    "youtube":  "UCKYyiJwNg2nV7hM86U5_wvw",  "bilibili":  "",           "group":    "staff",  "retired":  false},
