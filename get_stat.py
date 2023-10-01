@@ -1,23 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import json
-import logging
-import os
-import sys
-import time
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
+import json
 from json.decoder import JSONDecodeError
+import logging
+import os
 from pathlib import Path
 from subprocess import Popen
+import sys
+import time
 from typing import Any
 from zoneinfo import ZoneInfo
 
-import requests
 from bilibili_api import sync, user
 from dotenv import load_dotenv
-from tweepy import Client as TwitterClient
-from tweepy.user import User as TwitterUser
+import requests
 from yarl import URL
 
 BASE_PATH = Path(__file__).absolute().parent
@@ -33,11 +31,11 @@ STATS_PATH = BASE_PATH / "www/stats.json"
 
 LOW_POLY_TOOL = BASE_PATH / "triangulate-tool/build/triangulate-tool"
 
+TWITTER_BEARER_TOKEN = os.environ["TWITTER_BEARER_TOKEN"]
+
 # APIs
 YT_API_KEY = os.environ["YOUTUBE_KEY"]
 YT_API_URL = "https://www.googleapis.com/youtube/v3/channels?part={parts}&id={channels}&key={key}"
-
-TWITTER_API_CLIENT = TwitterClient(os.environ["TWITTER_BEARER_TOKEN"])
 
 # Logging
 logging.basicConfig(level=logging.INFO)
@@ -80,13 +78,27 @@ def get_youtube_data() -> dict:
     return result
 
 
+def get_list_members() -> dict[str, Any]:
+    url = f"https://api.twitter.com/1.1/lists/members.json"
+    response = requests.get(
+        url,
+        headers={"Authorization": f"Bearer {TWITTER_BEARER_TOKEN}"},
+        params={
+            "list_id": os.environ["TWITTER_MEMBER_LIST"],
+            "count": 1000,
+        },
+    )
+
+    if response.status_code != 200:
+        raise Exception(f"Request returned an error: {response.status_code} {response.text}")
+
+    return response.json()
+
+
 def get_twitter_data() -> dict[str, dict[str, Any]]:
     LOG.info("Getting Twitter stats")
-    data = TWITTER_API_CLIENT.get_list_members(
-        os.environ["TWITTER_MEMBER_LIST"],
-        user_fields=["id", "name", "username", "profile_image_url", "public_metrics"],
-    ).data  # pyright: ignore
-    return {talent.username.lower(): dict(talent) for talent in data}
+    data = get_list_members()
+    return {talent["screen_name"].lower(): talent for talent in data["users"]}
 
 
 def get_bilibili_data(talent: dict) -> dict | None:
@@ -196,7 +208,7 @@ def next_youtube_live_schedule(channel: dict) -> None | dict:
 def get_images(twitter: dict[str, Any], name: str) -> tuple[str | None, str | None]:
     profile_image_url = background_image_url = None
 
-    image_url = URL(twitter["profile_image_url"].replace("_normal", ""))  # type: ignore
+    image_url = URL(twitter["profile_image_url_https"].replace("_normal", ""))  # type: ignore
     image_path = IMAGES_PATH / image_url.name
 
     if not image_path.is_file():
@@ -231,7 +243,7 @@ def summarize_data(channel_data: dict, twitter: dict[str, Any], youtube: dict | 
     update_data = {
         "image": images[0],
         "background_image": images[1],
-        "twitter_subs": twitter["public_metrics"]["followers_count"],
+        "twitter_subs": twitter["followers_count"],
         "video": None,
     }
 
