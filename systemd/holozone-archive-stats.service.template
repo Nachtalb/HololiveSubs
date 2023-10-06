@@ -1,0 +1,9 @@
+[Unit]
+Description=Archive holo stats
+
+[Service]
+Type=oneshot
+WorkingDirectory={{WORKING_DIR}}
+ExecStart={{WORKING_DIR}}/bin/archive.sh
+StandardOutput=syslog
+SyslogIdentifier=holoarchive

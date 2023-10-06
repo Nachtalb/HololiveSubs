@@ -59,11 +59,11 @@ if STATS_PATH.is_file():
         pass
 
 
-def get_youtube_data() -> dict:
+def get_youtube_data() -> dict[str, Any]:
     LOG.info("Getting YouTube stats")
     parts = ["statistics"]
 
-    channel_ids = list(filter(None, map(lambda data: data["youtube"], TALENTS)))
+    channel_ids             : list[str]= list(filter(None, map(lambda data: data["youtube"], TALENTS)))
     chunked_channel_ids = [channel_ids[:50], channel_ids[50:]]
 
     result = {}
@@ -92,7 +92,7 @@ def get_list_members() -> dict[str, Any]:
     if response.status_code != 200:
         raise Exception(f"Request returned an error: {response.status_code} {response.text}")
 
-    return response.json()
+    return response.json()  # type: ignore[no-any-return]
 
 
 def get_twitter_data() -> dict[str, dict[str, Any]]:

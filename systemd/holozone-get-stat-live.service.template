@@ -1,0 +1,9 @@
+[Unit]
+Description=Get live events stats
+
+[Service]
+Type=oneshot
+WorkingDirectory={{WORKING_DIR}}
+ExecStart={{PYTHON_EXEC}} get_stat.py live
+StandardOutput=syslog
+SyslogIdentifier=holozone

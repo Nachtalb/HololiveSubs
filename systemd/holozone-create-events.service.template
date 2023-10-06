@@ -1,0 +1,9 @@
+[Unit]
+Description=Update calendar ICS files
+
+[Service]
+Type=oneshot
+WorkingDirectory={{WORKING_DIR}}
+ExecStart={{PYTHON_EXEC}} create_events.py
+StandardOutput=syslog
+SyslogIdentifier=holozone

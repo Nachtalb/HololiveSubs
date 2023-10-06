@@ -1,0 +1,9 @@
+[Unit]
+Description=Get subscriber + live events stats
+
+[Service]
+Type=oneshot
+WorkingDirectory={{WORKING_DIR}}
+ExecStart={{PYTHON_EXEC}} get_stat.py
+StandardOutput=syslog
+SyslogIdentifier=holozone
