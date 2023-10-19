@@ -33,37 +33,56 @@
     <script src="/resources/js/toastify.min.js"></script>
   </head>
   <body>
-    <main>
-      <div id="app">
+    <div id="app">
+      <Transition name="fade">
+        <div v-if="showSettings" id="backdrop"></div>
+      </Transition>
+      <main>
         <member-group
           v-for="(group, id) in groups"
           v-bind:id="id"
           v-bind:group="group"
           v-bind:key="group.order"
         ></member-group>
-      </div>
-    </main>
+      </main>
 
-    <footer>
-      <div id="meta">
-        Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with
-        <a href="https://en.hololive.tv/" target="_blank">Hololive</a>). Last update:
-        <abbr id="lastUpdated" title="Every 30min">-</abbr>. (Twitter) Profile pictures are also updated.
-        <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a><br />
-        You can also add this <a href="webcal://hololive.zone/events/all.ics?noCache" target="_blank">calendar</a> with
-        all live events or find your RSS feeds <a href="https://hololive.zone/rss/" target="_blank">here</a>! There is a
-        daily <a href="/archive" target="_blank" title="Daily Archive">archive</a> of the stats which you can use for
-        your projects as well.
-      </div>
-      <div id="settingsWrapper">
-        <div id="settingsToggler">
-          <label for="settingsCheckbox">Settings</label>
+      <footer>
+        <div id="meta">
+          Website created by <a href="https://nachtalb.io" target="_blank">Nachtalb</a> (no affiliation with
+          <a href="https://en.hololive.tv/" target="_blank">Hololive</a>). Last update:
+          <abbr ref="lastUpdated" id="lastUpdated" title="Every 30min">-</abbr>. (Twitter) Profile pictures are also
+          updated. <a href="https://github.com/Nachtalb/HololiveSubs" target="_blank">Source</a><br />
+          You can also add this
+          <a href="webcal://hololive.zone/events/all.ics?noCache" target="_blank">calendar</a> with all live events or
+          find your RSS feeds <a href="https://hololive.zone/rss/" target="_blank">here</a>! There is a daily
+          <a href="/archive" target="_blank" title="Daily Archive">archive</a> of the stats which you can use for your
+          projects as well.
         </div>
+      </footer>
 
-        <input type="checkbox" class="hidden" id="settingsCheckbox" onchange="console.log(this.checked)" />
-        <div id="settings"></div>
+      <div id="settings-wrapper">
+        <div id="settings" :class="{ open: showSettings }">
+          <Transition name="settings">
+            <div id="settings-popup" v-if="showSettings">
+              <div v-for="(setting, key) in settings" v-if="typeof setting.value !== 'string'">
+                <label :for="key">
+                  <input type="checkbox" :id="key" :name="key" v-model="setting.value" @change="toggleSetting(key)" />
+                  <span class="checkbox"></span>
+                  <span>{{ setting.label }}</span>
+                </label>
+              </div>
+              <div v-for="(setting, key) in settings" v-if="typeof setting.value === 'string'">
+                <a :data-key="key" :href="'#' + setting.value" @click="action(setting.value)"
+                  ><i class="icon icon-export"></i>{{ setting.label }}</a
+                >
+              </div>
+            </div>
+          </Transition>
+
+          <div id="settings-button" v-if="!showSettings">Settings</div>
+        </div>
       </div>
-    </footer>
+    </div>
 
     <script src="/resources/js/moment.min.js"></script>
     <script type="application/javascript" src="/resources/js/main.js"></script>

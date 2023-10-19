@@ -255,10 +255,12 @@ var app = new Vue({
     groups: {},
     meta: {},
     favourites: [],
+    showSettings: false,
     settings: {
       exportSettings: {
-        value: "exportSettingsProcedure",
         label: "Export settings",
+        value: "exportSettingsProcedure",
+        icon: "export",
       },
       simpleBackgrounds: {
         value: false,
@@ -300,6 +302,7 @@ var app = new Vue({
     this.importSettingsFromLink(window.location.href);
     this.loadSettings();
     this.loadStats();
+    document.addEventListener("click", this.handleClickOutsideSettings);
     setInterval(this.loadStats, 1000 * 60 * 5);
   },
 
@@ -311,6 +314,21 @@ var app = new Vue({
   },
 
   methods: {
+    handleClickOutsideSettings(event) {
+      const settingsElement = document.querySelector("#settings");
+      if (this.showSettings) {
+        if (!settingsElement.contains(event.target)) {
+          event.preventDefault();
+          this.showSettings = false;
+        }
+      } else {
+        if (settingsElement.contains(event.target)) {
+          event.preventDefault();
+          this.showSettings = true;
+        }
+      }
+    },
+
     installServiceWorker() {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("/service_worker.js");
@@ -327,7 +345,7 @@ var app = new Vue({
       axios.get("stats.json").then((response) => {
         this.groups = response.data.groups;
         this.meta = response.data.meta;
-        document.getElementById("lastUpdated").textContent = this.meta.subsLastUpdate;
+        this.$refs.lastUpdated.textContent = this.meta.subsLastUpdate;
       });
     },
 
@@ -383,34 +401,18 @@ var app = new Vue({
       }
     },
 
-    loadSettings() {
-      let container = document.getElementById("settings");
+    action(name) {
+      this[name]();
+    },
 
+    loadSettings() {
       this.favourites = window.localStorage.getItem("favourites")?.split(",") || [];
 
       for (const name in this.settings) {
-        let label = document.createElement("label");
-        label.setAttribute("for", name);
-        label.textContent = this.settings[name].label;
-
         let defaultValue = this.settings[name].value;
-        if (typeof defaultValue === "string") {
-          label.addEventListener("click", this[defaultValue]);
-        } else {
-          let storedValue = window.localStorage.getItem(name);
-          this.settings[name].value = storedValue === null ? defaultValue : storedValue === "true" ? true : false;
-
-          let box = document.createElement("input");
-          box.name = name;
-          box.id = name;
-          box.type = "checkbox";
-          box.checked = this.settings[name].value;
-
-          box.addEventListener("change", (event) => this.toggleSetting(event.target.name));
-          container.append(box);
-        }
-
-        container.append(label);
+        if (typeof defaultValue === "string") continue;
+        let storedValue = window.localStorage.getItem(name);
+        this.settings[name].value = storedValue === null ? defaultValue : storedValue === "true" ? true : false;
       }
       this.updateClasses();
     },
@@ -424,7 +426,6 @@ var app = new Vue({
     },
 
     toggleSetting(name) {
-      this.settings[name].value = !this.settings[name].value;
       window.localStorage.setItem(name, this.settings[name].value);
       this.updateClasses();
     },

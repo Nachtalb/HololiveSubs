@@ -3,7 +3,8 @@
 }
 
 html,
-body {
+body,
+#app {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -50,7 +51,31 @@ li {
   border: 1px solid white;
 }
 
-#app {
+#backdrop {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.fade-enter-active {
+  animation: fade-in 0.5s;
+}
+.fade-leave-active {
+  animation: fade-in 0.5s reverse;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+main {
   display: flex;
   flex-direction: column;
 }
@@ -177,6 +202,11 @@ li.retired {
   align-items: stretch;
 }
 
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
 .action {
   background: none;
   width: 22px;
@@ -202,13 +232,23 @@ li.retired {
   transform: scale(1.3);
 }
 
-.action-icon::before {
+.icon {
+  margin-right: 10px;
+}
+
+.icon::before {
+  display: block;
+}
+
+.action-icon::before,
+.icon::before {
   height: inherit;
   width: inherit;
 }
 
 .badge-icon::before,
-.action-icon::before {
+.action-icon::before,
+.icon::before {
   content: "";
   background-repeat: no-repeat;
   background-size: contain;
@@ -241,6 +281,11 @@ li.retired {
   background-image: url("../icons/heart-full.svg");
 }
 
+.action-export::before,
+.icon-export::before {
+  background-image: url("../icons/export.svg");
+}
+
 .badge-retired {
   background-color: grey;
 }
@@ -269,69 +314,6 @@ footer a {
   padding: 1em 0;
 }
 
-#settingsWrapper {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-}
-
-#settingsToggler {
-  width: 100%;
-  display: flex;
-  background: transparent;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0;
-  margin: 0;
-  height: 3em;
-}
-
-#settingsToggler > label {
-  height: inherit;
-  padding: 0 1em;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: center;
-  background: black;
-  cursor: pointer;
-  margin-bottom: -1px;
-}
-
-#settings {
-  display: None;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 1px;
-  background: black;
-}
-
-#settingsCheckbox:checked + #settings {
-  display: grid;
-}
-
-#settings input {
-  display: none;
-}
-
-#settings input:checked + label {
-  background: #666;
-}
-
-#settings label {
-  padding: 5px;
-  margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-
-input {
-  margin: 0;
-  vertical-align: text-top;
-}
-
 /* roboto-100 - latin */
 @font-face {
   font-family: "Roboto";
@@ -351,10 +333,6 @@ input {
 }
 
 @media (min-width: 768px) {
-  #settingsToggler > label {
-    width: 200px;
-  }
-
   ul {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -370,7 +348,7 @@ input {
   }
 
   footer {
-    padding-bottom: 2.5em;
+    padding-bottom: 4.5em;
   }
 
   #settings {
@@ -405,5 +383,155 @@ input {
 @media (min-width: 3840px) {
   ul {
     grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+#settings-wrapper {
+  position: fixed;
+  bottom: 0;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  width: calc(100% - 20px);
+}
+
+#settings {
+  background-color: black;
+  border: 1px solid black;
+  border-radius: 2em;
+  transition: all 0.4s ease;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 3em;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+#settings.open {
+  width: 100%;
+  height: auto;
+  cursor: auto;
+}
+
+#settings-popup {
+  width: 100%;
+  display: grid;
+  grid-template-columns: inherit;
+  transition: all 0.4s ease;
+  min-height: 3em;
+}
+
+#settings.open #settings-popup {
+  max-height: 1000px;
+}
+
+.sticky-button {
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#settings-popup a {
+  border: 1px solid darkgrey;
+  border-radius: 2em;
+  flex-direction: row;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  text-decoration: none;
+  text-align: center;
+}
+
+#settings-popup a:hover,
+#settings-popup a:focus {
+  background-color: rgb(255 255 255 / 10%);
+}
+#settings-popup a:active {
+  background-color: rgb(255 255 255 / 15%);
+}
+
+#settings-popup input[type="checkbox"] {
+  margin-right: 5px;
+  transform: scale(1.2);
+  transition: all 0.2s ease;
+}
+
+#settings-popup label {
+  flex: 1 1 auto;
+  padding: 10px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+#settings-popup span.checkbox {
+  position: absolute;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#settings-popup input[type="checkbox"] {
+  display: none;
+}
+
+#settings-popup input[type="checkbox"] + span.checkbox {
+  position: relative;
+  width: 30px;
+  height: 15px;
+  border-radius: 15px;
+  background: #bdc3c7;
+  display: inline-block;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+  margin-top: 2px;
+}
+
+#settings-popup input[type="checkbox"]:checked + span.checkbox {
+  background: #3498db;
+}
+
+#settings-popup input[type="checkbox"] + span.checkbox:before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #ecf0f1;
+  transition: all 0.3s ease;
+}
+
+#settings-popup input[type="checkbox"]:checked + span.checkbox:before {
+  left: 17px;
+}
+
+#settings-popup.settings-enter-active > div {
+  animation: settings 0.7s ease;
+}
+#settings-popup.settings-leave-active {
+  display: none;
+}
+
+@keyframes settings {
+  0% {
+    opacity: 0;
+    min-height: 0;
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+    min-height: 2em;
+    max-height: 4em;
   }
 }
