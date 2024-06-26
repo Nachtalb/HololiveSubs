@@ -94,7 +94,7 @@
         {"id":  112,  "name":  "Doris",                 "bg":  "#8198c8",  "fg":  "#fff",  "twitter":  "doris_hololive",   "youtube":  "",                          "bilibili":  "511613156",  "retired":  true},
         {"id":  113,  "name":  "Rosalyn",               "bg":  "#314268",  "fg":  "#fff",  "twitter":  "rosalyn_holocn",   "youtube":  "",                          "bilibili":  "511613157",  "retired":  true},
         {"id":  114,  "name":  "Spade Echo",            "bg":  "#bb88a1",  "fg":  "#fff",  "twitter":  "spadeecho",        "youtube":  "",                          "bilibili":  "456368455",  "retired":  true},
-        {"id":  115,  "name":  "Yogiri",                "bg":  "#bd536e",  "fg":  "#fff",  "twitter":  "yogiri_hololive",  "youtube":  "UCgnfPPb9JI3e9A4cXHnWbyg",                          "bilibili":  "427061218",  "retired":  true},
+        {"id":  115,  "name":  "Yogiri",                "bg":  "#bd536e",  "fg":  "#fff",  "twitter":  "yogiri_hololive",  "youtube":  "UCgnfPPb9JI3e9A4cXHnWbyg",  "bilibili":  "427061218",  "retired":  true},
 
         {"id":  140,  "name":  "Koseki Bijou",          "bg":  "#7e6bac",  "fg":  "#fff",  "twitter":  "kosekibijou",      "youtube":  "UC9p_lqQ0FEDz327Vgf5JwqA",  "bilibili":  "",           "retired":  false},
         {"id":  141,  "name":  "Nerissa Ravencroft",    "bg":  "#5260d4",  "fg":  "#fff",  "twitter":  "nerissa_en",       "youtube":  "UC_sFNM0z0MWm9A6WlKPuMMg",  "bilibili":  "",           "retired":  false},
@@ -105,11 +105,16 @@
         {"id":  151,  "name":  "Kaela Kovalskia",       "bg":  "#ff3a3a",  "fg":  "#fff",  "twitter":  "kaelakovalskia",   "youtube":  "UCZLZ8Jjx_RN2CXloOmgTHVg",  "bilibili":  "",           "retired":  false},
         {"id":  152,  "name":  "Vestia Zeta",           "bg":  "#91a2df",  "fg":  "#fff",  "twitter":  "vestiazeta",       "youtube":  "UCTvHWSfBZgtxE4sILOaurIQ",  "bilibili":  "",           "retired":  false},
 
-        {"id":  160,  "name":  "Hiodoshi Ao",           "bg":  "#16264b",  "fg":  "#fff",  "twitter":  "hiodoshiao",        "youtube":  "UCMGfV7TVTmHhEErVJg1oHBQ",  "bilibili":  "",           "retired":  false},
-        {"id":  161,  "name":  "Otonose Kanade",        "bg":  "#f6c663",  "fg":  "#fff",  "twitter":  "otonosekanade",     "youtube":  "UCWQtYtq9EOB4-I5P-3fh8lA",  "bilibili":  "",           "retired":  false},
-        {"id":  162,  "name":  "Ichijou Ririka",        "bg":  "#ee558b",  "fg":  "#fff",  "twitter":  "ichijouririka",     "youtube":  "UCtyWhCj3AqKh2dXctLkDtng",  "bilibili":  "",           "retired":  false},
-        {"id":  163,  "name":  "Juufuutei Raden",       "bg":  "#1c5e4f",  "fg":  "#fff",  "twitter":  "juufuuteiraden",    "youtube":  "UCdXAk5MpyLD8594lm_OvtGQ",  "bilibili":  "",           "retired":  false},
-        {"id":  164,  "name":  "Todoroki Hajime",       "bg":  "#9293fe",  "fg":  "#fff",  "twitter":  "todoroki_hajime",   "youtube":  "UC1iA6_NT4mtAcIII6ygrvCw",  "bilibili":  "",           "retired":  false},
+        {"id":  160,  "name":  "Hiodoshi Ao",           "bg":  "#16264b",  "fg":  "#fff",  "twitter":  "hiodoshiao",       "youtube":  "UCMGfV7TVTmHhEErVJg1oHBQ",  "bilibili":  "",           "retired":  false},
+        {"id":  161,  "name":  "Otonose Kanade",        "bg":  "#f6c663",  "fg":  "#fff",  "twitter":  "otonosekanade",    "youtube":  "UCWQtYtq9EOB4-I5P-3fh8lA",  "bilibili":  "",           "retired":  false},
+        {"id":  162,  "name":  "Ichijou Ririka",        "bg":  "#ee558b",  "fg":  "#fff",  "twitter":  "ichijouririka",    "youtube":  "UCtyWhCj3AqKh2dXctLkDtng",  "bilibili":  "",           "retired":  false},
+        {"id":  163,  "name":  "Juufuutei Raden",       "bg":  "#1c5e4f",  "fg":  "#fff",  "twitter":  "juufuuteiraden",   "youtube":  "UCdXAk5MpyLD8594lm_OvtGQ",  "bilibili":  "",           "retired":  false},
+        {"id":  164,  "name":  "Todoroki Hajime",       "bg":  "#9293fe",  "fg":  "#fff",  "twitter":  "todoroki_hajime",  "youtube":  "UC1iA6_NT4mtAcIII6ygrvCw",  "bilibili":  "",           "retired":  false},
+
+        {"id":  170,  "name":  "Elizabeth Rose Bloodflame", "bg":  "#C7383B",  "fg":  "#fff",  "twitter":  "ERBloodflame",   "youtube":  "UCW5uhrG1eCBYditmhL0Ykjw",  "bilibili":  "",           "retired":  false},
+        {"id":  171,  "name":  "Gigi Murin",                "bg":  "#FDB440",  "fg":  "#fff",  "twitter":  "gigimurin",      "youtube":  "UCDHABijvPBnJm7F-KlNME3w",  "bilibili":  "",           "retired":  false},
+        {"id":  172,  "name":  "Cecilia Immergreen",        "bg":  "#119A5C",  "fg":  "#fff",  "twitter":  "ceciliaimgreen", "youtube":  "UCvN5h1ShZtc7nly3pezRayg",  "bilibili":  "",           "retired":  false},
+        {"id":  173,  "name":  "Raora Panthera",            "bg":  "#F087A9",  "fg":  "#fff",  "twitter":  "raorapanthera",  "youtube":  "UCl69AEx4MdqMZH7Jtsm7Tig",  "bilibili":  "",           "retired":  false},
 
         {"id":  1,    "name":  "Best Girl (Yagoo)",     "bg":  "#C3B4AF",  "fg":  "#fff",  "twitter":  "tanigox",          "youtube":  "UCu2DMOGLeR_DSStCyeQpi5Q",  "bilibili":  "",           "group":    "staff",  "retired":  false},
         {"id":  2,    "name":  "A-Chan",                "bg":  "#413982",  "fg":  "#fff",  "twitter":  "achan_uga",        "youtube":  "",                          "bilibili":  "",           "group":    "staff",  "retired":  false},
