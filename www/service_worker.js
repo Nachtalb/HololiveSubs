@@ -1,4 +1,4 @@
-const PRECACHE = 'precache-v2';
+const PRECACHE = 'precache-v3';
 const RUNTIME = 'runtime';
 
 const log = () => {}
@@ -78,7 +78,7 @@ const getMembers = function* (stats) {
 const mappedStats = stats => {
   const new_stats = {}
   for (let talent of getMembers(stats)) {
-    new_stats[talent.twitter] = talent
+    new_stats[talent.slug] = talent
   }
   return new_stats
 }

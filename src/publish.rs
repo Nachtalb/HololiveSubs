@@ -55,7 +55,7 @@ pub fn merge_events(events: &mut BTreeMap<String, Event>, stats: &Value, ts: i64
         events.insert(
             id.to_string(),
             Event {
-                slug: str_of(m, "twitter"),
+                slug: str_of(m, "slug"),
                 member: str_of(m, "name"),
                 bg: str_of(m, "bg"),
                 title: str_of(video, "title"),
@@ -205,7 +205,7 @@ pub fn publish(data: &Path, site: &str, stats: &Value) -> Res<()> {
     write_atomic(&path, &serde_json::to_vec_pretty(&events)?)?;
 
     for m in members(stats) {
-        let slug = str_of(m, "twitter");
+        let slug = str_of(m, "slug");
         let name = str_of(m, "name");
         let own: Vec<_> = events.iter().filter(|(_, e)| e.slug == slug).collect();
         write_atomic(
@@ -240,7 +240,7 @@ mod tests {
     use serde_json::json;
 
     fn stats(video: Value) -> Value {
-        json!({"groups": {"talents": {"members": [{"name": "Suisei", "twitter": "suisei", "bg": "#799acb", "video": video}]}}})
+        json!({"groups": {"talents": {"members": [{"name": "Suisei", "slug": "suisei", "bg": "#799acb", "video": video}]}}})
     }
 
     #[test]

@@ -109,7 +109,7 @@ fn update_full(cfg: &Config) -> Res<Value> {
         .and_then(|b| serde_json::from_slice(&b).ok())
         .unwrap_or_default();
     let previous: Map<String, Value> = publish::members(&previous)
-        .map(|m| (str_of(m, "twitter").to_string(), m.clone()))
+        .map(|m| (str_of(m, "slug").to_string(), m.clone()))
         .collect();
 
     let talents = par_map(&talents, 6, |talent| {
@@ -117,7 +117,7 @@ fn update_full(cfg: &Config) -> Res<Value> {
         let name = str_of(talent, "name");
         let mut avatars = Vec::new();
 
-        let handle = str_of(talent, "twitter");
+        let handle = str_of(talent, "x");
         let mut x_failed = false;
         if !handle.is_empty() {
             match collect::twitter_user(handle) {
@@ -128,7 +128,11 @@ fn update_full(cfg: &Config) -> Res<Value> {
                 Err(e) => {
                     log!("[{name}] X: {e}");
                     x_failed = true;
-                    if let Some(subs) = previous.get(handle).map(|p| &p["twitter_subs"]).filter(|v| v.is_u64()) {
+                    if let Some(subs) = previous
+                        .get(str_of(talent, "slug"))
+                        .map(|p| &p["twitter_subs"])
+                        .filter(|v| v.is_u64())
+                    {
                         t.insert("twitter_subs".into(), subs.clone());
                     }
                 }

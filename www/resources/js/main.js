@@ -1,7 +1,7 @@
 Vue.component("member-card", {
   props: ["member"],
   template: `
-        <li v-bind:class="['member', member.twitter, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
+        <li v-bind:class="['member', member.slug, member.retired ? 'retired' : '', isLive ? 'live' : (member.video ? 'scheduled' : '')]"
             v-bind:style="liStyle">
           <div class="actions">
             <span @click="toggleFavourite" class="action action-icon action-heart-full" v-if="isFavourite"></span>
@@ -55,7 +55,7 @@ Vue.component("member-card", {
             </a>
             <a class="tFollowersCount followersCount"
                v-bind:title="member.twitter_subs + ' followers on X'"
-               v-bind:href="'https://x.com/' + member.twitter"
+               v-bind:href="'https://x.com/' + member.x"
                v-if="member.twitter_subs"
                target="_blank">
               <span>{{ nFormatter(member.twitter_subs, 2) }}</span> X
@@ -77,7 +77,7 @@ Vue.component("member-card", {
 
   computed: {
     isFavourite() {
-      return app.favourites.includes(this.member.twitter);
+      return app.favourites.includes(this.member.slug);
     },
 
     isLive: function () {
@@ -92,18 +92,18 @@ Vue.component("member-card", {
     },
 
     calendarLink: function () {
-      return window.location.host + "/events/" + this.member.twitter + ".ics?noCache";
+      return window.location.host + "/events/" + this.member.slug + ".ics?noCache";
     },
 
     rssLink: function () {
-      return window.location.host + "/rss/" + this.member.twitter + ".xml";
+      return window.location.host + "/rss/" + this.member.slug + ".xml";
     },
 
     mainLink: function () {
       if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id;
       if (this.member.youtube) return "https://youtube.com/channel/" + this.member.youtube;
       if (this.member.bilibili) return "https://space.bilibili.com/" + this.member.bilibili;
-      return "https://x.com/" + this.member.twitter;
+      return this.member.x ? "https://x.com/" + this.member.x : "#";
     },
 
     liStyle: function () {
@@ -130,9 +130,9 @@ Vue.component("member-card", {
 
   methods: {
     toggleFavourite() {
-      let index = app.favourites.indexOf(this.member.twitter);
+      let index = app.favourites.indexOf(this.member.slug);
       if (index !== -1) app.favourites.splice(index, 1);
-      else app.favourites.push(this.member.twitter);
+      else app.favourites.push(this.member.slug);
     },
 
     currentTimestamp() {
@@ -208,7 +208,7 @@ Vue.component("member-group", {
         if (
           (!app.settings.retired.value && member.retired) ||
           (app.settings.onlyLive.value && !member.video) ||
-          (app.settings.onlyFavourites.value && !app.favourites.includes(member.twitter))
+          (app.settings.onlyFavourites.value && !app.favourites.includes(member.slug))
         ) {
           continue;
         }
@@ -234,8 +234,8 @@ Vue.component("member-group", {
 
       if (app.settings.sortFavourites.value) {
         members.sort((a, b) => {
-          if (app.favourites.includes(a.twitter) && app.favourites.includes(b.twitter)) return 0;
-          else if (app.favourites.includes(a.twitter)) return -1;
+          if (app.favourites.includes(a.slug) && app.favourites.includes(b.slug)) return 0;
+          else if (app.favourites.includes(a.slug)) return -1;
           return 1;
         });
       }
