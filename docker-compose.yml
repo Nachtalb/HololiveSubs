@@ -3,7 +3,7 @@ services:
     image: ghcr.io/nachtalb/hololivesubs:latest
     restart: unless-stopped
     environment:
-      YOUTUBE_KEY: ${YOUTUBE_KEY}
+      YOUTUBE_KEY: ${YOUTUBE_KEY:?set YOUTUBE_KEY}
       SITE_URL: https://holo.naa.gg
     ports:
       - 8080:8080
