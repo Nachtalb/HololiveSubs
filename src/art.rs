@@ -25,7 +25,7 @@ pub fn profile_images(data: &Path, url: &str) -> Res<Images> {
         entries
             .flatten()
             .map(|e| e.file_name().to_string_lossy().into_owned())
-            .find(|n| n.starts_with(&stem) && !n.contains("_background") && !n.contains("_rss") && !n.ends_with(".tmp"))
+            .find(|n| n.starts_with(&stem) && !n.contains('_') && !n.ends_with(".tmp"))
     });
     let name = match existing {
         Some(n) => n,
@@ -42,8 +42,8 @@ pub fn profile_images(data: &Path, url: &str) -> Res<Images> {
             name
         }
     };
-    let background = format!("{stem}_background.jpg");
-    let rss = format!("{stem}_rss.png");
+    let background = format!("{stem}_lowpoly.jpg");
+    let rss = format!("{stem}_feed.png");
     if !dir.join(&background).is_file() || !dir.join(&rss).is_file() {
         let avatar = image::open(dir.join(&name))?.to_rgb8();
         let bg = low_poly(
@@ -69,23 +69,13 @@ pub fn profile_images(data: &Path, url: &str) -> Res<Images> {
 /// Same idea as triangulate-tool: `points` random points plus `per_side` on every edge,
 /// Delaunay-triangulated, each triangle filled with the average colour underneath it.
 pub fn low_poly(src: &RgbImage, points: usize, per_side: usize, seed: &str) -> RgbImage {
-    let (w, h) = (f64::from(src.width()), f64::from(src.height()));
-    let mut rng = seed.bytes().fold(0x9E37_79B9_7F4A_7C15u64, |a, b| {
-        (a ^ u64::from(b)).wrapping_mul(0x100_0000_01B3)
-    });
-    let mut rand = move || {
-        rng ^= rng << 13;
-        rng ^= rng >> 7;
-        rng ^= rng << 17;
-        (rng >> 11) as f64 / (1u64 << 53) as f64
-    };
-    let (mx, my) = (w - 1.0, h - 1.0);
-    let mut pts = vec![(0.0, 0.0), (mx, 0.0), (0.0, my), (mx, my)];
-    for i in 1..=per_side {
-        let t = i as f64 / (per_side + 1) as f64;
-        pts.extend([(t * mx, 0.0), (t * mx, my), (0.0, t * my), (mx, t * my)]);
-    }
-    pts.extend((0..points).map(|_| (rand() * mx, rand() * my)));
+    let pts = sample_points(
+        f64::from(src.width() - 1),
+        f64::from(src.height() - 1),
+        points,
+        per_side,
+        seed,
+    );
 
     let mut out = RgbImage::new(src.width(), src.height());
     for [a, b, c] in delaunay(&pts) {
@@ -125,6 +115,26 @@ pub fn low_poly(src: &RgbImage, points: usize, per_side: usize, seed: &str) -> R
     out
 }
 
+/// The 4 corners, `per_side` evenly spaced points on every edge and `points` random ones inside.
+fn sample_points(mx: f64, my: f64, points: usize, per_side: usize, seed: &str) -> Vec<(f64, f64)> {
+    let mut rng = seed.bytes().fold(0x9E37_79B9_7F4A_7C15u64, |a, b| {
+        (a ^ u64::from(b)).wrapping_mul(0x100_0000_01B3)
+    });
+    let mut rand = move || {
+        rng ^= rng << 13;
+        rng ^= rng >> 7;
+        rng ^= rng << 17;
+        (rng >> 11) as f64 / (1u64 << 53) as f64
+    };
+    let mut pts = vec![(0.0, 0.0), (mx, 0.0), (0.0, my), (mx, my)];
+    for i in 1..=per_side {
+        let t = i as f64 / (per_side + 1) as f64;
+        pts.extend([(t * mx, 0.0), (t * mx, my), (0.0, t * my), (mx, t * my)]);
+    }
+    pts.extend((0..points).map(|_| (rand() * mx, rand() * my)));
+    pts
+}
+
 /// Bowyer-Watson. Returns triangles as index triples into `pts`.
 fn delaunay(pts: &[(f64, f64)]) -> Vec<[usize; 3]> {
     let n = pts.len();
@@ -137,13 +147,18 @@ fn delaunay(pts: &[(f64, f64)]) -> Vec<[usize; 3]> {
         let sq = |p: (f64, f64)| p.0 * p.0 + p.1 * p.1;
         let ux = (sq(a) * (b.1 - c.1) + sq(b) * (c.1 - a.1) + sq(c) * (a.1 - b.1)) / d;
         let uy = (sq(a) * (c.0 - b.0) + sq(b) * (a.0 - c.0) + sq(c) * (b.0 - a.0)) / d;
+        if d.abs() < 1e-9 {
+            return (0.0, 0.0, f64::INFINITY); // degenerate (collinear) triangle: always replace it
+        }
         (ux, uy, (a.0 - ux).powi(2) + (a.1 - uy).powi(2))
     };
+    // Strictly-inside test: corner and edge points are co-circular, and treating "on the circle" as bad
+    // makes the cavity non-star-shaped, which produces overlapping triangles.
     let mut tris: Vec<([usize; 3], (f64, f64, f64))> = vec![([n, n + 1, n + 2], circum(&[n, n + 1, n + 2]))];
     for (i, &p) in all.iter().enumerate().take(n) {
         let (bad, good): (Vec<_>, Vec<_>) = tris
             .into_iter()
-            .partition(|(_, (x, y, r2))| (p.0 - x).powi(2) + (p.1 - y).powi(2) <= *r2);
+            .partition(|(_, (x, y, r2))| (p.0 - x).powi(2) + (p.1 - y).powi(2) < r2 * (1.0 - 1e-12));
         tris = good;
         let edges: Vec<(usize, usize)> = bad
             .iter()
@@ -202,6 +217,40 @@ mod tests {
     fn delaunay_square() {
         let tris = delaunay(&[(0.0, 0.0), (1.0, 0.0), (0.0, 1.0), (1.0, 1.0)]);
         assert_eq!(tris.len(), 2);
+    }
+
+    /// The triangles must tile the rectangle exactly: no overlaps (area sum) and no holes (count).
+    #[test]
+    fn delaunay_tiles_the_rectangle() {
+        for seed in ["e031604b264c7c0f", "seed", "x"] {
+            let pts = sample_points(399.0, 399.0, 150, 10, seed);
+            let tris = delaunay(&pts);
+            let area: f64 = tris
+                .iter()
+                .map(|t| {
+                    let (a, b, c) = (pts[t[0]], pts[t[1]], pts[t[2]]);
+                    ((b.0 - a.0) * (c.1 - a.1) - (c.0 - a.0) * (b.1 - a.1)).abs() / 2.0
+                })
+                .sum();
+            assert!((area - 399.0 * 399.0).abs() < 1e-3, "{seed}: area {area}");
+            let hull = 4 + 4 * 10; // every corner and edge point is on the hull
+            assert_eq!(tris.len(), 2 * pts.len() - hull - 2, "{seed}: Euler count");
+        }
+    }
+
+    #[test]
+    fn low_poly_triangles_are_flat_and_distinct() {
+        // gradient source: overlapping triangles would show up as more distinct colours than triangles
+        let src = RgbImage::from_fn(400, 400, |x, y| {
+            Rgb([(x * 255 / 399) as u8, (y * 255 / 399) as u8, 128])
+        });
+        let out = low_poly(&src, 150, 10, "seed");
+        let mut colours: Vec<_> = out.pixels().map(|p| p.0).collect();
+        colours.sort_unstable();
+        colours.dedup();
+        assert!(colours.len() <= 342, "{} colours for 342 triangles", colours.len());
+        assert!(colours.len() > 250);
+        assert!(!colours.contains(&[0, 0, 0]), "no uncovered (black) pixels");
     }
 
     #[test]
