@@ -35,7 +35,7 @@ Vue.component("member-card", {
           <a v-bind:href="mainLink"
              v-bind:title="member.name"
              target="_blank">
-            <div class="profile-image"><img v-bind:src="member.image" alt="{{ member.name }}"></div>
+            <div class="profile-image"><img v-bind:src="member.image || '/icon.png'" v-bind:alt="member.name"></div>
             <span class="name" v-bind:style="nameStyle">{{ member.name }}</span>
           </a>
           <div class="buttons">
@@ -54,11 +54,9 @@ Vue.component("member-card", {
               <span>{{ nFormatter(member.bilibili_subs, 2) }}</span> Bilibili
             </a>
             <a class="tFollowersCount followersCount"
-               v-bind:title="member.twitter_subs + ' subscribers on Twitter'"
-               v-bind:href="'https://twitter.com/' + member.twitter"
-               target="_blank">
-              <span>{{ nFormatter(member.twitter_subs, 2) }}</span> Twitter
-            </a>
+               v-bind:title="'@' + member.twitter + ' on X'"
+               v-bind:href="'https://x.com/' + member.twitter"
+               target="_blank">X</a>
           </div>
         </li>`,
 
@@ -99,16 +97,10 @@ Vue.component("member-card", {
     },
 
     mainLink: function () {
-      if (this.member.youtube_subs) {
-        if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id;
-        else "https://youtube.com/channel/" + this.member.youtube;
-      } else if (this.member.twitter_subs) {
-        return "https://twitter.com/" + this.member.twitter;
-      } else if (this.member.bilibili_subs) {
-        return "https://space.bilibili.com/" + member.bilibili;
-      } else {
-        return "#";
-      }
+      if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id;
+      if (this.member.youtube) return "https://youtube.com/channel/" + this.member.youtube;
+      if (this.member.bilibili) return "https://space.bilibili.com/" + this.member.bilibili;
+      return "https://x.com/" + this.member.twitter;
     },
 
     liStyle: function () {

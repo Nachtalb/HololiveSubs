@@ -1,7 +1,7 @@
-const PRECACHE = 'precache-v1';
+const PRECACHE = 'precache-v2';
 const RUNTIME = 'runtime';
 
-const log = (location.host === "test.hololive.zone") ? console.log : () => {}
+const log = () => {}
 
 const CACHED_URLS = [
   "stats.json",
@@ -26,7 +26,7 @@ const PREFER_NO_CACHE = [
 
 let CACHED_PROFILE_PICTURES = []
 
-let FAVOURITES
+let FAVOURITES = []
 
 let worker, stats, prevStats
 
@@ -134,7 +134,7 @@ self.addEventListener("install", event => {
         stats = mappedStats(data)
         for (let group in data.groups) {
           for (let talent of data.groups[group].members) {
-            CACHED_PROFILE_PICTURES.push("/" + talent.image)
+            if (talent.image && !talent.image.startsWith("http")) CACHED_PROFILE_PICTURES.push("/" + talent.image)
           }
         }
 
