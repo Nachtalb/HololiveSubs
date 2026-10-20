@@ -273,7 +273,7 @@ var app = new Vue({
         label: "Show simple backgrounds",
       },
       retired: {
-        value: true,
+        value: false,
         label: "Show retired",
       },
       bilibili: {
