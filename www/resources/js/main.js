@@ -22,6 +22,7 @@ Vue.component("member-card", {
                v-bind:href="mainLink"
                v-bind:title="member.video.title"
                target="_blank"
+               @click="onLiveClick"
                ref="live">
               <span class="badge badge-icon badge-live" v-if="isLive">LIVE</span>
               <span class="badge badge-icon badge-scheduled" v-else>{{ scheduledTitle }}</span>
@@ -65,12 +66,15 @@ Vue.component("member-card", {
 
   mounted() {
     if (this.$refs.live) {
-      tippy(this.$refs.live, {
+      // No hover on touch screens: the first tap shows the preview, the next one opens it.
+      const touch = window.matchMedia("(hover: none)").matches;
+      this.tip = tippy(this.$refs.live, {
         allowHTML: true,
         interactive: true,
         appendTo: () => document.body,
         content: this.$refs.thumbnail,
         maxWidth: "none",
+        trigger: touch ? "manual" : "mouseenter focus",
       });
     }
   },
@@ -129,6 +133,13 @@ Vue.component("member-card", {
   },
 
   methods: {
+    onLiveClick(event) {
+      if (this.tip && this.tip.props.trigger === "manual" && !this.tip.state.isVisible) {
+        event.preventDefault();
+        this.tip.show();
+      }
+    },
+
     toggleFavourite() {
       let index = app.favourites.indexOf(this.member.slug);
       if (index !== -1) app.favourites.splice(index, 1);
