@@ -1,10 +1,11 @@
-version: '3'
 services:
-  hololive:
-    container_name: hololive
-    image: halverneus/static-file-server:latest
+  holozone:
+    image: ghcr.io/nachtalb/hololivesubs:latest
     restart: unless-stopped
+    environment:
+      YOUTUBE_KEY: ${YOUTUBE_KEY:?set YOUTUBE_KEY}
+      SITE_URL: https://holo.naa.gg
     ports:
-      - 8001:8080
+      - 8080:8080
     volumes:
-      - ./www/:/web
+      - ./data:/data
