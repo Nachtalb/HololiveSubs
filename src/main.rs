@@ -343,7 +343,10 @@ fn send_file(req: Request, path: &Path) {
     let ct = content_type(path);
     let cache = if ct.starts_with("image/") || ct.starts_with("font/") {
         "public, max-age=86400"
-    } else if ["text/html", "text/css", "text/javascript"].iter().any(|t| ct.starts_with(t)) {
+    } else if ["text/html", "text/css", "text/javascript"]
+        .iter()
+        .any(|t| ct.starts_with(t))
+    {
         "public, max-age=3600"
     } else {
         "no-cache"
