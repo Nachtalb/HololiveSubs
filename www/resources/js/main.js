@@ -258,6 +258,12 @@ Vue.component("member-group", {
           return 1;
         });
       }
+
+      // Last so generations stay together; the stable sort keeps the order above within each one.
+      if (app.settings.sortGeneration.value) {
+        const order = (m) => m.generation_order || Infinity;
+        members.sort((a, b) => order(a) - order(b));
+      }
       return members;
     },
   },
@@ -314,6 +320,10 @@ var app = new Vue({
       sortName: {
         value: false,
         label: "Sort by name",
+      },
+      sortGeneration: {
+        value: false,
+        label: "Sort by generation",
       },
     },
   },
