@@ -1,4 +1,4 @@
-const PRECACHE = 'precache-v3';
+const PRECACHE = 'precache-v4';
 const RUNTIME = 'runtime';
 
 const log = () => {}
@@ -6,7 +6,6 @@ const log = () => {}
 const CACHED_URLS = [
   "stats.json",
   "/resources/css/main.css",
-  "/resources/css/toastify.min.css",
   "/resources/icons/calendar.svg",
   "/resources/icons/heart-full.svg",
   "/resources/icons/heart.svg",
@@ -16,7 +15,7 @@ const CACHED_URLS = [
   "/resources/js/axios.min.js",
   "/resources/js/proper.min.js",
   "/resources/js/tippy.min.js",
-  "/resources/js/toastify.min.js",
+  "/resources/js/liquid-glass.min.js",
 ]
 
 const PREFER_NO_CACHE = [
