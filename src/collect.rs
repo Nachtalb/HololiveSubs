@@ -148,6 +148,18 @@ pub fn parse_live(html: &str, now: i64) -> Value {
     })
 }
 
+/// Ids of videos in a channel feed published on or after `since` (YYYY-MM-DD).
+#[allow(dead_code)]
+fn parse_feed(_xml: &str, _since: &str) -> Vec<String> {
+    Vec::new()
+}
+
+/// The live stream, else the next upcoming one, from a channel's video items as `video`, or `null`.
+#[allow(dead_code)]
+pub fn pick_video(_items: &[&Value], _now: i64) -> Value {
+    Value::Null
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -187,5 +199,39 @@ mod tests {
         );
         assert!(parse_live(&page(json!({"videoId": "e"}), None), now).is_null());
         assert!(parse_live("<html>nothing</html>", now).is_null());
+    }
+
+    fn video(id: &str, state: &str, scheduled: Option<&str>) -> Value {
+        json!({"id": id, "snippet": {"title": id, "liveBroadcastContent": state},
+               "liveStreamingDetails": {"scheduledStartTime": scheduled}})
+    }
+
+    #[test]
+    fn picks_live_then_soonest_upcoming() {
+        let now = 1_793_534_400; // 2026-11-01T12:00:00Z
+        let soon = video("soon", "upcoming", Some("2026-11-01T13:00:00Z"));
+        let later = video("later", "upcoming", Some("2026-11-02T10:00:00Z"));
+        let far = video("far", "upcoming", Some("2026-11-05T12:00:00Z"));
+        let stale = video("stale", "upcoming", Some("2026-10-01T12:00:00Z"));
+        let live = video("live", "live", Some("2026-11-01T11:00:00Z"));
+        let done = video("done", "none", None);
+
+        let pick = pick_video(&[&later, &soon, &live, &done], now);
+        assert_eq!((pick["id"].as_str(), pick["start"].as_i64()), (Some("live"), Some(0)));
+        let pick = pick_video(&[&later, &soon, &far], now);
+        assert_eq!(
+            (pick["id"].as_str(), pick["start"].as_i64()),
+            (Some("soon"), Some(now + 3600))
+        );
+        assert!(pick_video(&[&far, &stale, &done], now).is_null());
+        assert!(pick_video(&[], now).is_null());
+    }
+
+    #[test]
+    fn feed_ids_since() {
+        let xml = "<feed><published>2020-01-01T00:00:00+00:00</published>\
+            <entry><yt:videoId>new</yt:videoId><published>2026-10-31T11:51:36+00:00</published></entry>\
+            <entry><yt:videoId>old</yt:videoId><published>2026-09-01T00:00:00+00:00</published></entry></feed>";
+        assert_eq!(parse_feed(xml, "2026-10-18"), ["new"]);
     }
 }
