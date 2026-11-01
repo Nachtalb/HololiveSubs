@@ -215,7 +215,7 @@ fn update_full(cfg: &Config) -> Res<Value> {
     Ok(json!({"groups": groups, "meta": {"subsLastUpdate": stamp, "liveEventsLastUpdate": stamp}}))
 }
 
-/// Each member's live or next upcoming YouTube stream, or `null`.
+/// Each member's live stream (YouTube before Twitch), else their next upcoming YouTube stream, or `null`.
 fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
     let channels: Vec<&str> = members
         .iter()
@@ -237,15 +237,30 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
             Vec::new()
         })
     });
+    let logins: Vec<String> = members
+        .iter()
+        .filter(|m| !m["retired"].as_bool().unwrap_or(false))
+        .map(|m| str_of(m, "twitch").to_string())
+        .filter(|l| !l.is_empty())
+        .collect();
+    let twitch = collect::twitch_streams(&logins).unwrap_or_else(|e| {
+        log!("Twitch live check: {e}");
+        Map::new()
+    });
     let items = collect::youtube_videos(&cfg.youtube_key, &ids.concat()).unwrap_or_else(|e| {
         log!("Live check: {e}");
         Vec::new()
     });
-    channels
+    members
         .iter()
-        .map(|c| {
+        .zip(&channels)
+        .map(|(m, c)| {
             let own: Vec<&Value> = items.iter().filter(|v| v["snippet"]["channelId"] == *c).collect();
-            collect::pick_video(&own, now())
+            let youtube = collect::pick_video(&own, now());
+            match twitch.get(str_of(m, "twitch")) {
+                Some(stream) if youtube["start"] != 0 => stream.clone(),
+                _ => youtube,
+            }
         })
         .collect()
 }

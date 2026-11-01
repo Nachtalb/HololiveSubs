@@ -1,4 +1,4 @@
-//! Data sources: YouTube Data API, YouTube feeds, X (via FxTwitter) and Bilibili.
+//! Data sources: YouTube Data API, YouTube feeds, Twitch, X (via FxTwitter) and Bilibili.
 
 use std::sync::LazyLock;
 use std::time::Duration;
@@ -10,6 +10,8 @@ use crate::util::{Res, parse_iso};
 const UA: &str =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36";
 const LIMIT: u64 = 20 << 20;
+// Twitch's public web client id; the gql endpoint needs no key or registered app with it
+const TWITCH_CLIENT_ID: &str = "kimne78kx3ncx6brgo4mv6wki5h1ko";
 
 static AGENT: LazyLock<ureq::Agent> = LazyLock::new(|| {
     ureq::Agent::config_builder()
@@ -133,7 +135,44 @@ pub fn pick_video(items: &[&Value], now: i64) -> Value {
         "start": start,
         "description": snippet["description"].as_str().unwrap_or(""),
         "thumbnail": thumbnail,
+        "url": format!("https://youtu.be/{id}"),
     })
+}
+
+/// login -> current stream as `video`, for the logins that are live on Twitch.
+pub fn twitch_streams(logins: &[String]) -> Res<serde_json::Map<String, Value>> {
+    let query = format!(
+        "{{users(logins:{}){{login stream{{id title previewImageURL(width:1280,height:720)}}}}}}",
+        serde_json::to_string(logins)?
+    );
+    let body = AGENT
+        .post("https://gql.twitch.tv/gql")
+        .header("Client-ID", TWITCH_CLIENT_ID)
+        .header("Content-Type", "application/json")
+        .send(json!({ "query": query }).to_string())?
+        .body_mut()
+        .read_to_string()?;
+    Ok(parse_twitch(&serde_json::from_str(&body)?))
+}
+
+fn parse_twitch(res: &Value) -> serde_json::Map<String, Value> {
+    res["data"]["users"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|u| {
+            let (login, stream) = (u["login"].as_str()?, &u["stream"]);
+            let video = json!({
+                "id": format!("twitch-{}", stream["id"].as_str()?),
+                "title": stream["title"].as_str().unwrap_or(""),
+                "start": 0,
+                "description": "",
+                "thumbnail": stream["previewImageURL"].as_str().unwrap_or(""),
+                "url": format!("https://www.twitch.tv/{login}"),
+            });
+            Some((login.to_string(), video))
+        })
+        .collect()
 }
 
 /// (followers, avatar url) from FxTwitter's public API.
@@ -201,5 +240,18 @@ mod tests {
             <entry><yt:videoId>new</yt:videoId><published>2026-10-31T11:51:36+00:00</published></entry>\
             <entry><yt:videoId>old</yt:videoId><published>2026-09-01T00:00:00+00:00</published></entry></feed>";
         assert_eq!(parse_feed(xml, "2026-10-18"), ["new"]);
+    }
+
+    #[test]
+    fn twitch_live_users_only() {
+        let res = json!({"data": {"users": [
+            {"login": "liz", "stream": {"id": "1", "title": "Karaoke", "previewImageURL": "p"}},
+            {"login": "gigi", "stream": null},
+            null
+        ]}});
+        let live = parse_twitch(&res);
+        assert_eq!(live.len(), 1);
+        assert_eq!(live["liz"]["id"], "twitch-1");
+        assert_eq!(live["liz"]["url"], "https://www.twitch.tv/liz");
     }
 }

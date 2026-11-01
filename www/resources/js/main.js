@@ -104,7 +104,7 @@ Vue.component("member-card", {
     },
 
     mainLink: function () {
-      if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id;
+      if (this.member.video) return this.member.video.url || "https://youtube.com/watch?v=" + this.member.video.id;
       if (this.member.youtube) return "https://youtube.com/channel/" + this.member.youtube;
       if (this.member.bilibili) return "https://space.bilibili.com/" + this.member.bilibili;
       return this.member.x ? "https://x.com/" + this.member.x : "#";
