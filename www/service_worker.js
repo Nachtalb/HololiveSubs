@@ -1,4 +1,4 @@
-const PRECACHE = 'precache-v3';
+const PRECACHE = 'precache-v4';
 const RUNTIME = 'runtime';
 
 const log = () => {}
@@ -6,7 +6,6 @@ const log = () => {}
 const CACHED_URLS = [
   "stats.json",
   "/resources/css/main.css",
-  "/resources/css/toastify.min.css",
   "/resources/icons/calendar.svg",
   "/resources/icons/heart-full.svg",
   "/resources/icons/heart.svg",
@@ -16,7 +15,7 @@ const CACHED_URLS = [
   "/resources/js/axios.min.js",
   "/resources/js/proper.min.js",
   "/resources/js/tippy.min.js",
-  "/resources/js/toastify.min.js",
+  "/resources/js/liquid-glass.min.js",
 ]
 
 const PREFER_NO_CACHE = [
@@ -168,8 +167,9 @@ self.addEventListener('fetch', event => {
   if (event.request.url.startsWith(self.location.origin)) {
     event.respondWith(
       caches.match(event.request).then(cachedResponse => {
-        // Update stats.json and return cached one if offline
-        if (prefersNoCache(event.request)) {
+        // Network first for stats.json and the page itself (its asset links carry the cache busters),
+        // the cached copy only when offline
+        if (prefersNoCache(event.request) || event.request.mode === "navigate") {
           return fetch(event.request)
             .then(response => {
               log("Update stats")

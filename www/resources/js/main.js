@@ -263,13 +263,20 @@ Vue.component("member-group", {
   },
 });
 
+// liquid-glass web components, rendered by the browser rather than Vue
+Vue.config.ignoredElements = [/^lg-/];
+
+// Same module instance as the <head> script; this classic script runs before it, hence the dynamic import
+function notify(text, duration) {
+  import("/resources/js/liquid-glass.min.js").then(({ toast }) => toast(text, { duration }));
+}
+
 var app = new Vue({
   el: "#app",
   data: {
     groups: {},
     meta: {},
     favourites: [],
-    showSettings: false,
     settings: {
       exportSettings: {
         label: "Export settings",
@@ -316,7 +323,6 @@ var app = new Vue({
     this.importSettingsFromLink(window.location.href);
     this.loadSettings();
     this.loadStats();
-    document.addEventListener("click", this.handleClickOutsideSettings);
     setInterval(this.loadStats, 1000 * 60 * 5);
   },
 
@@ -328,21 +334,6 @@ var app = new Vue({
   },
 
   methods: {
-    handleClickOutsideSettings(event) {
-      const settingsElement = document.querySelector("#settings");
-      if (this.showSettings) {
-        if (!settingsElement.contains(event.target)) {
-          event.preventDefault();
-          this.showSettings = false;
-        }
-      } else {
-        if (settingsElement.contains(event.target)) {
-          event.preventDefault();
-          this.showSettings = true;
-        }
-      }
-    },
-
     installServiceWorker() {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register("/service_worker.js");
@@ -368,20 +359,12 @@ var app = new Vue({
 
       function failed() {
         window.history.pushState("", "", url);
-        Toastify({
-          text: "Copy the URL. Use it to automatically import the settings again.",
-          duration: 7000,
-          position: "center",
-        }).showToast();
+        notify("Copy the URL. Use it to automatically import the settings again.", 7000);
       }
 
       if (window.navigator.clipboard) {
         window.navigator.clipboard.writeText(url).then(() => {
-          Toastify({
-            text: "The settings URL has been copied. Use it to automatically import the settings again.",
-            duration: 7000,
-            position: "center",
-          }).showToast();
+          notify("The settings URL has been copied. Use it to automatically import the settings again.", 7000);
         }, failed);
       } else {
         failed();
@@ -407,11 +390,7 @@ var app = new Vue({
         });
         window.history.pushState("", "", window.location.origin);
 
-        Toastify({
-          text: "Imported settings",
-          duration: 3000,
-          position: "center",
-        }).showToast();
+        notify("Imported settings", 3000);
       }
     },
 

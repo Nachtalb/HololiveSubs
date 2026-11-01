@@ -24,19 +24,15 @@
     <meta name="msapplication-TileColor" content="#ffffff" />
     <meta name="theme-color" content="#ffffff" />
 
-    <link href="/resources/css/main.css?v=7" rel="stylesheet" />
-    <link href="/resources/css/toastify.min.css" rel="stylesheet" />
+    <script type="module" blocking="render" src="/resources/js/liquid-glass.min.js"></script>
+    <link href="/resources/css/main.css?v=11" rel="stylesheet" />
     <script src="/resources/js/vue.min.js"></script>
     <script src="/resources/js/axios.min.js"></script>
     <script src="/resources/js/proper.min.js"></script>
     <script src="/resources/js/tippy.min.js"></script>
-    <script src="/resources/js/toastify.min.js"></script>
   </head>
   <body>
     <div id="app">
-      <Transition name="fade">
-        <div v-if="showSettings" id="backdrop"></div>
-      </Transition>
       <main>
         <member-group
           v-for="(group, id) in groups"
@@ -60,31 +56,37 @@
         </div>
       </footer>
 
-      <div id="settings-wrapper">
-        <div id="settings" :class="{ open: showSettings }">
-          <Transition name="settings">
-            <div id="settings-popup" v-if="showSettings">
-              <div v-for="(setting, key) in settings" v-if="typeof setting.value !== 'string'">
-                <label :for="key">
-                  <input type="checkbox" :id="key" :name="key" v-model="setting.value" @change="toggleSetting(key)" />
-                  <span class="checkbox"></span>
-                  <span>{{ setting.label }}</span>
-                </label>
-              </div>
-              <div v-for="(setting, key) in settings" v-if="typeof setting.value === 'string'">
-                <a :data-key="key" :href="'#' + setting.value" @click="action(setting.value)"
-                  ><i class="icon icon-export"></i>{{ setting.label }}</a
-                >
-              </div>
-            </div>
-          </Transition>
+      <button id="settings-button" class="lg-btn" data-glass @click="$refs.settings.showModal()">Settings</button>
 
-          <div id="settings-button" v-if="!showSettings">Settings</div>
+      <dialog id="settings" class="lg-sheet" data-glass closedby="any" ref="settings">
+        <header>
+          <h2>Settings</h2>
+          <form method="dialog"><button class="lg-btn">Done</button></form>
+        </header>
+        <div class="settings-list">
+          <label v-for="(setting, key) in settings" v-if="typeof setting.value !== 'string'">
+            <span>{{ setting.label }}</span>
+            <lg-switch
+              :name="key"
+              :checked="setting.value"
+              @change="setting.value = $event.target.checked; toggleSetting(key)"
+            ></lg-switch>
+          </label>
+          <button
+            v-for="(setting, key) in settings"
+            v-if="typeof setting.value === 'string'"
+            class="lg-btn"
+            data-glass
+            :data-key="key"
+            @click="action(setting.value)"
+          >
+            <i class="icon icon-export"></i>{{ setting.label }}
+          </button>
         </div>
-      </div>
+      </dialog>
     </div>
 
     <script src="/resources/js/moment.min.js"></script>
-    <script type="application/javascript" src="/resources/js/main.js?v=9"></script>
+    <script type="application/javascript" src="/resources/js/main.js?v=12"></script>
   </body>
 </html>
