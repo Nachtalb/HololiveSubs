@@ -167,8 +167,9 @@ self.addEventListener('fetch', event => {
   if (event.request.url.startsWith(self.location.origin)) {
     event.respondWith(
       caches.match(event.request).then(cachedResponse => {
-        // Update stats.json and return cached one if offline
-        if (prefersNoCache(event.request)) {
+        // Network first for stats.json and the page itself (its asset links carry the cache busters),
+        // the cached copy only when offline
+        if (prefersNoCache(event.request) || event.request.mode === "navigate") {
           return fetch(event.request)
             .then(response => {
               log("Update stats")
