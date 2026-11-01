@@ -39,6 +39,7 @@ Vue.component("member-card", {
              target="_blank">
             <div class="profile-image"><img v-bind:src="member.image || '/icon.png'" v-bind:alt="member.name"></div>
             <span class="name" v-bind:style="nameStyle">{{ member.name }}</span>
+            <span class="generation" v-if="member.generation">{{ member.generation }}</span>
           </a>
           <div class="buttons">
             <a class="ytFollowersCount followersCount"
@@ -211,11 +212,12 @@ Vue.component("member-group", {
           <h2 v-if="group.show_title">{{ group.name }}</h2>
 
           <ul>
-            <member-card
-              v-for="member in filteredMembers"
-              v-bind:member="member"
-              v-bind:key="member.id"
-            ></member-card>
+            <template v-for="(member, i) in filteredMembers">
+              <li class="generation-header" v-if="startsGeneration(i)" v-bind:key="'gen-' + member.id">
+                <h2>{{ member.generation || "Other" }}</h2>
+              </li>
+              <member-card v-bind:member="member" v-bind:key="member.id"></member-card>
+            </template>
           </ul>
         </section>`,
 
@@ -265,6 +267,15 @@ Vue.component("member-group", {
         members.sort((a, b) => order(a) - order(b));
       }
       return members;
+    },
+  },
+
+  methods: {
+    startsGeneration(i) {
+      if (!app.settings.sortGeneration.value) return false;
+      const member = this.filteredMembers[i];
+      if (i === 0) return !!member.generation;
+      return member.generation !== this.filteredMembers[i - 1].generation;
     },
   },
 });
