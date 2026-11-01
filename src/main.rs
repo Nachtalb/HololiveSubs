@@ -112,8 +112,24 @@ fn update_full(cfg: &Config) -> Res<Value> {
         .map(|m| (str_of(m, "slug").to_string(), m.clone()))
         .collect();
 
+    let logins: Vec<String> = talents
+        .iter()
+        .map(|t| str_of(t, "twitch").to_string())
+        .filter(|l| !l.is_empty())
+        .collect();
+    let twitch = collect::twitch_users(&logins).unwrap_or_else(|e| {
+        log!("Twitch: {e}");
+        Map::new()
+    });
+
     let talents = par_map(&talents, 6, |talent| {
         let mut t = talent.as_object().cloned().unwrap_or_default();
+        if let Some(followers) = twitch
+            .get(str_of(talent, "twitch"))
+            .and_then(|u| u["followers"].as_u64())
+        {
+            t.insert("twitch_subs".into(), followers.into());
+        }
         let name = str_of(talent, "name");
         let mut avatars = Vec::new();
 
@@ -199,7 +215,7 @@ fn update_full(cfg: &Config) -> Res<Value> {
     let mut groups: Map<String, Value> = config["groups"].as_object().cloned().unwrap_or_default();
     let mut sorted = talents;
     let key = |t: &Value| {
-        ["youtube_subs", "twitter_subs", "bilibili_subs"]
+        ["youtube_subs", "twitter_subs", "bilibili_subs", "twitch_subs"]
             .iter()
             .find_map(|k| t[k].as_u64())
             .unwrap_or(0)
@@ -243,7 +259,7 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
         .map(|m| str_of(m, "twitch").to_string())
         .filter(|l| !l.is_empty())
         .collect();
-    let twitch = collect::twitch_streams(&logins).unwrap_or_else(|e| {
+    let twitch = collect::twitch_users(&logins).unwrap_or_else(|e| {
         log!("Twitch live check: {e}");
         Map::new()
     });
@@ -257,8 +273,8 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
         .map(|(m, c)| {
             let own: Vec<&Value> = items.iter().filter(|v| v["snippet"]["channelId"] == *c).collect();
             let youtube = collect::pick_video(&own, now());
-            match twitch.get(str_of(m, "twitch")) {
-                Some(stream) if youtube["start"] != 0 => stream.clone(),
+            match twitch.get(str_of(m, "twitch")).map(|u| &u["video"]) {
+                Some(stream) if !stream.is_null() && youtube["start"] != 0 => stream.clone(),
                 _ => youtube,
             }
         })

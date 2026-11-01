@@ -139,10 +139,10 @@ pub fn pick_video(items: &[&Value], now: i64) -> Value {
     })
 }
 
-/// login -> current stream as `video`, for the logins that are live on Twitch.
-pub fn twitch_streams(logins: &[String]) -> Res<serde_json::Map<String, Value>> {
+/// login -> `{"followers": n, "video": current stream as `video` or null}`.
+pub fn twitch_users(logins: &[String]) -> Res<serde_json::Map<String, Value>> {
     let query = format!(
-        "{{users(logins:{}){{login stream{{id title previewImageURL(width:1280,height:720)}}}}}}",
+        "{{users(logins:{}){{login followers{{totalCount}} stream{{id title previewImageURL(width:1280,height:720)}}}}}}",
         serde_json::to_string(logins)?
     );
     let body = AGENT
@@ -162,15 +162,18 @@ fn parse_twitch(res: &Value) -> serde_json::Map<String, Value> {
         .flatten()
         .filter_map(|u| {
             let (login, stream) = (u["login"].as_str()?, &u["stream"]);
-            let video = json!({
-                "id": format!("twitch-{}", stream["id"].as_str()?),
-                "title": stream["title"].as_str().unwrap_or(""),
-                "start": 0,
-                "description": "",
-                "thumbnail": stream["previewImageURL"].as_str().unwrap_or(""),
-                "url": format!("https://www.twitch.tv/{login}"),
+            let video = stream["id"].as_str().map(|id| {
+                json!({
+                    "id": format!("twitch-{id}"),
+                    "title": stream["title"].as_str().unwrap_or(""),
+                    "start": 0,
+                    "description": "",
+                    "thumbnail": stream["previewImageURL"].as_str().unwrap_or(""),
+                    "url": format!("https://www.twitch.tv/{login}"),
+                })
             });
-            Some((login.to_string(), video))
+            let followers = u["followers"]["totalCount"].as_u64();
+            Some((login.to_string(), json!({"followers": followers, "video": video})))
         })
         .collect()
 }
@@ -243,15 +246,19 @@ mod tests {
     }
 
     #[test]
-    fn twitch_live_users_only() {
+    fn twitch_users() {
         let res = json!({"data": {"users": [
-            {"login": "liz", "stream": {"id": "1", "title": "Karaoke", "previewImageURL": "p"}},
-            {"login": "gigi", "stream": null},
+            {"login": "liz", "followers": {"totalCount": 75}, "stream": {"id": "1", "title": "Karaoke", "previewImageURL": "p"}},
+            {"login": "gigi", "followers": {"totalCount": 44}, "stream": null},
             null
         ]}});
-        let live = parse_twitch(&res);
-        assert_eq!(live.len(), 1);
-        assert_eq!(live["liz"]["id"], "twitch-1");
-        assert_eq!(live["liz"]["url"], "https://www.twitch.tv/liz");
+        let users = parse_twitch(&res);
+        assert_eq!(users.len(), 2);
+        assert_eq!(users["liz"]["video"]["id"], "twitch-1");
+        assert_eq!(users["liz"]["video"]["url"], "https://www.twitch.tv/liz");
+        assert_eq!(
+            (users["gigi"]["followers"].as_u64(), users["gigi"]["video"].is_null()),
+            (Some(44), true)
+        );
     }
 }

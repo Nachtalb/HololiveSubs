@@ -127,6 +127,15 @@ main a {
   background-color: #1690c0;
 }
 
+.twFollowersCount {
+  background-color: #9146ff;
+}
+
+.twFollowersCount:hover,
+.twFollowersCount:focus {
+  background-color: #772ce8;
+}
+
 a:focus {
   outline: none;
 }

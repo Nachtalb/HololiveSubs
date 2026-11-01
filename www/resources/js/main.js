@@ -54,6 +54,13 @@ Vue.component("member-card", {
                target="_blank">
               <span>{{ nFormatter(member.bilibili_subs, 2) }}</span> Bilibili
             </a>
+            <a class="twFollowersCount followersCount"
+               v-bind:href="'https://www.twitch.tv/' + member.twitch"
+               v-bind:title="member.twitch_subs + ' followers on Twitch'"
+               v-if="member.twitch_subs"
+               target="_blank">
+              <span>{{ nFormatter(member.twitch_subs, 2) }}</span> Twitch
+            </a>
             <a class="tFollowersCount followersCount"
                v-bind:title="member.twitter_subs + ' followers on 𝕏'"
                v-bind:href="'https://x.com/' + member.x"
