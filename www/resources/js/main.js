@@ -24,6 +24,7 @@ Vue.component("member-card", {
                target="_blank"
                @click="onLiveClick"
                ref="live">
+              <span class="badge badge-icon badge-members" v-if="member.video.members" title="Members only"></span>
               <span class="badge badge-icon badge-live" v-if="isLive">LIVE</span>
               <span class="badge badge-icon badge-scheduled" v-else>{{ scheduledTitle }}</span>
               <a class="thumbnail" v-bind:href="mainLink" target="_blank" ref="thumbnail">

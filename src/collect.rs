@@ -81,16 +81,21 @@ pub fn youtube_videos(key: &str, ids: &[String]) -> Res<Vec<Value>> {
 /// Ids of videos from a channel's uploads and members-only feeds published on or after `since` (YYYY-MM-DD).
 /// The feeds are fetched instead of the /live page, which YouTube hides behind a bot check for datacenter IPs
 /// and which never shows members-only streams.
-pub fn recent_video_ids(channel: &str, since: &str) -> Res<Vec<String>> {
+/// Each id comes with whether it is members-only.
+pub fn recent_video_ids(channel: &str, since: &str) -> Res<Vec<(String, bool)>> {
     let rest = channel.strip_prefix("UC").ok_or("not a UC channel id")?;
     let feed = |list: &str| {
         get_text(&format!(
             "https://www.youtube.com/feeds/videos.xml?playlist_id={list}{rest}"
         ))
     };
-    let mut ids = parse_feed(&feed("UU")?, since);
+    let mut ids: Vec<_> = parse_feed(&feed("UU")?, since)
+        .into_iter()
+        .map(|id| (id, false))
+        .collect();
     // Channels without memberships have no members feed (404)
-    ids.extend(feed("UUMO").map(|x| parse_feed(&x, since)).unwrap_or_default());
+    let members = feed("UUMO").map(|x| parse_feed(&x, since)).unwrap_or_default();
+    ids.extend(members.into_iter().map(|id| (id, true)));
     Ok(ids)
 }
 

@@ -201,6 +201,11 @@ li.retired {
   margin: 0;
 }
 
+main .badges > a {
+  flex-direction: row;
+  align-items: stretch;
+}
+
 .badge,
 .action {
   background-color: red;
@@ -293,6 +298,20 @@ li.retired {
 .action-export::before,
 .icon-export::before {
   background-image: url("../icons/export.svg");
+}
+
+.badge-members {
+  background-color: #2ba640;
+  border-radius: 50%;
+  margin-right: 4px;
+  width: 25px;
+  box-sizing: border-box;
+}
+
+.badge-members::before {
+  background-image: url("../icons/members.svg");
+  background-position: center;
+  width: 100%;
 }
 
 .badge-retired {

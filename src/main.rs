@@ -244,7 +244,7 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
         })
         .collect();
     let since = date(now() - 14 * 86400);
-    let ids = par_map(&channels, 6, |c| {
+    let ids: Vec<(String, bool)> = par_map(&channels, 6, |c| {
         if c.is_empty() {
             return Vec::new();
         }
@@ -252,7 +252,11 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
             log!("[{c}] feed: {e}");
             Vec::new()
         })
-    });
+    })
+    .concat();
+    let members_only: std::collections::HashSet<&str> =
+        ids.iter().filter(|(_, m)| *m).map(|(id, _)| id.as_str()).collect();
+    let ids: Vec<String> = ids.iter().map(|(id, _)| id.clone()).collect();
     let logins: Vec<String> = members
         .iter()
         .filter(|m| !m["retired"].as_bool().unwrap_or(false))
@@ -263,7 +267,7 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
         log!("Twitch live check: {e}");
         Map::new()
     });
-    let items = collect::youtube_videos(&cfg.youtube_key, &ids.concat()).unwrap_or_else(|e| {
+    let items = collect::youtube_videos(&cfg.youtube_key, &ids).unwrap_or_else(|e| {
         log!("Live check: {e}");
         Vec::new()
     });
@@ -272,7 +276,10 @@ fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
         .zip(&channels)
         .map(|(m, c)| {
             let own: Vec<&Value> = items.iter().filter(|v| v["snippet"]["channelId"] == *c).collect();
-            let youtube = collect::pick_video(&own, now());
+            let mut youtube = collect::pick_video(&own, now());
+            if youtube["id"].as_str().is_some_and(|id| members_only.contains(id)) {
+                youtube["members"] = true.into();
+            }
             match twitch.get(str_of(m, "twitch")).map(|u| &u["video"]) {
                 Some(stream) if !stream.is_null() && youtube["start"] != 0 => stream.clone(),
                 _ => youtube,
