@@ -43,6 +43,19 @@ pub fn iso_minutes(ts: i64) -> String {
     format!("{y:04}-{mo:02}-{d:02}T{h:02}:{mi:02}+00:00")
 }
 
+/// Unix time of an RFC 3339 UTC timestamp like `2026-11-01T14:00:00Z`.
+pub fn parse_iso(s: &str) -> Option<i64> {
+    let n = |r: std::ops::Range<usize>| s.get(r)?.parse::<i64>().ok();
+    let (y, m, d) = (n(0..4)?, n(5..7)?, n(8..10)?);
+    // Howard Hinnant's days_from_civil
+    let y = if m <= 2 { y - 1 } else { y };
+    let era = y.div_euclid(400);
+    let yoe = y - era * 400;
+    let doy = (153 * (m + if m > 2 { -3 } else { 9 }) + 2) / 5 + d - 1;
+    let days = era * 146_097 + yoe * 365 + yoe / 4 - yoe / 100 + doy - 719_468;
+    Some(days * 86400 + n(11..13)? * 3600 + n(14..16)? * 60 + n(17..19)?)
+}
+
 pub fn iso_seconds(ts: i64) -> String {
     let (y, mo, d, h, mi, s, _) = civil(ts);
     format!("{y:04}-{mo:02}-{d:02}T{h:02}:{mi:02}:{s:02}Z")
@@ -297,6 +310,8 @@ mod tests {
         assert_eq!(iso_seconds(ts), "2026-10-18T20:03:09Z");
         assert_eq!(ics_time(ts), "20261018T200309Z");
         assert_eq!(rfc2822(ts), "Sun, 18 Oct 2026 20:03:09 GMT");
+        assert_eq!(parse_iso("2026-10-18T20:03:09Z"), Some(ts));
+        assert_eq!(parse_iso("2000-02-29T00:00:00Z"), Some(951_782_400));
         assert_eq!(date(0), "1970-01-01");
         assert_eq!(date(951_782_400), "2000-02-29");
     }

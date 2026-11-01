@@ -13,7 +13,7 @@ use std::time::Duration;
 use serde_json::{Map, Value, json};
 use tiny_http::{Header, Method, Request, Response, Server};
 
-use util::{Res, iso_minutes, now, par_map};
+use util::{Res, date, iso_minutes, now, par_map};
 
 const INTERVAL: Duration = Duration::from_secs(15 * 60); // live check; full update every 2nd run
 
@@ -76,7 +76,7 @@ fn updater_loop(cfg: &Config) {
             .ok()
             .and_then(|b| serde_json::from_slice::<Value>(&b).ok());
         let result = match stats {
-            Some(s) if run % 2 == 1 => update_live(s),
+            Some(s) if run % 2 == 1 => update_live(cfg, s),
             _ => update_full(cfg),
         }
         .and_then(|s| publish::publish(&cfg.data, &cfg.site, &s));
@@ -188,10 +188,13 @@ fn update_full(cfg: &Config) -> Res<Value> {
             );
             t.insert("rss_image".into(), images.as_ref().map(|i| i.rss.clone()).into());
         }
-        let mut talent = Value::Object(t);
-        talent["video"] = video_for(&talent);
-        talent
+        Value::Object(t)
     });
+    let videos = live_videos(cfg, &talents);
+    let mut talents = talents;
+    for (t, video) in talents.iter_mut().zip(videos) {
+        t["video"] = video;
+    }
 
     let mut groups: Map<String, Value> = config["groups"].as_object().cloned().unwrap_or_default();
     let mut sorted = talents;
@@ -212,20 +215,44 @@ fn update_full(cfg: &Config) -> Res<Value> {
     Ok(json!({"groups": groups, "meta": {"subsLastUpdate": stamp, "liveEventsLastUpdate": stamp}}))
 }
 
-fn video_for(member: &Value) -> Value {
-    let channel = str_of(member, "youtube");
-    if channel.is_empty() || member["retired"].as_bool().unwrap_or(false) {
-        return Value::Null;
-    }
-    collect::live_video(channel).unwrap_or_else(|e| {
-        log!("[{}] live check: {e}", str_of(member, "name"));
-        Value::Null
-    })
+/// Each member's live or next upcoming YouTube stream, or `null`.
+fn live_videos(cfg: &Config, members: &[Value]) -> Vec<Value> {
+    let channels: Vec<&str> = members
+        .iter()
+        .map(|m| {
+            if m["retired"].as_bool().unwrap_or(false) {
+                ""
+            } else {
+                str_of(m, "youtube")
+            }
+        })
+        .collect();
+    let since = date(now() - 14 * 86400);
+    let ids = par_map(&channels, 6, |c| {
+        if c.is_empty() {
+            return Vec::new();
+        }
+        collect::recent_video_ids(c, &since).unwrap_or_else(|e| {
+            log!("[{c}] feed: {e}");
+            Vec::new()
+        })
+    });
+    let items = collect::youtube_videos(&cfg.youtube_key, &ids.concat()).unwrap_or_else(|e| {
+        log!("Live check: {e}");
+        Vec::new()
+    });
+    channels
+        .iter()
+        .map(|c| {
+            let own: Vec<&Value> = items.iter().filter(|v| v["snippet"]["channelId"] == *c).collect();
+            collect::pick_video(&own, now())
+        })
+        .collect()
 }
 
-fn update_live(mut stats: Value) -> Res<Value> {
+fn update_live(cfg: &Config, mut stats: Value) -> Res<Value> {
     log!("Live update");
-    let videos: Vec<Value> = par_map(&publish::members(&stats).cloned().collect::<Vec<_>>(), 6, video_for);
+    let videos = live_videos(cfg, &publish::members(&stats).cloned().collect::<Vec<_>>());
     let mut videos = videos.into_iter();
     for group in stats["groups"].as_object_mut().into_iter().flat_map(|g| g.values_mut()) {
         for m in group["members"].as_array_mut().into_iter().flatten() {
