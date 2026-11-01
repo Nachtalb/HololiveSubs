@@ -3,7 +3,8 @@ HololiveSubs
 ============
 
 Website which tracks the YouTube, X, Bilibili and Twitch follower counts of all Hololive talents, orders them by
-YouTube subscribers and shows who is live (on YouTube or Twitch) or about to go live.
+YouTube subscribers (optionally grouped by generation in debut order) and shows who is live (on YouTube or Twitch) or
+about to go live.
 
 https://holo.naa.gg/
 
