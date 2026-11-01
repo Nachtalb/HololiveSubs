@@ -110,7 +110,7 @@
         {"id": 184, "name": "holoAN (Michiru, Sayaka & Yuki)", "slug": "holoan", "bg": "#93def0", "fg": "#fff", "x": "", "youtube": "UCozx5csNhCx1wsVq3SZVkBQ", "bilibili": "", "retired": false, "generation": "holoAN", "generation_order": 20},
         {"id": 1, "name": "Best Girl (Yagoo)", "slug": "tanigox", "bg": "#C3B4AF", "fg": "#fff", "x": "tanigox", "youtube": "UCu2DMOGLeR_DSStCyeQpi5Q", "bilibili": "", "retired": false, "group": "staff"},
         {"id": 2, "name": "A-Chan", "slug": "achan_uga", "bg": "#413982", "fg": "#fff", "x": "achan_uga", "youtube": "", "bilibili": "", "retired": true, "group": "staff"},
-        {"id": 3, "name": "Omegaα", "slug": "omegaalpha_en", "bg": "#fbdeeb", "fg": "#fff", "x": "omegaalpha_en", "youtube": "UCKYyiJwNg2nV7hM86U5_wvw", "bilibili": "", "retired": false, "group": "staff"},
+        {"id": 3, "name": "Omegaα", "slug": "omegaalpha_en", "bg": "#fbdeeb", "fg": "#fff", "x": "omegaalpha_en", "youtube": "UCKYyiJwNg2nV7hM86U5_wvw", "bilibili": "", "retired": true, "group": "staff"},
         {"id": 4, "name": "Harusaki Nodoka", "slug": "harusakinodoka", "bg": "#f4a6b8", "fg": "#fff", "x": "harusakinodoka", "youtube": "", "bilibili": "", "retired": true, "group": "staff", "generation": "holoAN", "generation_order": 20},
         {"id": 1, "name": "Japanese Branch", "slug": "hololivetv", "bg": "#61DFEB", "fg": "#fff", "x": "hololivetv", "youtube": "UCJFZiqLMntJufDCHc6bQixg", "bilibili": "286700005", "retired": false, "group": "corp"},
         {"id": 2, "name": "English Branch", "slug": "hololive_en", "bg": "#45C2F2", "fg": "#fff", "x": "hololive_en", "youtube": "UCotXwY6s8pWmuWd_snKYjhg", "bilibili": "", "retired": false, "group": "corp"},
