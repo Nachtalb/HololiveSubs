@@ -24,6 +24,7 @@ Vue.component("member-card", {
                target="_blank"
                @click="onLiveClick"
                ref="live">
+              <span class="badge badge-icon badge-members" v-if="member.video.members" title="Members only"></span>
               <span class="badge badge-icon badge-live" v-if="isLive">LIVE</span>
               <span class="badge badge-icon badge-scheduled" v-else>{{ scheduledTitle }}</span>
               <a class="thumbnail" v-bind:href="mainLink" target="_blank" ref="thumbnail">
@@ -53,6 +54,13 @@ Vue.component("member-card", {
                v-if="member.bilibili_subs && app.settings.bilibili.value"
                target="_blank">
               <span>{{ nFormatter(member.bilibili_subs, 2) }}</span> Bilibili
+            </a>
+            <a class="twFollowersCount followersCount"
+               v-bind:href="'https://www.twitch.tv/' + member.twitch"
+               v-bind:title="member.twitch_subs + ' followers on Twitch'"
+               v-if="member.twitch_subs"
+               target="_blank">
+              <span>{{ nFormatter(member.twitch_subs, 2) }}</span> Twitch
             </a>
             <a class="tFollowersCount followersCount"
                v-bind:title="member.twitter_subs + ' followers on 𝕏'"
@@ -104,7 +112,7 @@ Vue.component("member-card", {
     },
 
     mainLink: function () {
-      if (this.member.video) return "https://youtube.com/watch?v=" + this.member.video.id;
+      if (this.member.video) return this.member.video.url || "https://youtube.com/watch?v=" + this.member.video.id;
       if (this.member.youtube) return "https://youtube.com/channel/" + this.member.youtube;
       if (this.member.bilibili) return "https://space.bilibili.com/" + this.member.bilibili;
       return this.member.x ? "https://x.com/" + this.member.x : "#";

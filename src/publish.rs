@@ -21,9 +21,22 @@ pub struct Event {
     pub thumbnail: String,
     #[serde(default)]
     pub thumbnail_size: u64,
+    #[serde(default)]
+    pub url: String,
     pub start: i64,
     pub end: i64,
     pub updated: i64,
+}
+
+impl Event {
+    /// Events stored before Twitch support have no url and are all YouTube videos.
+    fn link(&self, id: &str) -> String {
+        if self.url.is_empty() {
+            format!("https://youtu.be/{id}")
+        } else {
+            self.url.clone()
+        }
+    }
 }
 
 pub fn members(stats: &Value) -> impl Iterator<Item = &Value> {
@@ -62,6 +75,7 @@ pub fn merge_events(events: &mut BTreeMap<String, Event>, stats: &Value, ts: i64
                 description: str_of(video, "description"),
                 thumbnail,
                 thumbnail_size,
+                url: str_of(video, "url"),
                 start,
                 end,
                 updated: ts,
@@ -118,7 +132,7 @@ pub fn calendar(site: &str, name: &str, slug: &str, events: &[(&String, &Event)]
         "REFRESH-INTERVAL;VALUE=DURATION:PT4H".to_string(),
     ];
     for (id, e) in events {
-        let link = format!("https://youtu.be/{id}");
+        let link = e.link(id);
         lines.extend([
             "BEGIN:VEVENT".to_string(),
             format!("UID:{}", md5_uuid(id)),
@@ -127,10 +141,7 @@ pub fn calendar(site: &str, name: &str, slug: &str, events: &[(&String, &Event)]
             format!("DTSTART:{}", ics_time(e.start)),
             format!("DTEND:{}", ics_time(e.end)),
             format!("SUMMARY:{}", ics_text(&format!("[{}] - {}", e.member, e.title))),
-            format!(
-                "DESCRIPTION:{}",
-                ics_text(&format!("Watch {} live on YouTube {link}", e.member))
-            ),
+            format!("DESCRIPTION:{}", ics_text(&format!("Watch {} live {link}", e.member))),
             format!("URL:{link}"),
             format!("COLOR:{}", css_colour_name(&e.bg)),
             format!("CONFERENCE;VALUE=URI;FEATURE=AUDIO,VIDEO,CHAT:{link}"),
@@ -173,10 +184,11 @@ pub fn feed(site: &str, name: &str, image: Option<&str>, events: &[(&String, &Ev
     }
     for (id, e) in sorted {
         out += &format!(
-            "<item><title>{}</title><link>https://youtu.be/{id}</link><description>{}</description>\
+            "<item><title>{}</title><link>{}</link><description>{}</description>\
              <guid isPermaLink=\"false\">{}</guid><pubDate>{}</pubDate>\
              <enclosure url=\"{}\" length=\"{}\" type=\"image/jpeg\"/></item>",
             xml(&e.title),
+            xml(&e.link(id)),
             xml(&e.description),
             md5_uuid(id),
             rfc2822(e.start),
@@ -274,6 +286,7 @@ mod tests {
             description: String::new(),
             thumbnail: String::new(),
             thumbnail_size: 0,
+            url: String::new(),
             start: 0,
             end: 3600,
             updated: 0,
